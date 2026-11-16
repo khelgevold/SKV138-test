@@ -672,6 +672,81 @@ renderTasks=function(){
  [['taskOpen','open'],['taskDone','done'],['taskAll','all']].forEach(([id,value])=>$(id)?.classList.toggle('selected',taskFilterV8===value));
 };
 
+
+/* V16.5: private stock placement. Rental stock settings remain unchanged. */
+const v16PlaceDefaults=['Kjøleskap','Fryser','Kjøkkenskuff','Kjøkkenskap','Bod','Annet'];
+function v16PlaceOptions(current=''){
+ const known=[...new Set([...v16PlaceDefaults.filter(x=>x!=='Annet'),...state.stock.filter(x=>x.kind==='Privat').map(x=>x.location).filter(Boolean)])];
+ if(current&&!known.includes(current))known.push(current);
+ return known.map(x=>`<option value="${esc(x)}" ${x===current?'selected':''}>${esc(x)}</option>`).join('')+
+ `<option value="__custom__">+ Ny plassering …</option>`;
+}
+function v16PlaceField(prefix,current=''){
+ return `<div class="v16-location-field"><label>Plassering<select id="${prefix}Location" onchange="v16PlaceChanged('${prefix}')">${v16PlaceOptions(current)}</select></label>
+ <label id="${prefix}CustomRow" hidden>Ny plassering<input id="${prefix}CustomLocation" placeholder="F.eks. skuff ved komfyren"></label></div>`;
+}
+function v16PlaceChanged(prefix){
+ const sel=$(prefix+'Location'),row=$(prefix+'CustomRow');if(row)row.hidden=sel?.value!=='__custom__';
+}
+function v16ReadPlace(prefix){
+ const select=$(prefix+'Location');if(!select)return null;
+ return select.value==='__custom__'?$(prefix+'CustomLocation')?.value.trim():select.value;
+}
+const v16StockRenderBase=renderStock;
+renderStock=function(){
+ v16StockRenderBase();
+ const privateMode=stockKind==='Privat';
+ const card=$('stockAddCard');
+ if(card){
+  const minimum=$('stockMinRow'),fixed=$('newFixedRow');
+  if(minimum)minimum.style.display=privateMode?'none':'block';
+  if(fixed)fixed.style.display=privateMode?'none':'flex';
+  let field=$('v16AddLocationHost');
+  if(!field){field=document.createElement('div');field.id='v16AddLocationHost';const qty=$('stockQty')?.closest('label');if(qty)qty.insertAdjacentElement('afterend',field)}
+  if(field){field.hidden=!privateMode;if(privateMode&&!field.querySelector('#addLocation'))field.innerHTML=v16PlaceField('add')}
+ }
+ if(!privateMode)return;
+ const visible=state.stock.filter(x=>x.kind==='Privat'&&x.qty>0);
+ const rows=[...$('stockList').querySelectorAll(':scope > .stock-item')];
+ rows.forEach((row,i)=>{
+  const item=visible[i];if(!item)return;
+  const strong=row.querySelector('strong');if(!strong)return;
+  const detail=document.createElement('div');detail.className='sub v16-location-label';
+  detail.textContent='Plassering: '+(item.location||'Ikke angitt');
+  strong.insertAdjacentElement('afterend',detail);
+ });
+};
+const v16StockAddBase=addStock;
+addStock=function(){
+ if(stockKind!=='Privat')return v16StockAddBase();
+ const place=v16ReadPlace('add');
+ if(!place){alert('Velg eller opprett en plassering.');return}
+ const before=new Set(state.stock.map(x=>x.id));
+ v16StockAddBase();
+ const added=state.stock.find(x=>x.kind==='Privat'&&!before.has(x.id));
+ if(added){added.location=place;added.min=0;added.fixed=false;save();renderStock()}
+};
+const v16EditStockBase=editStock;
+editStock=function(id){
+ v16EditStockBase(id);
+ const item=state.stock.find(x=>x.id===id);
+ const editor=$('stockList')?.querySelector('.stock-editor');
+ if(!item||item.kind!=='Privat'||!editor)return;
+ const quantity=$('editStockQty')?.closest('label');
+ if(quantity)quantity.insertAdjacentHTML('afterend',v16PlaceField('edit',item.location||''));
+};
+const v16SaveStockEditBase=saveStockEdit;
+saveStockEdit=function(){
+ const item=state.stock.find(x=>x.id===editingStock);
+ if(!item||item.kind!=='Privat')return v16SaveStockEditBase();
+ const place=v16ReadPlace('edit');
+ if(!place){alert('Velg eller opprett en plassering.');return}
+ const id=item.id;
+ v16SaveStockEditBase();
+ const updated=state.stock.find(x=>x.id===id);
+ if(updated&&editingStock===null){updated.location=place;updated.min=0;updated.fixed=false;save();renderStock()}
+};
+
 render();
 if(!hytteStoragePersistent)hytteShowStorageWarning();
 </script></body></html>
