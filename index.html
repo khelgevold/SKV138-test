@@ -536,6 +536,48 @@ function v15IcsFold(line){const bytes=new TextEncoder();let lines=[''];for(const
 function v15CalendarData(){const items=[];for(const b of state.bookings){if(b.cancelled)continue;items.push({id:'rental-'+b.id,platform:b.platform==='Finn.no'?'FINN.no':b.platform,start:b.start,end:b.end,checkin:b.checkin,checkout:b.checkout})}for(const p of state.privateStays||[]){items.push({id:'private-'+p.id,platform:'Privat',start:p.start,end:p.end,checkin:p.checkin,checkout:p.checkout})}return items.filter(x=>x.start&&x.end&&/^\d{2}:\d{2}$/.test(x.checkin||'')&&/^\d{2}:\d{2}$/.test(x.checkout||''))}
 function v15CreateICS(){const now=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');const rows=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Hytteokonomi//V15//NO','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:SKV138','X-WR-TIMEZONE:Europe/Oslo'];for(const x of v15CalendarData()){rows.push('BEGIN:VEVENT','UID:'+v15IcsEscape(x.id)+'@hytteokonomi.local','DTSTAMP:'+now,'DTSTART;TZID=Europe/Oslo:'+v15IcsStamp(x.start,x.checkin),'DTEND;TZID=Europe/Oslo:'+v15IcsStamp(x.end,x.checkout),'SUMMARY:'+v15IcsEscape(x.platform),'END:VEVENT')}rows.push('END:VCALENDAR');return rows.map(v15IcsFold).join('\r\n')+'\r\n'}
 function v15DownloadICS(){const blob=new Blob([v15CreateICS()],{type:'text/calendar;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='hytteokonomi-kalender.ics';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
+
+/* V16.2: Kalenderutvalg med to trykk og retur til opprinnelig visning. */
+let v16RangeStart='',v16RangeEnd='',v16BookingOrigin='';
+const v16RenderCalendarBase=renderCalendar;
+renderCalendar=function(){
+ v16RenderCalendarBase();
+ const grid=$('calendarGrid');
+ if(!grid)return;
+ grid.querySelectorAll('button.calendar-cell').forEach(btn=>{
+   const onclick=btn.getAttribute('onclick')||'';
+   const match=onclick.match(/selectCalendarDay\\('([^']+)'\\)/);
+   if(!match)return;
+   const day=match[1];
+   btn.setAttribute('onclick',"v16PickCalendarDate('"+day+"')");
+   if(v16RangeStart&&day>=v16RangeStart&&day<=(v16RangeEnd||v16RangeStart))btn.classList.add('selected');
+ });
+ if(!v16RangeStart)return;
+ const panel=$('calendarDay');
+ if(!panel)return;
+ const end=v16RangeEnd;
+ panel.innerHTML='<div class="card calendar-day-card"><div class="row wrap"><h2>'+ (end?'Valgt periode':'Velg sluttdato') +'</h2><button onclick="v16ClearRange()">Nullstill</button></div><p>'+fmt(v16RangeStart)+(end?' – '+fmt(end):' · Trykk på sluttdato i kalenderen')+'</p>'+(end?'<div class="private-actions"><button onclick="v16CreatePrivate()">+ Privat booking</button><button onclick="v16CreateRental()">+ Utleiebooking</button></div>':'')+'</div>';
+};
+function v16PickCalendarDate(day){
+ if(!v16RangeStart||v16RangeEnd||day<=v16RangeStart){
+   v16RangeStart=day;v16RangeEnd='';
+ }else{v16RangeEnd=day}
+ calendarSelected=day;renderCalendar();
+}
+function v16ClearRange(){v16RangeStart='';v16RangeEnd='';calendarSelected='';renderCalendar()}
+const v16MoveCalendarBase=moveCalendar;
+moveCalendar=function(delta){v16MoveCalendarBase(delta);renderCalendar()};
+function v16CreatePrivate(){if(!v16RangeStart||!v16RangeEnd)return;const start=v16RangeStart,end=v16RangeEnd;v16ClearRange();newPrivateStay(start);$('privateEnd').value=end;privateDateChanged()}
+function v16CreateRental(){if(!v16RangeStart||!v16RangeEnd)return;const start=v16RangeStart,end=v16RangeEnd;v16ClearRange();v16BookingOrigin='kalender';show('bookinger');newBookingFromDay(start);$('be').value=end}
+const v16OpenCalendarStayBase=openCalendarStay;
+openCalendarStay=function(kind,id){v16BookingOrigin='kalender';v16OpenCalendarStayBase(kind,id);if(kind!=='private')v16AddBackButton()};
+function v16AddBackButton(){const panel=$('bookingDetail');if(panel&&!panel.querySelector('#v16BackCalendar'))panel.insertAdjacentHTML('afterbegin','<button id="v16BackCalendar" onclick="v16ReturnCalendar()">‹ Tilbake til kalender</button>')}
+function v16ReturnCalendar(){v16BookingOrigin='';selected=null;show('kalender');renderCalendar()}
+const v16RenderBookingsBase=renderBookings;
+renderBookings=function(){v16RenderBookingsBase();if(v16BookingOrigin==='kalender'&&selected)v16AddBackButton()};
+const v16SaveBookingBase=saveBooking;
+saveBooking=function(id=null){const before=JSON.stringify(state.bookings);const result=v16SaveBookingBase(id);if(v16BookingOrigin==='kalender'&&JSON.stringify(state.bookings)!==before)v16ReturnCalendar();return result};
+
 render();
 if(!hytteStoragePersistent)hytteShowStorageWarning();
 </script></body></html>
