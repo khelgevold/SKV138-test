@@ -108,3 +108,20 @@ SKV138 er en privat, norskspråklig webapp for administrasjon av en utleiehytte 
 6. Oppgi commit, teststatus, hva som er endret og hva som gjenstår. Ikke påstå testet funksjonalitet uten bevis.
 
 **Merk:** Dokumentasjonsendringer alene er ikke en ny appversjon og skal ikke utløse Netlify-bruk.
+
+## 8. Nye krav avklart 2026-11-16 – planlagt, ikke implementert
+
+### Innlogging og delt lagring
+- SKV138 skal støtte **maksimalt to innloggede brukerkontoer**. Ingen behov for åpen registrering eller omfattende administrasjon.
+- Begge skal kunne arbeide med **samme bookinger, kalender, oppgaver og økonomidata** på tvers av enheter; sikker autentisering og sentral datalagring må planlegges før ekte data tas i bruk.
+- Teknologivalg, tilgangsroller, passordhåndtering og datamigrering er **ikke avklart**. Ikke implementer falsk klientbasert innlogging som om den sikrer offentlig GitHub Pages.
+
+### iCal-feed til eksisterende Homey-app
+- Brukeren har **allerede en Homey-app som leser iCal** og bruker opphold til styring av lys og varme.
+- SKV138 skal på sikt eksponere en **stabil abonnementsadresse for iCal** som denne Homey-appen kan lese. Eksisterende Homey-oppsett skal gjenbrukes fremfor å bygge ny Homey-integrasjon uten behov.
+- Både **utleiebookinger og privat bruk** skal inkluderes, med korrekte inn-/utsjekktider, oppdateringer og håndtering av avbestillinger. Bevar personvernvennlige hendelsestitler.
+- Eksisterende manuelle `.ics`-eksport i V15.1 er **ikke** en dynamisk feed. Feeden krever en tilgjengelig datakilde/endpoint, og kompatibilitet med Homey-appens iCal-format må testes.
+- Avklar sikkerhetsmodell for feed-URL (for eksempel vanskelig å gjette, roterbar URL) før ekte bookingdata publiseres; ikke legg hemmeligheter i offentlig repository.
+
+### Plan for neste chat
+- **Bytt chat nå**, og fortsett med **finpuss fane for fane**. Begynn med Oversikt og avklar endringer før kodeoppdatering. De nye innloggings- og iCal-kravene registreres som senere arkitekturarbeid, ikke som allerede bygde funksjoner.
