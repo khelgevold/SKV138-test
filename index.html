@@ -126,6 +126,14 @@ html{-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{font-size:15px;l
 .v16-task-item{padding:12px 0;border-bottom:1px solid var(--border,#ddd)}
 .v16-task-item:last-child{border-bottom:0;padding-bottom:2px}
 @media(max-width:650px){.v16-task-item{flex-wrap:wrap;gap:8px}.v16-task-item .task-buttons{display:flex;flex-wrap:wrap;gap:6px}}
+</style><style id="v16-booking-list-style">
+.v16-booking-card{cursor:pointer;transition:border-color .15s}
+.v16-booking-card:focus-visible{outline:3px solid #547ab7;outline-offset:2px}
+.v16-cancelled{opacity:.65;filter:grayscale(.8)}
+#v16BookingPeriod{margin:12px 0}
+#bookinger.v16-booking-detail > .row,#bookinger.v16-booking-detail > #bookingTypeFilters,#bookinger.v16-booking-detail > #v16BookingPeriod,#bookinger.v16-booking-detail > #bookingList{display:none!important}
+#bookinger.v16-booking-detail #bookingDetail{display:block}
+#v16BookingBack{margin-bottom:12px}
 </style></head><body><header><div><h1>⌂ SKV138</h1><div style="opacity:.8;font-size:13px">V15.1 · Mobilretting · Lokal testprototype</div></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
 <section id="oversikt" class="active"><div class="row"><button onclick="changeYear(-1)">‹</button><span class="year" id="yearTitle"></span><button onclick="changeYear(1)">›</button></div><div class="grid" id="metrics"></div><div class="card"><h2>Utbetalinger og skatt hittil i år</h2><div class="grid" id="v15YtdMetrics"></div><p class="hint">Utbetalt følger registrert utbetalingsdato. Skatt hittil i år er et foreløpig estimat basert på opptjent leieinntekt, ikke framtidige opphold.</p></div><div class="card"><div class="row"><h2>Neste oppgaver</h2><button onclick="show('oppgaver')">Se alle</button></div><div id="nextTasks"></div></div></section>
 <section id="bookinger"><div class="row"><h2>Bookinger</h2><div class="booking-create"><button class="primary" onclick="newBooking()">+ Ny booking</button><button onclick="newPrivateStay()">+ Privat booking</button></div></div><div class="segmented triple" id="bookingTypeFilters"><button onclick="setBookingTypeFilter('all')">Alle</button><button onclick="setBookingTypeFilter('rental')">Utleie</button><button onclick="setBookingTypeFilter('private')">Privat</button></div><div id="bookingList"></div><div id="bookingDetail"></div></section>
@@ -745,6 +753,80 @@ saveStockEdit=function(){
  v16SaveStockEditBase();
  const updated=state.stock.find(x=>x.id===id);
  if(updated&&editingStock===null){updated.location=place;updated.min=0;updated.fixed=false;save();renderStock()}
+};
+
+
+/* V16.6 – booking list cards, temporal filter and isolated detail surface. */
+let v16BookingPeriod='upcoming';
+function v16SetBookingPeriod(value){v16BookingPeriod=value;selected=null;renderBookings()}
+function v16OpenBooking(id){
+ v16BookingOrigin=v16BookingOrigin==='kalender'?'kalender':'bookinger';
+ selected=id;renderBookings();window.scrollTo(0,0);
+}
+function v16CloseBooking(){
+ const origin=v16BookingOrigin;
+ selected=null;v16BookingOrigin='';
+ if(origin==='kalender'){show('kalender');renderCalendar()}
+ else{renderBookings();window.scrollTo(0,0)}
+}
+const v16BookingListBase=renderBookings;
+renderBookings=function(){
+ v16BookingListBase();
+ const section=$('bookinger'),list=$('bookingList'),detail=$('bookingDetail');
+ if(!section||!list||!detail)return;
+ let controls=$('v16BookingPeriod');
+ if(!controls){
+  controls=document.createElement('div');controls.id='v16BookingPeriod';controls.className='segmented triple';
+  controls.innerHTML='<button onclick="v16SetBookingPeriod(\'upcoming\')">Aktuelle</button><button onclick="v16SetBookingPeriod(\'past\')">Tidligere</button><button onclick="v16SetBookingPeriod(\'cancelled\')">Kansellerte</button>';
+  list.insertAdjacentElement('beforebegin',controls);
+ }
+ controls.querySelectorAll('button').forEach((button,i)=>button.classList.toggle('selected',['upcoming','past','cancelled'][i]===v16BookingPeriod));
+ const now=Date.now();
+ const all=state.bookings.filter(b=>v16BookingPeriod==='cancelled'?b.cancelled:v16BookingPeriod==='past'?!b.cancelled&&stamp(b.end,b.checkout).getTime()<now:!b.cancelled&&stamp(b.end,b.checkout).getTime()>=now);
+ const priv=state.privateStays.filter(b=>v16BookingPeriod==='cancelled'?false:v16BookingPeriod==='past'?stamp(b.end,b.checkout).getTime()<now:stamp(b.end,b.checkout).getTime()>=now);
+ let rows=[];
+ if(bookingTypeFilter!=='private')rows.push(...all.map(b=>({kind:'rental',b})));
+ if(bookingTypeFilter!=='rental')rows.push(...priv.map(b=>({kind:'private',b})));
+ rows.sort((a,b)=>v16BookingPeriod==='upcoming'?a.b.start.localeCompare(b.b.start):b.b.start.localeCompare(a.b.start));
+ list.innerHTML=rows.map(({kind,b})=>kind==='rental'?
+ `<div class="card booking-card v16-booking-card ${b.cancelled?'v16-cancelled':''}" role="button" tabindex="0" onclick="v16OpenBooking(${Number(b.id)})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();v16OpenBooking(${Number(b.id)})}">
+  <div class="row"><strong>${esc(b.name)}</strong><span class="platform platform-${platformClass(b.platform)}">${esc(b.platform)}</span></div>
+  <p class="sub">${fmt(b.start)} ${esc(b.checkin)} – ${fmt(b.end)} ${esc(b.checkout)}</p>
+  <div class="row"><span class="status ${b.cancelled?'cancelled':''}">${bookingStatus(b)}</span><strong>${money(bookingAmounts(b).net)}</strong></div>
+ </div>`:
+ `<div class="card booking-card v16-booking-card" role="button" tabindex="0" onclick="v16OpenPrivate(${JSON.stringify(String(b.id))})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();v16OpenPrivate(${JSON.stringify(String(b.id))})}">
+ <div class="row"><strong>${esc(b.name||'Privat')}</strong><span class="platform">Privat</span></div>
+ <p class="sub">${fmt(b.start)} ${esc(b.checkin)} – ${fmt(b.end)} ${esc(b.checkout)}</p>
+ </div>`).join('')||'<div class="empty">Ingen opphold i valgt filter.</div>';
+ const opened=!!selected&&!!detail.querySelector('#bookingOpen');
+ const form=!!detail.querySelector('#bookingForm');
+ section.classList.toggle('v16-booking-detail',opened||form);
+ if(opened){
+  const header=detail.querySelector('#bookingOpen .row');
+  if(header){
+   const old=header.querySelector('button');
+   if(old)old.remove();
+   const back=document.createElement('button');back.textContent=v16BookingOrigin==='kalender'?'‹ Tilbake til kalender':'‹ Tilbake til bookinger';back.onclick=v16CloseBooking;
+   header.insertAdjacentElement('beforebegin',back);
+  }
+ }
+};
+function v16OpenPrivate(id){v16BookingOrigin='bookinger';v16PrivateOrigin='bookinger';editPrivateStay(id)}
+const v16BookingFormBase=bookingForm;
+bookingForm=function(b){
+ v16BookingFormBase(b);
+ const detail=$('bookingDetail'),form=$('bookingForm');
+ if(!form)return;
+ $('bookinger')?.classList.add('v16-booking-detail');
+ if(!form.querySelector('#v16BookingBack')){
+  const back=document.createElement('button');back.id='v16BookingBack';back.textContent='‹ Tilbake';back.onclick=()=>{selected=b?.id||null;renderBookings()};
+  form.insertBefore(back,form.firstChild);
+ }
+ const guest=$('bguests');
+ if(guest){
+  const value=Math.min(8,Math.max(1,Number(guest.value)||1));
+  guest.outerHTML='<select id="bguests">'+Array.from({length:8},(_,i)=>'<option value="'+(i+1)+'" '+(value===i+1?'selected':'')+'>'+(i+1)+'</option>').join('')+'</select>';
+ }
 };
 
 render();
