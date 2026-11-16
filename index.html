@@ -578,6 +578,58 @@ renderBookings=function(){v16RenderBookingsBase();if(v16BookingOrigin==='kalende
 const v16SaveBookingBase=saveBooking;
 saveBooking=function(id=null){const before=JSON.stringify(state.bookings);const result=v16SaveBookingBase(id);if(v16BookingOrigin==='kalender'&&JSON.stringify(state.bookings)!==before)v16ReturnCalendar();return result};
 
+
+/* V16.3 – preserve source tab for private stays and prevent invalid rental ranges. */
+let v16PrivateOrigin='bookinger';
+const v16PrivateFormBase=privateStayForm;
+privateStayForm=function(stay){
+ const origin=v16BookingOrigin==='kalender'?'kalender':v16PrivateOrigin;
+ v16PrivateOrigin=origin;
+ v16PrivateFormBase(stay);
+ const editor=$('privateEditor');
+ if(!editor)return;
+ const card=editor.querySelector('.card');
+ if(!card)return;
+ const back=document.createElement('button');
+ back.type='button';back.className='v16-private-back';
+ back.textContent=origin==='kalender'?'‹ Tilbake til kalender':'‹ Tilbake til bookinger';
+ back.onclick=()=>v16ClosePrivateEditor();
+ card.insertBefore(back,card.firstChild);
+ const cancel=[...card.querySelectorAll('button')].find(b=>b.textContent.trim()==='Avbryt');
+ if(cancel)cancel.onclick=()=>v16ClosePrivateEditor();
+};
+function v16ClosePrivateEditor(){
+ const editor=$('privateEditor');if(editor)editor.innerHTML='';
+ editingPrivateId=null;
+ const origin=v16PrivateOrigin;
+ v16PrivateOrigin='bookinger';v16BookingOrigin='';
+ show(origin==='kalender'?'kalender':'bookinger');
+}
+const v16PrivateSaveBase=savePrivateStay;
+savePrivateStay=function(){
+ const before=JSON.stringify(state.privateStays);
+ const result=v16PrivateSaveBase();
+ if(before!==JSON.stringify(state.privateStays))v16ClosePrivateEditor();
+ return result;
+};
+const v16PrivateDeleteBase=deletePrivateStay;
+deletePrivateStay=function(){
+ const before=JSON.stringify(state.privateStays);
+ const result=v16PrivateDeleteBase();
+ if(before!==JSON.stringify(state.privateStays))v16ClosePrivateEditor();
+ return result;
+};
+const v16CreatePrivateBase=v16CreatePrivate;
+v16CreatePrivate=function(){v16PrivateOrigin='kalender';v16BookingOrigin='kalender';v16CreatePrivateBase()};
+const v16OpenCalendarStayPrivateBase=openCalendarStay;
+openCalendarStay=function(kind,id){if(kind==='private')v16PrivateOrigin='kalender';v16OpenCalendarStayPrivateBase(kind,id)};
+const v16CreateRentalBase=v16CreateRental;
+v16CreateRental=function(){
+ if(!v16RangeStart||!v16RangeEnd)return;
+ if(v16RangeEnd<shift(v16RangeStart,2)){alert('Utleie krever minimum 2 netter. Velg en senere avreisedato.');return}
+ v16CreateRentalBase();
+};
+
 render();
 if(!hytteStoragePersistent)hytteShowStorageWarning();
 </script></body></html>
