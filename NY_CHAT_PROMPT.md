@@ -35,3 +35,5 @@ Kontroller også `index.html` og siste relevante GitHub-commits. **Ikke stol bli
 V16 første kodecommit `2cde050`: mobil-layoutjusteringer og skjult oppgaveteller. Ikke fullført eller iPhone-testet. Les PROJECT.md punkt 9 for resterende avtalte endringer. Ikke bland inn dynamisk iCal eller innlogging i V16.
 
 V16 del 2: `f58b02f` (privatopphold/statistikk hjelpetekst, mobilfelter). Fortsatt ikke iPhone-testet; viderefør utestående finpuss i PROJECT.md.
+
+V16.2 commit `e6bdd6f`: kalender to-trykks datoperiode (start og slutt), opprett booking med forhåndsutfylte datoer, tilbakeknapp fra utleiebooking åpnet i kalender og retur etter lagring av ny utleiebooking. Ikke iPhone-testet. Privat booking-redigering og returflyt trenger fortsatt kontroll. Eksisterende iCal-feed/innlogging utsatt.
