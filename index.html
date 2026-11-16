@@ -134,6 +134,24 @@ html{-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{font-size:15px;l
 #bookinger.v16-booking-detail > .row,#bookinger.v16-booking-detail > #bookingTypeFilters,#bookinger.v16-booking-detail > #v16BookingPeriod,#bookinger.v16-booking-detail > #bookingList{display:none!important}
 #bookinger.v16-booking-detail #bookingDetail{display:block}
 #v16BookingBack{margin-bottom:12px}
+</style><style id="v16-settings-polish">
+#innstillinger .card{padding:14px 16px}
+#innstillinger .field-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#innstillinger .field-grid>*{min-width:0}
+#innstillinger input,#innstillinger select,#innstillinger textarea{min-width:0;max-width:100%;box-sizing:border-box}
+#innstillinger input[type=time],#innstillinger input[type=date]{width:100%;min-width:0}
+#innstillinger .message-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start}
+#innstillinger .message-row>div:first-child{min-width:0;flex:1 1 180px}
+#innstillinger .message-actions{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-start}
+#innstillinger .message-actions button{min-height:36px}
+#innstillinger .v16-settings-accordion>summary{cursor:pointer;list-style:none;font-weight:750;font-size:1.06rem;display:flex;align-items:center;justify-content:space-between;padding:3px 0}
+#innstillinger .v16-settings-accordion>summary::-webkit-details-marker{display:none}
+#innstillinger .v16-settings-accordion>summary:after{content:'⌄';font-size:1.3rem;transition:transform .15s}
+#innstillinger .v16-settings-accordion[open]>summary:after{transform:rotate(180deg)}
+#innstillinger .v16-settings-accordion[open]>summary{margin-bottom:14px}
+#innstillinger .v16-settings-accordion .row{flex-wrap:wrap;gap:10px}
+#innstillinger .v16-settings-accordion .row>button{flex-shrink:0}
+@media(max-width:520px){#innstillinger .field-grid{grid-template-columns:minmax(0,1fr)}#innstillinger .message-actions button{flex:1 1 auto}}
 </style></head><body><header><div><h1>⌂ SKV138</h1><div style="opacity:.8;font-size:13px">V15.1 · Mobilretting · Lokal testprototype</div></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
 <section id="oversikt" class="active"><div class="row"><button onclick="changeYear(-1)">‹</button><span class="year" id="yearTitle"></span><button onclick="changeYear(1)">›</button></div><div class="grid" id="metrics"></div><div class="card"><h2>Utbetalinger og skatt hittil i år</h2><div class="grid" id="v15YtdMetrics"></div><p class="hint">Utbetalt følger registrert utbetalingsdato. Skatt hittil i år er et foreløpig estimat basert på opptjent leieinntekt, ikke framtidige opphold.</p></div><div class="card"><div class="row"><h2>Neste oppgaver</h2><button onclick="show('oppgaver')">Se alle</button></div><div id="nextTasks"></div></div></section>
 <section id="bookinger"><div class="row"><h2>Bookinger</h2><div class="booking-create"><button class="primary" onclick="newBooking()">+ Ny booking</button><button onclick="newPrivateStay()">+ Privat booking</button></div></div><div class="segmented triple" id="bookingTypeFilters"><button onclick="setBookingTypeFilter('all')">Alle</button><button onclick="setBookingTypeFilter('rental')">Utleie</button><button onclick="setBookingTypeFilter('private')">Privat</button></div><div id="bookingList"></div><div id="bookingDetail"></div></section>
@@ -883,6 +901,38 @@ renderStatistics=function(){
  const percent=Math.abs(prevValue)>0.0001?(' ('+(100*delta/Math.abs(prevValue)).toLocaleString('nb-NO',{maximumFractionDigits:1})+' %)'):'';
  const label=netMode?'Netto etter skatt':'Brutto';
  $('statsCompare').innerHTML=`<div class="stats-row"><span>${label} ${statsYear-1}</span><strong>${money(prevValue)}</strong></div><div class="stats-row"><span>${label} ${statsYear}</span><strong>${money(selectedValue)}</strong></div><div class="stats-row"><span>Endring</span><strong>${money(delta)}${percent}</strong></div>`;
+};
+
+
+/* V16.8: independent, initially closed settings accordions. */
+function v16InitSettingsAccordions(){
+ const section=$('innstillinger');if(!section)return;
+ const cards=[...section.querySelectorAll(':scope > .card')];
+ cards.forEach((card,i)=>{
+  if(card.dataset.v16Accordion)return;
+  const heading=card.querySelector(':scope > h2, :scope > .row > h2, :scope > .row > div > h2');
+  if(!heading)return;
+  const title=heading.textContent.trim();
+  const details=document.createElement('details');
+  details.className='v16-settings-accordion';
+  details.dataset.v16Index=String(i);
+  const summary=document.createElement('summary');
+  summary.textContent=title;
+  details.appendChild(summary);
+  heading.remove();
+  while(card.firstChild)details.appendChild(card.firstChild);
+  card.appendChild(details);
+  card.dataset.v16Accordion='true';
+ });
+ // Preserve any active editor if a rule was just opened.
+}
+const v16SettingsRenderBase=renderSettings;
+renderSettings=function(){v16SettingsRenderBase();v16InitSettingsAccordions()};
+const v16SettingsEditRuleBase=editRule;
+editRule=function(id){
+ const card=$('ruleList')?.closest('.card');
+ if(card){const details=card.querySelector('details.v16-settings-accordion');if(details)details.open=true}
+ v16SettingsEditRuleBase(id);
 };
 
 render();
