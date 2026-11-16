@@ -58,3 +58,5 @@ Nye regler som brukeren uttrykkelig godkjenner, legges inn her og tas med i `NY_
 
 ## V16-status
 Reglene er gjennomgått ved første V16-kodecommit `2cde050` og videreføres uendret. Innlogging og dynamisk iCal skal ikke bygges som del av denne finpussrunden.
+
+V16 del 2 `f58b02f`: arbeidsreglene videreføres uten endring; iCal og innlogging er fortsatt utsatt.
