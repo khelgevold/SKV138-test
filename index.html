@@ -119,6 +119,13 @@ html{-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{font-size:15px;l
  .private-actions{display:flex;flex-wrap:wrap;gap:8px}
  .private-actions button{max-width:100%;min-width:0}
 }
+</style><style id="v16-task-groups">
+#taskList{background:transparent;border:0;padding:0;box-shadow:none}
+.v16-task-group{background:var(--card,#fff);border:1px solid var(--border,#ddd);border-radius:14px;padding:12px 14px;margin:0 0 12px}
+.v16-task-heading{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;padding:2px 0 9px;border-bottom:1px solid var(--border,#ddd)}
+.v16-task-item{padding:12px 0;border-bottom:1px solid var(--border,#ddd)}
+.v16-task-item:last-child{border-bottom:0;padding-bottom:2px}
+@media(max-width:650px){.v16-task-item{flex-wrap:wrap;gap:8px}.v16-task-item .task-buttons{display:flex;flex-wrap:wrap;gap:6px}}
 </style></head><body><header><div><h1>⌂ SKV138</h1><div style="opacity:.8;font-size:13px">V15.1 · Mobilretting · Lokal testprototype</div></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
 <section id="oversikt" class="active"><div class="row"><button onclick="changeYear(-1)">‹</button><span class="year" id="yearTitle"></span><button onclick="changeYear(1)">›</button></div><div class="grid" id="metrics"></div><div class="card"><h2>Utbetalinger og skatt hittil i år</h2><div class="grid" id="v15YtdMetrics"></div><p class="hint">Utbetalt følger registrert utbetalingsdato. Skatt hittil i år er et foreløpig estimat basert på opptjent leieinntekt, ikke framtidige opphold.</p></div><div class="card"><div class="row"><h2>Neste oppgaver</h2><button onclick="show('oppgaver')">Se alle</button></div><div id="nextTasks"></div></div></section>
 <section id="bookinger"><div class="row"><h2>Bookinger</h2><div class="booking-create"><button class="primary" onclick="newBooking()">+ Ny booking</button><button onclick="newPrivateStay()">+ Privat booking</button></div></div><div class="segmented triple" id="bookingTypeFilters"><button onclick="setBookingTypeFilter('all')">Alle</button><button onclick="setBookingTypeFilter('rental')">Utleie</button><button onclick="setBookingTypeFilter('private')">Privat</button></div><div id="bookingList"></div><div id="bookingDetail"></div></section>
@@ -628,6 +635,41 @@ v16CreateRental=function(){
  if(!v16RangeStart||!v16RangeEnd)return;
  if(v16RangeEnd<shift(v16RangeStart,2)){alert('Utleie krever minimum 2 netter. Velg en senere avreisedato.');return}
  v16CreateRentalBase();
+};
+
+
+/* V16.4 – adjacent tasks for the same booking share a heading.
+   Preserve the globally chronological order, completion actions and checklists. */
+function v16TaskItemHtml(t){
+ const complete=done(t);
+ const message=t.type==='manual'&&t.task&&t.task!=='none';
+ return `<div class="task v16-task-item">
+   <div style="flex:1;min-width:0"><strong>${esc(t.title)}</strong>
+     <div class="sub">${fmtDue(t.due)}</div>
+     ${complete?'<span class="tag">Fullført</span>':''}
+   </div>
+   <div class="task-buttons">
+     ${t.type==='check'?`<button class="primary" onclick="openTask('${t.id}')">Åpne sjekkliste</button>`:`<button class="${complete?'':'primary'}" onclick="toggleTask('${t.id}')">${complete?'Angre':'Merk som ferdig'}</button>`}
+     ${message?`<button onclick="openMessageForTask('${t.id}')">Melding</button>`:''}
+   </div>
+ </div>`;
+}
+renderTasks=function(){
+ const all=tasks();
+ const shown=all.filter(t=>taskFilterV8==='all'||(taskFilterV8==='done'?done(t):!done(t)));
+ const groups=[];
+ for(const t of shown){
+   const last=groups[groups.length-1];
+   if(last&&String(last.bookingId)===String(t.bookingId))last.items.push(t);
+   else groups.push({bookingId:t.bookingId,guest:t.guest,platform:t.platform,items:[t]});
+ }
+ const list=$('taskList');
+ if(list)list.innerHTML=groups.length?groups.map(g=>`<div class="v16-task-group">
+   <div class="v16-task-heading"><strong>${esc(g.guest)}</strong><span class="sub">${esc(g.platform)}</span></div>
+   ${g.items.map(v16TaskItemHtml).join('')}
+ </div>`).join(''):'<div class="empty">Ingen oppgaver</div>';
+ const counter=$('taskCount');if(counter)counter.textContent='';
+ [['taskOpen','open'],['taskDone','done'],['taskAll','all']].forEach(([id,value])=>$(id)?.classList.toggle('selected',taskFilterV8===value));
 };
 
 render();
