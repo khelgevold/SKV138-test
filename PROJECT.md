@@ -1,7 +1,7 @@
 # SKV138 – PROJECT.md
 
 **Sist oppdatert:** 2026-11-16  
-**Gjeldende testversjon:** V15.1  
+**Gjeldende testversjon:** V16 (delvis implementert, ikke iPhone-testet)  
 **Miljø:** GitHub Pages, `main` → `/ (root)`  
 **Test-URL:** https://khelgevold.github.io/SKV138-test/  
 **Repository:** https://github.com/khelgevold/SKV138-test  
@@ -125,3 +125,12 @@ SKV138 er en privat, norskspråklig webapp for administrasjon av en utleiehytte 
 
 ### Plan for neste chat
 - **Bytt chat nå**, og fortsett med **finpuss fane for fane**. Begynn med Oversikt og avklar endringer før kodeoppdatering. De nye innloggings- og iCal-kravene registreres som senere arkitekturarbeid, ikke som allerede bygde funksjoner.
+
+
+## 9. V16 – finpussrunde påbegynt 2026-11-16
+- Første kodecommit: `2cde0507f4f1f10bc37fa1dde04f1f8e35075bde`.
+- Implementert: mobil-CSS for bedre bryting av knapper, rader og felt, og skjult teller for gjenstående oppgaver.
+- Ikke verifisert på iPhone ennå. V16 er **ikke ferdig**.
+- Avtalte utestående forbedringer: kalender med trykk på start/slutt og retur til opprinnelig kalender; kronologiske oppgavegrupper med gjestenavn som rammeoverskrift; privat lager uten minimum/fast-vare, med egne plasseringer; statistikk med flere nettotall og mindre infotekst; systematisk opprydding i innstillinger, kolliderende felt/knapper og oppgavereglenes overskriftsplassering.
+- Innlogging/felles datalagring og dynamisk iCal-feed til Homey utsettes til egen arkitekturfase etter finpuss. Eksisterende manuell ICS-eksport beholdes.
+- Neste steg: fortsett implementering i små kontrollerbare trinn, kontroller funksjonene og test i Safari på iPhone.
