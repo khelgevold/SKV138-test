@@ -54,3 +54,7 @@
 
 ## 8. Arkitekturkrav som må huskes\n- Planlegg for **maksimalt to innloggede brukere med felles, sikker datalagring** før reelle data brukes. Ikke forveksle lokal nettleserlagring med delt database eller klientbasert skjuling med sikker innlogging.\n- Gjenbruk eksisterende **Homey-app som leser iCal**; planlegg en dynamisk, personvernvennlig feed med både utleie og privat bruk, ikke ny Homey-integrasjon uten behov.\n- Disse kravene er planlagt og **ikke implementert i V15.1**.\n\n## 9. Regelendringer
 Nye regler som brukeren uttrykkelig godkjenner, legges inn her og tas med i `NY_CHAT_PROMPT.md` ved neste synkronisering. Ikke finn på nye bindende regler uten å merke dem som forslag.
+
+
+## V16-status
+Reglene er gjennomgått ved første V16-kodecommit `2cde050` og videreføres uendret. Innlogging og dynamisk iCal skal ikke bygges som del av denne finpussrunden.
