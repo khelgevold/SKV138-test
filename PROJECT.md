@@ -136,3 +136,5 @@ SKV138 er en privat, norskspråklig webapp for administrasjon av en utleiehytte 
 - Neste steg: fortsett implementering i små kontrollerbare trinn, kontroller funksjonene og test i Safari på iPhone.
 
 - V16 del 2 commit `f58b02f`: fjernet hjelpetekst i privatopphold og statistikk; lagt til mer robust mobil-CSS for dato-/klokkeslettfelt og handlingsknapper. Ikke testet på iPhone. Gjenstående V16-arbeid uendret.
+
+V16.2 commit `e6bdd6f`: kalender to-trykks datoperiode (start og slutt), opprett booking med forhåndsutfylte datoer, tilbakeknapp fra utleiebooking åpnet i kalender og retur etter lagring av ny utleiebooking. Ikke iPhone-testet. Privat booking-redigering og returflyt trenger fortsatt kontroll. Eksisterende iCal-feed/innlogging utsatt.
