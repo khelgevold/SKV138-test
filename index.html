@@ -829,6 +829,62 @@ bookingForm=function(b){
  }
 };
 
+
+/* V16.7 – one gross/net switch for all financial statistics.
+   Estimated tax follows the prototype's existing simplified formula;
+   monthly/platform allocations are proportional estimates. */
+let v16StatsMode='net';
+function v16SetStatsMode(mode){v16StatsMode=mode==='gross'?'gross':'net';renderStatistics()}
+function v16EstimatedTax(gross){return Math.max(0,gross-15000)*0.85*0.22}
+const v16YearStatsBase=v10YearStats;
+v10YearStats=function(y){
+ const stats=v16YearStatsBase(y);
+ // Correct the legacy omission of cancelled-booking platform accumulation.
+ for(const b of state.bookings.filter(b=>b.cancelled&&Number((b.cancelDate||b.start).slice(0,4))===y)){
+  const a=bookingAmounts(b);
+  const p=stats.platforms[b.platform]||(stats.platforms[b.platform]={gross:0,fees:0,count:0});
+  p.gross+=a.gross;p.fees+=a.fee;
+ }
+ return stats;
+};
+renderStatistics=function(){
+ const metrics=$('statsMetrics');if(!metrics)return;
+ const current=v10YearStats(statsYear),previous=v10YearStats(statsYear-1);
+ const tax=v16EstimatedTax(current.gross),prevTax=v16EstimatedTax(previous.gross);
+ const afterTax=current.net-tax,prevAfterTax=previous.net-prevTax;
+ const netMode=v16StatsMode==='net';
+ const selectedValue=netMode?afterTax:current.gross;
+ const prevValue=netMode?prevAfterTax:previous.gross;
+ const ratio=current.gross>0?afterTax/current.gross:0;
+ const monthValues=current.months.map(x=>netMode?x*ratio:x);
+ const platformValue=p=>netMode?p.gross*ratio:p.gross;
+ $('statsYear').textContent=statsYear;
+ let toggle=$('v16StatsToggle');
+ if(!toggle){
+  toggle=document.createElement('div');toggle.id='v16StatsToggle';toggle.className='segmented';
+  toggle.innerHTML='<button onclick="v16SetStatsMode(\'net\')">Netto etter skatt</button><button onclick="v16SetStatsMode(\'gross\')">Brutto</button>';
+  metrics.insertAdjacentElement('beforebegin',toggle);
+ }
+ toggle.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('selected',i===(netMode?0:1)));
+ const values=[
+ ['Brutto / prognose',money(current.gross)],['Plattformgebyrer',money(current.fees)],
+ ['Etter plattformgebyr',money(current.net)],['Estimert skatt',money(tax)],
+ ['Netto etter estimert skatt',money(afterTax)],['Bookinger',current.bookings],
+ ['Utleiedøgn',current.bookedNights],['Privatdøgn',current.privateNights],
+ ['Gjestedøgn',current.guestNights],['Snittpris / natt',money(current.bookedNights?selectedValue/current.bookedNights:0)],
+ ['Kanselleringer',current.cancelled],['Belegg (utleie)',(100*current.bookedNights/current.totalDays).toFixed(1).replace('.',',')+' %']
+ ];
+ metrics.innerHTML=values.map(([label,value])=>`<div class="metric"><small>${label}</small><b>${value}</b></div>`).join('');
+ const max=Math.max(1,...monthValues);
+ $('statsMonths').innerHTML='<div class="stats-bars">'+monthValues.map((v,i)=>`<div class="stats-barrow"><span>${['Jan','Feb','Mar','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Des'][i]}</span><div class="stats-track"><div class="stats-fill" style="width:${Math.max(0,100*v/max)}%"></div></div><span style="text-align:right">${money(v)}</span></div>`).join('')+'</div>';
+ $('statsPlatforms').innerHTML=Object.entries(current.platforms).map(([p,v])=>`<div class="stats-row"><div><strong>${esc(p)}</strong><div class="sub">${v.count} bookinger · gebyr ${money(v.fees)}</div></div><strong>${money(platformValue(v))}</strong></div>`).join('')||'<p class="sub">Ingen inntekter registrert.</p>';
+ $('statsUsage').innerHTML=[['Utleid',current.bookedNights],['Privat',current.privateNights],['Ledig',current.availableDays]].map(([label,value])=>`<div class="stats-row"><span>${label}</span><strong>${value} døgn</strong></div>`).join('');
+ const delta=selectedValue-prevValue;
+ const percent=Math.abs(prevValue)>0.0001?(' ('+(100*delta/Math.abs(prevValue)).toLocaleString('nb-NO',{maximumFractionDigits:1})+' %)'):'';
+ const label=netMode?'Netto etter skatt':'Brutto';
+ $('statsCompare').innerHTML=`<div class="stats-row"><span>${label} ${statsYear-1}</span><strong>${money(prevValue)}</strong></div><div class="stats-row"><span>${label} ${statsYear}</span><strong>${money(selectedValue)}</strong></div><div class="stats-row"><span>Endring</span><strong>${money(delta)}${percent}</strong></div>`;
+};
+
 render();
 if(!hytteStoragePersistent)hytteShowStorageWarning();
 </script></body></html>
