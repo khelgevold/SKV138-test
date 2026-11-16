@@ -60,3 +60,5 @@ Nye regler som brukeren uttrykkelig godkjenner, legges inn her og tas med i `NY_
 Reglene er gjennomgått ved første V16-kodecommit `2cde050` og videreføres uendret. Innlogging og dynamisk iCal skal ikke bygges som del av denne finpussrunden.
 
 V16 del 2 `f58b02f`: arbeidsreglene videreføres uten endring; iCal og innlogging er fortsatt utsatt.
+
+V16.2 commit `e6bdd6f`: kalender to-trykks datoperiode (start og slutt), opprett booking med forhåndsutfylte datoer, tilbakeknapp fra utleiebooking åpnet i kalender og retur etter lagring av ny utleiebooking. Ikke iPhone-testet. Privat booking-redigering og returflyt trenger fortsatt kontroll. Eksisterende iCal-feed/innlogging utsatt.
