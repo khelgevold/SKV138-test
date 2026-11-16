@@ -62,3 +62,5 @@ Reglene er gjennomgått ved første V16-kodecommit `2cde050` og videreføres uen
 V16 del 2 `f58b02f`: arbeidsreglene videreføres uten endring; iCal og innlogging er fortsatt utsatt.
 
 V16.2 commit `e6bdd6f`: kalender to-trykks datoperiode (start og slutt), opprett booking med forhåndsutfylte datoer, tilbakeknapp fra utleiebooking åpnet i kalender og retur etter lagring av ny utleiebooking. Ikke iPhone-testet. Privat booking-redigering og returflyt trenger fortsatt kontroll. Eksisterende iCal-feed/innlogging utsatt.
+
+V16.3 commit `5686094`: private booking/opphold har tilbakeknapp til kildefane, retur ved vellykket lagring/sletting, og kalendervalgt utleieperiode valideres mot minimum 2 netter. Kode er ikke iPhone-testet. Gjenstår: full egen bookingvisning, kronologisk oppgavegruppering, privatlager/plasseringer, netto-statistikk, innstillingsfinpuss og samlet test. iCal og innlogging utsatt.
