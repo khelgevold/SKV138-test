@@ -134,3 +134,5 @@ SKV138 er en privat, norskspråklig webapp for administrasjon av en utleiehytte 
 - Avtalte utestående forbedringer: kalender med trykk på start/slutt og retur til opprinnelig kalender; kronologiske oppgavegrupper med gjestenavn som rammeoverskrift; privat lager uten minimum/fast-vare, med egne plasseringer; statistikk med flere nettotall og mindre infotekst; systematisk opprydding i innstillinger, kolliderende felt/knapper og oppgavereglenes overskriftsplassering.
 - Innlogging/felles datalagring og dynamisk iCal-feed til Homey utsettes til egen arkitekturfase etter finpuss. Eksisterende manuell ICS-eksport beholdes.
 - Neste steg: fortsett implementering i små kontrollerbare trinn, kontroller funksjonene og test i Safari på iPhone.
+
+- V16 del 2 commit `f58b02f`: fjernet hjelpetekst i privatopphold og statistikk; lagt til mer robust mobil-CSS for dato-/klokkeslettfelt og handlingsknapper. Ikke testet på iPhone. Gjenstående V16-arbeid uendret.
