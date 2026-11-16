@@ -29,3 +29,7 @@ Kontroller også `index.html` og siste relevante GitHub-commits. **Ikke stol bli
 - Ikke påstå at endringer er publisert/testet uten å kontrollere dette. Hold kostnader og manuelle steg nede.
 
 **Nye, avtalte krav (16.11.2026), ennå ikke implementert:** Maksimalt **to brukerkontoer med sikker innlogging og felles data** på tvers av enheter. Brukeren har allerede en **Homey-app som leser iCal** for lys og varme; SKV138 skal etter hvert levere en **dynamisk iCal-abonnementsfeed** med både utleie og privat bruk, endringer og avbestillinger, slik at eksisterende Homey-oppsett kan gjenbrukes. Dagens manuelle .ics-eksport er ikke en abonnementsfeed. Teknologivalg, sikkerhet og Homey-kompatibilitet er ikke avklart. Se PROJECT.md punkt 8.\n\n**Arbeidsmåte nå:** Vi har valgt å bytte chat nå og ta finpuss fane for fane. Spør meg hvilke finpussendringer jeg ønsker på Oversikt, noter og diskuter dem først. Implementer først når vi er enige om omfanget. Gi tydelig status og hold dokumentasjonen synkronisert.
+
+
+## V16 påbegynt – nyere status
+V16 første kodecommit `2cde050`: mobil-layoutjusteringer og skjult oppgaveteller. Ikke fullført eller iPhone-testet. Les PROJECT.md punkt 9 for resterende avtalte endringer. Ikke bland inn dynamisk iCal eller innlogging i V16.
