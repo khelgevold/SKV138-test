@@ -70,3 +70,8 @@ Privat administrasjonsapp for hytteutleie og privat bruk i Sirdal. Skal brukes a
 - Passordtilbakestilling sender nå `redirectTo` tilbake til TEST-sidens URL; test lagt til. Ingen deploy.
 - Bruker har vist at Neon TEST bruker Shared e-postleverandør og at e-postinnlogging er på. Faktisk e-postlevering/passordtilbakestilling er ikke verifisert.
 - Neste: velge separat Netlify TEST-site og kjent hostname, tillate domene i Neon Auth, bekrefte JWT issuer/JWKS, database-rolle og allowlist, deretter godkjent TEST-deploy. V16.23/PROD urørt.
+
+## 18.11 – TEST Auth: registrering uten å slette eksisterende bruker
+- Undersøkt Better Auth: serverbasert `setPassword` krever autentisert sesjon; passordreset-e-post er ikke mottatt. Vi sletter ikke eksisterende Neon-bruker eller endrer `neon_auth` direkte.
+- Egen `Opprett TEST-bruker`-visning er nå lagt til i `backend-draft/test-site/index.html` på utviklingsgrenen. Bruker kan registrere med en annen e-postadresse som vedkommende kontrollerer og eget passord. Registrering gir ikke automatisk tilgang til SKV138-data; `skv138_access` håndheves i backend.
+- Endringen er ikke bekreftet i CI eller publisert. TEST Netlify-site er separat; neste trinn: kontrollere GitHub Actions og foreta én bevisst TEST-deploy, så registrere bruker og verifisere autentisering.
