@@ -22,9 +22,9 @@ export function startSkv138TestLogin({ document, verifyAccess, onAuthorized, neo
         if (typeof jwt === "string" && jwt.split(".").length === 3) {
           const encoded = jwt.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
           const claims = JSON.parse(atob(encoded));
-          if (typeof claims.iss === "string" && /^https:\/\/[^\\s]{1,500}$/.test(claims.iss)) {
+          if (typeof claims.iss === "string" && claims.iss.startsWith("https://") && claims.iss.length <= 500) {
             const statusElement = document.querySelector("#status");
-            if (statusElement) statusElement.textContent = "Neon-innlogging OK. JWT issuer: " + claims.iss + " — kontrollerer SKV138-tilgang …";
+            if (statusElement) statusElement.dataset.testIssuer = claims.iss;
           }
         }
       } catch { /* Diagnostics must never affect login or access decisions. */ }
