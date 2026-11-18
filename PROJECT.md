@@ -1,5 +1,8 @@
 # SKV138 – PROJECT.md
 
+> **NY DOKUMENTSTRUKTUR (18.11.2026):** Gjeldende status og regler ligger nå i `project.md`, `startnestechat.md`, `utviklingsregler.md` og `parkeringsplassen.md`. Dette dokumentet beholdes for historikk/kompatibilitet. Eldre statuslinjer under kan være utdaterte. Les de nye dokumentene først.
+
+
 **Sist oppdatert:** 2026-11-16  
 **Gjeldende testversjon:** V16 (delvis implementert, ikke iPhone-testet)  
 **Miljø:** GitHub Pages, `main` → `/ (root)`  
