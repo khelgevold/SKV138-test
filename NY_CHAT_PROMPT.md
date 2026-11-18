@@ -66,3 +66,6 @@ Kodecommit `d080867`: Ved åpning av privatopphold skjules bookinglisten og eksi
 
 ### V16.14 (2026-11-18)
 Kodecommit `318bcfc`: Ny utleiebooking åpnet fra kalender får «Tilbake til kalender» og går faktisk tilbake dit. Fra Bookinger returnerer tilbakeknappen til Bookinger. For å unngå iOS/Safari-overlapp er ankomst, avreise, innsjekk og utsjekk i én kolonne på mobil (full bredde). Dette må bekreftes på iPhone. Brukeren bekreftet at V16.13 åpner private/utleieskjema uten støy, men at feltbredde og retur fra utleieskjema fortsatt var feil.
+
+### V16.15 (2026-11-18)
+Kodecommit `c837837`: Bruker ønsker ankomst/avreise og innsjekk/utsjekk side om side på mobil. Gjeninnført to like brede kolonner i både privat- og utleieskjema, med kompakt iOS Safari-dato-/tidskontroll (redusert padding/font, min-width 0). Må kontrolleres på iPhone for eventuell avklipping. Retur til kalender fra V16.14 beholdt.
