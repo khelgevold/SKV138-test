@@ -221,6 +221,38 @@ html{-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{font-size:15px;l
  #bookingForm .field-grid input::-webkit-datetime-edit,#privateEditor .field-grid input::-webkit-datetime-edit{padding:0;min-width:0;font-size:13px}
  #bookingForm .field-grid input::-webkit-calendar-picker-indicator,#privateEditor .field-grid input::-webkit-calendar-picker-indicator{margin:0;padding:0;width:12px;flex-shrink:0}
 }
+</style><style id="v1617-release">
+#bookingOpen .v1617-money{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+#bookingOpen .v1617-money>div{background:var(--soft);border-radius:10px;padding:10px 6px;min-width:0;text-align:center}
+#bookingOpen .v1617-money small{display:block;font-size:11px}
+#bookingOpen .v1617-money strong{display:block;font-size:clamp(12px,3.5vw,17px);margin-top:5px;overflow-wrap:anywhere}
+#bookingOpen .v1617-payment{padding:12px 0;margin:8px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+#bookingOpen .v1617-payment-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+#bookingOpen .v1617-payment-row .sub{margin-top:5px}
+#bookingOpen #v1617PaymentEditor{padding-top:10px}
+#bookingOpen .v1617-message{display:flex;flex-wrap:nowrap;align-items:center;gap:8px;padding:8px 0}
+#bookingOpen .v1617-message span{flex:1;min-width:0}
+#bookingOpen .v1617-message button{flex:0 0 auto;width:auto;margin-left:auto;padding:8px 12px}
+#oppgaver .v1617-task{padding:10px 0}
+#oppgaver .v1617-task-main{width:100%;min-width:0}
+#oppgaver .v1617-task-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#oppgaver .v1617-task-head strong{flex:1 1 auto;min-width:0}
+#oppgaver .v1617-task-head .sub{white-space:nowrap;margin-left:auto}
+#oppgaver .v1617-done{background:#d8ebdc;color:#235c35;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-weight:bold}
+#oppgaver .v1617-task .task-buttons{margin-top:8px}
+#lager .v1617-stock{padding:5px 12px}
+#lager .v1617-stock>.stock-item{padding:8px 0;gap:7px;display:flex;align-items:center;flex-wrap:nowrap}
+#lager .v1617-stock>.stock-item>div:first-child{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+#lager .v1617-stock .stock-edit{align-self:flex-start;padding:2px 7px;min-height:28px}
+#lager .v1617-stock .stock-counter{flex:0 0 auto}
+#lager .v1617-stock-add{padding:12px}
+#innstillinger .v1617-location-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+#innstillinger .v1617-location-row span{flex:1}
+#innstillinger input[type=time]{min-width:0;max-width:100%}
+#innstillinger .field-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#innstillinger .field-grid label{min-width:0;overflow:hidden}
+#innstillinger .field-grid input{min-width:0;width:100%;box-sizing:border-box}
+@media(max-width:600px){#innstillinger .field-grid:has(input[type=time]){grid-template-columns:minmax(0,1fr)}}
 </style></head><body><header><div><h1>⌂ SKV138</h1><div style="opacity:.8;font-size:13px">V16 · Lokal testprototype</div></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
 <section id="oversikt" class="active"><div class="row"><button onclick="changeYear(-1)">‹</button><span class="year" id="yearTitle"></span><button onclick="changeYear(1)">›</button></div><div class="grid" id="metrics"></div><div class="card"><h2>Utbetalinger og skatt hittil i år</h2><div class="grid" id="v15YtdMetrics"></div></div><div class="card"><div class="row"><h2>Neste oppgaver</h2><button onclick="show('oppgaver')">Se alle</button></div><div id="nextTasks"></div></div></section>
 <section id="bookinger"><div class="row"><h2>Bookinger</h2><div class="booking-create"><button class="primary" onclick="newBooking()">+ Ny booking</button><button onclick="newPrivateStay()">+ Privat booking</button></div></div><div class="segmented triple" id="bookingTypeFilters"><button onclick="setBookingTypeFilter('all')">Alle</button><button onclick="setBookingTypeFilter('rental')">Utleie</button><button onclick="setBookingTypeFilter('private')">Privat</button></div><div id="bookingList"></div><div id="bookingDetail"></div></section>
@@ -1213,6 +1245,102 @@ bookingForm=function(b){
  }
  requestAnimationFrame(()=>window.scrollTo(0,0));
 };
+
+
+/* V16.17 – approved booking, task, stock and settings refinements. */
+const v1617BookingBase=renderBookings;
+renderBookings=function(){
+ v1617BookingBase();
+ const open=$('bookingOpen'),b=state.bookings.find(x=>String(x.id)===String(selected));
+ if(!open||!b)return;
+ const a=bookingAmounts(b);
+ const summary=[...open.querySelectorAll('p')].find(p=>p.textContent.includes('Brutto:')&&p.textContent.includes('Netto:'));
+ if(summary){summary.outerHTML='<div class="v1617-money"><div><small>Brutto</small><strong>'+money(a.gross)+'</strong></div><div><small>Gebyr</small><strong>'+money(a.fee)+'</strong></div><div><small>Netto</small><strong>'+money(a.net)+'</strong></div></div>'}
+ const pay=open.querySelector('.v15-pay');
+ if(pay){
+  const paid=b.paid&&b.paidDate&&Number.isFinite(Number(b.paidAmount));
+  pay.classList.add('v1617-payment');
+  pay.innerHTML='<div class="v1617-payment-row"><div><strong>Utbetaling</strong><div class="sub">'+(paid?'✓ '+money(Number(b.paidAmount))+' · '+fmt(b.paidDate):'Ikke registrert')+'</div></div><button type="button" onclick="v1617TogglePayment()">'+(paid?'Rediger':'Registrer')+'</button></div><div id="v1617PaymentEditor" hidden><label class="check"><input type="checkbox" id="v15Paid" '+(paid?'checked':'')+' onchange="v15PaymentToggle()"> Utbetalt</label><div id="v15PayFields" '+(paid?'':'hidden')+'><div class="field-grid"><label>Utbetalingsdato<input type="date" id="v15PayDate" value="'+esc(b.paidDate||v15Today())+'"></label><label>Mottatt etter gebyr, før skatt (kr)<input type="number" min="0" step="0.01" id="v15PayAmount" value="'+(paid?Number(b.paidAmount):Math.max(0,a.net).toFixed(2))+'"></label></div></div><button class="primary" onclick="v15SavePayment('+JSON.stringify(b.id)+')">Lagre utbetaling</button></div>';
+ }
+ open.querySelectorAll('.booking-messages .message-row').forEach(row=>{row.classList.add('v1617-message');const btn=row.querySelector('button');if(btn)btn.textContent='Kopier'});
+};
+function v1617TogglePayment(){const editor=$('v1617PaymentEditor');if(editor){editor.hidden=!editor.hidden;if(!editor.hidden)editor.scrollIntoView({block:'nearest'})}}
+v16TaskItemHtml=function(t){
+ const complete=done(t),message=t.type==='manual'&&t.task&&t.task!=='none';
+ return '<div class="task v16-task-item v1617-task"><div class="v1617-task-main"><div class="v1617-task-head"><strong>'+esc(t.title)+'</strong><span class="sub">'+fmtDue(t.due)+'</span>'+(complete?'<span class="v1617-done" aria-label="Fullført" title="Fullført">✓</span>':'')+'</div><div class="task-buttons">'+(t.type==='check'?'<button class="primary" onclick="openTask(\''+t.id+'\')">Åpne sjekkliste</button>':'<button class="'+(complete?'':'primary')+'" onclick="toggleTask(\''+t.id+'\')">'+(complete?'Angre':'Merk som ferdig')+'</button>')+(message?'<button onclick="openMessageForTask(\''+t.id+'\')">Melding</button>':'')+'</div></div></div>';
+};
+let v1617Locations=JSON.parse(localStorage.getItem('skv138_private_locations')||'["Kjøleskap","Kjøkkenskap","Bod"]');
+function v1617SaveLocations(){localStorage.setItem('skv138_private_locations',JSON.stringify(v1617Locations))}
+function v1617LocationOptions(value){return '<option value="">Velg plassering</option>'+v1617Locations.map(x=>'<option value="'+esc(x)+'" '+(x===value?'selected':'')+'>'+esc(x)+'</option>').join('')}
+const v1617StockBase=renderStock;
+renderStock=function(){
+ v1617StockBase();
+ const list=$('stockList');
+ if(list){
+  list.classList.add('v1617-stock');
+  list.querySelectorAll(':scope > .stock-item').forEach(row=>{
+   const btn=row.querySelector('.stock-edit');
+   if(btn){btn.textContent='✎';btn.title='Rediger vare';btn.setAttribute('aria-label','Rediger vare')}
+   if(stockKind==='Privat'){
+    const name=row.querySelector('strong')?.textContent;
+    const item=state.stock.find(x=>x.kind==='Privat'&&x.name===name);
+    if(item?.location){const label=document.createElement('small');label.className='sub';label.textContent=item.location;row.querySelector('div:first-child')?.appendChild(label)}
+   }
+  });
+ }
+ const name=$('stockName');if(!name)return;
+ const add=name.closest('.card');
+ if(add){
+  add.classList.add('v1617-stock-add');
+  const location=$('v1617StockLocation');
+  if(stockKind==='Privat'&&!location)name.closest('label')?.insertAdjacentHTML('afterend','<label id="v1617StockLocation">Plassering<select id="v1617NewLocation">'+v1617LocationOptions('')+'</select></label>');
+  if(stockKind!=='Privat')location?.remove();
+  if(add.parentElement?.id==='lager'&&list&&add.previousElementSibling===list)list.parentElement.insertBefore(add,list);
+ }
+};
+const v1617AddStockBase=addStock;
+addStock=function(){
+ const ids=new Set(state.stock.map(x=>x.id)),location=$('v1617NewLocation')?.value||'';
+ v1617AddStockBase();
+ const item=state.stock.find(x=>!ids.has(x.id));
+ if(item&&item.kind==='Privat'){item.location=location;save();renderStock()}
+};
+const v1617EditStockBase=editStock;
+editStock=function(id){
+ v1617EditStockBase(id);
+ const item=state.stock.find(x=>x.id===id);
+ if(item?.kind==='Privat'){
+  const editor=$('stockList')?.querySelector('.stock-editor');
+  editor?.querySelector('#editStockQty')?.closest('label')?.insertAdjacentHTML('afterend','<label>Plassering<select id="v1617EditLocation">'+v1617LocationOptions(item.location||'')+'</select></label>');
+ }
+};
+const v1617SaveStockEditBase=saveStockEdit;
+saveStockEdit=function(){
+ const item=state.stock.find(x=>x.id===editingStock),location=$('v1617EditLocation')?.value;
+ v1617SaveStockEditBase();
+ if(item&&location!==undefined){item.location=location;save();renderStock()}
+};
+function v1617RenderLocations(){
+ const host=$('v1617Locations');if(!host)return;
+ host.innerHTML='<div class="row"><h3>Plasseringer</h3></div>'+v1617Locations.map((x,i)=>'<div class="v1617-location-row"><span>'+esc(x)+'</span><button onclick="v1617RenameLocation('+i+')">Rediger</button><button onclick="v1617DeleteLocation('+i+')">Slett</button></div>').join('')+'<div class="row"><input id="v1617LocationName" placeholder="Ny plassering" aria-label="Ny plassering"><button onclick="v1617AddLocation()">Legg til</button></div>';
+}
+function v1617AddLocation(){const v=$('v1617LocationName')?.value.trim();if(!v||v1617Locations.includes(v))return;v1617Locations.push(v);v1617SaveLocations();v1617RenderLocations()}
+function v1617RenameLocation(i){const old=v1617Locations[i],v=prompt('Nytt navn på plassering',old)?.trim();if(!v||v1617Locations.some((x,j)=>i!==j&&x===v))return;v1617Locations[i]=v;state.stock.filter(x=>x.kind==='Privat'&&x.location===old).forEach(x=>x.location=v);save();v1617SaveLocations();v1617RenderLocations()}
+function v1617DeleteLocation(i){const name=v1617Locations[i];if(state.stock.some(x=>x.kind==='Privat'&&x.location===name)){alert('Plasseringen er i bruk. Flytt varene først.');return}if(!confirm('Slette plasseringen '+name+'?'))return;v1617Locations.splice(i,1);v1617SaveLocations();v1617RenderLocations()}
+function v1617CleanSettings(){
+ const root=$('innstillinger');if(!root)return;
+ root.querySelectorAll('.card').forEach(card=>{if(card.querySelector('h2')?.textContent.trim()==='Utseende')card.remove()});
+ root.querySelectorAll('p.hint,p.sub').forEach(p=>{if(/Disse standardtidene brukes|Oppgaver oppdateres ved endring|Opprett, rediger og kopier|Reglene lager oppgaver|Legg inn hva du vil|Velg per plattform|Prisene er veiledende|Rabatten regnes fra|Administrer gebyrer separat/.test(p.textContent))p.remove()});
+ root.querySelectorAll('button').forEach(b=>{if(b.textContent.trim()==='Lukk gebyrer')b.remove()});
+ if(!$('v1617Locations')){
+  const card=document.createElement('details');card.className='card';card.innerHTML='<summary>Plasseringer</summary><div id="v1617Locations"></div>';
+  root.appendChild(card);
+ }
+ v1617RenderLocations();
+}
+const v1617SettingsBase=renderSettings;
+renderSettings=function(){v1617SettingsBase();v1617CleanSettings()};
+v1617CleanSettings();
 
 render();
 if(!hytteStoragePersistent)hytteShowStorageWarning();
