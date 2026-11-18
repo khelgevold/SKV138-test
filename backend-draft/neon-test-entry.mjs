@@ -56,3 +56,5 @@ export { mountNewPasswordForm } from "./new-password-form.mjs";
 export { readResetToken, clearResetTokenFromUrl } from "./reset-link.mjs";
 export function createNeonTestLoginController() { return createNeonTestLogin(SKV138_TEST_AUTH_URL).login; }
 export function createNeonTestSession() { return createNeonTestLogin(SKV138_TEST_AUTH_URL); }
+
+export { createV1623StateBridge } from './v1623-state-bridge.mjs';
