@@ -253,6 +253,26 @@ html{-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{font-size:15px;l
 #innstillinger .field-grid label{min-width:0;overflow:hidden}
 #innstillinger .field-grid input{min-width:0;width:100%;box-sizing:border-box}
 @media(max-width:600px){#innstillinger .field-grid:has(input[type=time]){grid-template-columns:minmax(0,1fr)}}
+</style><style id="v1618-css">
+#lager .v1617-stock>.stock-item{display:flex!important;align-items:center!important;gap:7px!important;flex-wrap:nowrap!important;padding:8px 0!important}
+#lager .v1617-stock>.stock-item>div:first-child{flex:1 1 auto!important;min-width:0!important;display:flex!important;flex-direction:column!important;gap:2px!important}
+#lager .v1617-stock>.stock-item .stock-edit{flex:0 0 auto;align-self:center!important;order:2;margin:0!important}
+#lager .v1617-stock>.stock-item .stock-counter{order:3;flex:0 0 auto!important}
+#lager .v1617-stock>.stock-item .sub{margin:0!important;font-size:12px}
+#lager .v1618-add-collapsed> :not(#v1618NewStockButton){display:none!important}
+#lager .v1618-add-collapsed.v1618-add-open> :not(#v1618NewStockButton){display:block!important}
+#lager .v1618-add-collapsed{margin:10px 0;padding:12px}
+#innstillinger.v1618-settings>.row{margin-bottom:20px}
+#innstillinger.v1618-settings .field-grid{display:grid;grid-template-columns:minmax(0,1fr)!important}
+#innstillinger.v1618-settings .field-grid label,#innstillinger.v1618-settings .field-grid input{width:100%!important;min-width:0!important;max-width:100%!important}
+#innstillinger .v1618-rule-row{display:flex;flex-direction:column;align-items:stretch;gap:5px}
+#innstillinger .v1618-rule-row>div:first-child{width:100%}
+#innstillinger .v1618-rule-row .message-actions{display:flex;flex-wrap:wrap;gap:6px}
+#innstillinger .v1618-rule-detail summary{cursor:pointer;list-style-position:inside}
+#innstillinger .v1618-rule-detail .sub{padding:5px 0 0 15px}
+#innstillinger .v1618-price-row{display:grid!important;grid-template-columns:1.1fr 1fr 1fr 1fr!important;gap:4px!important;align-items:center}
+#innstillinger .v1618-price-row>*{min-width:0;overflow-wrap:anywhere;font-size:clamp(10px,2.8vw,14px)!important;text-align:right}
+#innstillinger .v1618-price-row>*:first-child{text-align:left}
 </style></head><body><header><div><h1>⌂ SKV138</h1><div style="opacity:.8;font-size:13px">V16 · Lokal testprototype</div></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
 <section id="oversikt" class="active"><div class="row"><button onclick="changeYear(-1)">‹</button><span class="year" id="yearTitle"></span><button onclick="changeYear(1)">›</button></div><div class="grid" id="metrics"></div><div class="card"><h2>Utbetalinger og skatt hittil i år</h2><div class="grid" id="v15YtdMetrics"></div></div><div class="card"><div class="row"><h2>Neste oppgaver</h2><button onclick="show('oppgaver')">Se alle</button></div><div id="nextTasks"></div></div></section>
 <section id="bookinger"><div class="row"><h2>Bookinger</h2><div class="booking-create"><button class="primary" onclick="newBooking()">+ Ny booking</button><button onclick="newPrivateStay()">+ Privat booking</button></div></div><div class="segmented triple" id="bookingTypeFilters"><button onclick="setBookingTypeFilter('all')">Alle</button><button onclick="setBookingTypeFilter('rental')">Utleie</button><button onclick="setBookingTypeFilter('private')">Privat</button></div><div id="bookingList"></div><div id="bookingDetail"></div></section>
@@ -1341,6 +1361,93 @@ function v1617CleanSettings(){
 const v1617SettingsBase=renderSettings;
 renderSettings=function(){v1617SettingsBase();v1617CleanSettings()};
 v1617CleanSettings();
+
+
+/* V16.18 – targeted acceptance corrections. */
+const v1618BookingBase=renderBookings;
+renderBookings=function(){
+ v1618BookingBase();
+ const panel=$('bookingOpen')?.querySelector('.v1617-payment'),b=state.bookings.find(x=>String(x.id)===String(selected));
+ if(!panel||!b)return;
+ const paid=!!(b.paid&&b.paidDate);
+ panel.innerHTML='<div class="v1617-payment-row"><div><strong>Utbetaling</strong><div class="sub">'+(paid?'✓ '+money(Number(b.paidAmount))+' · '+fmt(b.paidDate):'Ikke registrert')+'</div></div><button onclick="v1618TogglePayment()">'+(paid?'Rediger':'Registrer')+'</button></div><div id="v1618PaymentEditor" hidden><label>Utbetalingsdato<input id="v1618PayDate" type="date" value="'+esc(b.paidDate||v15Today())+'"></label><div class="form-actions"><button class="primary" onclick="v1618SavePayment()">Lagre utbetaling</button>'+(paid?'<button onclick="v1618UndoPayment()">Angre registrering</button>':'')+'</div></div>';
+};
+function v1618TogglePayment(){const e=$('v1618PaymentEditor');if(e)e.hidden=!e.hidden}
+function v1618SavePayment(){
+ const b=state.bookings.find(x=>String(x.id)===String(selected)),day=$('v1618PayDate')?.value;
+ if(!b||!day){alert('Velg utbetalingsdato.');return}
+ const wasPaid=!!b.paid;
+ b.paid=true;b.paidDate=day;
+ if(!wasPaid||!Number.isFinite(Number(b.paidAmount)))b.paidAmount=bookingAmounts(b).net;
+ b.history=b.history||[];b.history.push({at:new Date().toLocaleString('nb-NO'),text:'Utbetaling registrert/endret'});
+ save();render();
+}
+function v1618UndoPayment(){
+ const b=state.bookings.find(x=>String(x.id)===String(selected));
+ if(!b||!confirm('Angre registrert utbetaling?'))return;
+ b.paid=false;b.paidDate='';b.paidAmount=null;
+ b.history=b.history||[];b.history.push({at:new Date().toLocaleString('nb-NO'),text:'Utbetaling opphevet'});
+ save();render();
+}
+const v1618StockBase=renderStock;
+renderStock=function(){
+ v1618StockBase();
+ const list=$('stockList');if(!list)return;
+ list.querySelectorAll(':scope > .stock-item').forEach(row=>{
+  const first=row.firstElementChild, counter=row.querySelector('.stock-counter');
+  if(!first||!counter)return;
+  const edit=first.querySelector('.stock-edit');
+  if(edit){edit.remove();counter.before(edit)}
+  const name=first.querySelector('strong')?.textContent;
+  const item=state.stock.find(x=>x.kind===stockKind&&x.name===name);
+  first.querySelectorAll('.sub').forEach(n=>n.remove());
+  const subtitle=stockKind==='Privat'?item?.location:(item?.min>0&&item.qty<item.min?'Må fylles på':item?.fixed?'Fast vare':'');
+  if(subtitle){const el=document.createElement('small');el.className='sub';el.textContent=subtitle;first.appendChild(el)}
+ });
+ const add=$('stockName')?.closest('.card');
+ if(add){
+  add.classList.add('v1618-add-collapsed');
+  if(!add.querySelector('#v1618NewStockButton')){
+   const btn=document.createElement('button');btn.id='v1618NewStockButton';btn.type='button';btn.className='primary';btn.textContent='+ Ny vare';btn.onclick=()=>{add.classList.toggle('v1618-add-open');btn.textContent=add.classList.contains('v1618-add-open')?'Avbryt':'+ Ny vare'};
+   add.insertBefore(btn,add.firstChild);
+  }
+ }
+};
+const v1618SettingsBase=renderSettings;
+renderSettings=function(){v1618SettingsBase();v1618AdjustSettings()};
+const v1618RulesBase=renderRules;
+renderRules=function(){
+ v1618RulesBase();
+ const list=$('ruleList');if(!list)return;
+ list.querySelectorAll(':scope > .message-row').forEach(row=>{
+  const info=row.querySelector('div:first-child'),actions=row.querySelector('.message-actions');
+  if(!info||!actions)return;
+  const title=info.querySelector('strong')?.textContent||'Oppgaveregel',detail=info.querySelector('.sub')?.textContent||'';
+  info.innerHTML='<details class="v1618-rule-detail"><summary><strong>'+esc(title)+'</strong></summary><div class="sub">'+esc(detail)+'</div></details>';
+  row.classList.add('v1618-rule-row');
+ });
+};
+const v1618PriceBase=renderPriceResults;
+renderPriceResults=function(){
+ v1618PriceBase();
+ const root=$('priceResults');if(!root)return;
+ const rows=[...root.querySelectorAll('.price-result')],notes=[...root.querySelectorAll('.price-note')];
+ rows.forEach((row,i)=>{
+  row.classList.add('v1618-price-row');
+  if(i===0){const h=document.createElement('strong');h.textContent='Totalpris';row.appendChild(h);return}
+  const note=notes[i-1];if(!note)return;
+  const match=note.textContent.match(/Totalpris:\\s*([^·]+)/);
+  const val=document.createElement('strong');val.textContent=match?match[1].trim():'–';row.appendChild(val);note.remove();
+ });
+};
+function v1618AdjustSettings(){
+ const root=$('innstillinger');if(!root)return;
+ root.querySelectorAll('.card').forEach(card=>{
+  if(card.querySelector('h2')?.textContent.trim()==='Utseende')card.remove();
+ });
+ root.classList.add('v1618-settings');
+}
+v1618AdjustSettings();
 
 render();
 if(!hytteStoragePersistent)hytteShowStorageWarning();
