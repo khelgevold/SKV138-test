@@ -57,3 +57,6 @@ The owner supplied the public managed Neon Auth endpoint for SKV138-TEST. It is 
 
 ## Password reset request form draft
 `password-reset-form.mjs` implements a form adapter for a password reset *request*, with duplicate-submission protection and neutral account-existence messaging. It requires an injected `login.requestPasswordReset` implementation. This does **not** implement the reset-link landing page or the new-password submission; both must be verified against managed Neon Auth before activation. Not wired to V16.23 or a deployed TEST site. No reset email has been sent by this code.
+
+## Reset-link completion draft
+`login-controller.mjs` now provides `completePasswordReset(token,newPassword)` using the Better Auth `resetPassword` client method. `new-password-form.mjs` handles confirmation, clears entered password fields and blocks duplicate submission. The token must come from a verified reset-link URL; no URL parser or active reset landing page has been implemented yet. Two mocked tests were added; no live reset request or completion has occurred. Before enabling: verify actual managed Neon reset URL/redirect behavior, configured allowed origin and delivery, and bundle the auth SDK.
