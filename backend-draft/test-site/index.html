@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="nb"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SKV138 – Neon TEST</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#193328;background:#f3f6f2}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px}
+main{width:min(100%,440px);padding:30px;background:#fff;border:1px solid #d9e5dd;border-radius:16px;box-shadow:0 12px 35px #102a1b12}
+h1{margin:0 0 8px}p{line-height:1.5;color:#50695a}label{display:block;margin:18px 0 6px;font-weight:600}
+input{width:100%;padding:13px;font:inherit;border:1px solid #a7b9ae;border-radius:9px}
+button{width:100%;margin-top:22px;padding:13px;border:0;border-radius:9px;background:#245c43;color:white;font:inherit;font-weight:600}
+button:disabled{opacity:.6}#status[data-error=true]{color:#a12a2a}#status{min-height:1.5em}
+small{color:#526b5c}#authorized{display:none}
+</style></head><body><main>
+<h1>SKV138</h1><p>Innlogging – isolert TEST-miljø.</p>
+<form id="login"><label for="email">E-post</label><input id="email" type="email" autocomplete="username" required>
+<label for="password">Passord</label><input id="password" type="password" autocomplete="current-password" required>
+<button id="submit" type="submit">Logg inn</button></form>
+<p id="status" role="status" aria-live="polite"></p>
+<section id="authorized"><h2>Tilgang bekreftet</h2><p>Backend har bekreftet at kontoen har tilgang. Hytteappen er ikke koblet til dette TEST-skallet ennå.</p></section>
+<small>Ingen passord lagres i denne siden. Ikke bruk PROD-data i TEST.</small>
+</main>
+<script type="module">
+import { startConfiguredSkv138TestLogin } from "./neon-test-entry.js";
+const status=document.querySelector("#status");
+try {
+  startConfiguredSkv138TestLogin({
+    document,
+    fetchImpl: (...args)=>fetch(...args),
+    storage: window.localStorage,
+    onAuthorized: async () => {
+      document.querySelector("#login").hidden=true;
+      document.querySelector("#authorized").style.display="block";
+      status.textContent="";
+    }
+  });
+} catch {
+  status.dataset.error="true";
+  status.textContent="TEST-innlogging kunne ikke startes.";
+}
+</script></body></html>
