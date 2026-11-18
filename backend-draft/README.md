@@ -48,3 +48,6 @@ GitHub Actions screenshot supplied by project owner shows `SKV138 backend draft 
 
 ## Supplied TEST Auth URL (2026-11-18)
 The owner supplied the public managed Neon Auth endpoint for SKV138-TEST. It is stored in `neon-test-config.mjs` (not a secret). `neon-test-entry.mjs` connects the config to the isolated login controller and form adapter, requiring an injected `verifyAccess(authClient)` callback. It is not loaded in the current HTML preview, not bundled, not deployed, and not functionally verified. Before any activation, implement a real authenticated backend verifier and confirm the SDK client/token API and existing-user password enrollment. No production URL has been configured.
+
+## Backend authorization verification (2026-11-18)
+`access-verifier.mjs` injects the existing client adapter to perform authenticated backend GET after sign-in. It distinguishes 401 login-required, 403 user-not-allowlisted and 404 shared-state-not-initialized. Only a validated successful GET yields `status: ready` with payload. Two mocked tests added. Not yet wired to the live browser entrypoint, deployed, or integration-tested.
