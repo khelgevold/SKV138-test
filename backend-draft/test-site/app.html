@@ -1329,7 +1329,7 @@ v16TaskItemHtml=function(t){
  const complete=done(t),message=t.type==='manual'&&t.task&&t.task!=='none';
  return '<div class="task v16-task-item v1617-task"><div class="v1617-task-main"><div class="v1617-task-head"><strong>'+esc(t.title)+'</strong><span class="sub">'+fmtDue(t.due)+'</span>'+(complete?'<span class="v1617-done" aria-label="Fullført" title="Fullført">✓</span>':'')+'</div><div class="task-buttons">'+(t.type==='check'?'<button class="primary" onclick="openTask(\''+t.id+'\')">Åpne sjekkliste</button>':'<button class="'+(complete?'':'primary')+'" onclick="toggleTask(\''+t.id+'\')">'+(complete?'Angre':'Merk som ferdig')+'</button>')+(message?'<button onclick="openMessageForTask(\''+t.id+'\')">Melding</button>':'')+'</div></div></div>';
 };
-let v1617Locations=skv138TestBridge.current().privateLocations.slice();
+// Locations already initialized before startup.
 function v1617SaveLocations(){save()}
 function v1617LocationOptions(value){return '<option value="">Velg plassering</option>'+v1617Locations.map(x=>'<option value="'+esc(x)+'" '+(x===value?'selected':'')+'>'+esc(x)+'</option>').join('')}
 const v1617StockBase=renderStock;
