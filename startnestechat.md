@@ -35,3 +35,6 @@ Neste konkrete steg: Be brukeren åpne `Better Auth → Configure Auth` i Neon T
 - Les `backend-draft/README.md`, `backend-draft/test-site/index.html`, `backend-draft/neon-test-entry.mjs`, `backend-draft/skv138-state.mjs`, `backend-draft/netlify.template.toml` og `package.json`. En isolert TEST-side har innlogging, passordresettskjema og backend-tilgangskontroll. En draft Netlify-funksjon finnes, men ingen deploy.
 - GitHub Actions var grønn etter rettet Neon Auth-pakke/import. Nyere endringer må kontrolleres. Verifiser live Neon Auth-metoder (inkl. token, reset og issuer/JWKS), sett opp minsteprivilegert DB-rolle, og klargjør samlet TEST-deploy med eksplisitt godkjenning. Ikke kall løsningen ferdig før faktisk autentisering og autorisasjon er testet.
 - Gjør mest mulig samlet i GitHub, minimer manuelle steg, og oppdater dokumentasjon. Ingen hemmelige nøkler i kode eller chat.
+
+## Sikkerhetsretting 18.11.2026
+- `backend-draft/skv138-state.mjs` krever nå eksplisitt `NEON_AUTH_ISSUER` (ikke antatt hostname-origin). Bekreft eksakt verdi fra Neon Auth før TEST-deploy, sammen med JWKS og tokenmetode. Ikke svekk JWT-verifiseringen. Ingen live-test eller deploy utført.
