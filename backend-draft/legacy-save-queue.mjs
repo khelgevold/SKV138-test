@@ -7,6 +7,7 @@ export function createLegacySaveQueue({ client, onStatus = () => {} }) {
   let active = false;
   let pending = null;
   let idleWaiters = [];
+  let failedSnapshot = null;
   const settle = () => {
     if (!active && pending === null) {
       const waiters = idleWaiters; idleWaiters = [];
@@ -26,6 +27,7 @@ export function createLegacySaveQueue({ client, onStatus = () => {} }) {
         } catch (error) {
           // Stop all further writes until a user explicitly resolves the conflict/error.
           blocked = true;
+          failedSnapshot = payload;
           pending = null;
           onStatus({ type: error?.status === 409 ? "conflict" : "error" });
         }
@@ -46,6 +48,8 @@ export function createLegacySaveQueue({ client, onStatus = () => {} }) {
       return true;
     },
     isBlocked: () => blocked,
+    // The UI can offer a local export when a write fails; never silently discard edits.
+    getFailedSnapshot: () => failedSnapshot === null ? null : JSON.parse(JSON.stringify(failedSnapshot)),
     whenIdle: () => (!active && pending === null) ? Promise.resolve() : new Promise(resolve => idleWaiters.push(resolve)),
   };
 }
