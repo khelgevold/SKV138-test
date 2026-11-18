@@ -49,7 +49,18 @@ export async function handler(event) {
 
   let userId;
   try { userId = await authenticatedUser(event, issuer); }
-  catch { return json(401, { error: "Invalid authentication" }); }
+  catch (error) {
+    // TEST-only diagnostics: expose a bounded jose error category, never JWTs, keys or claims.
+    const allowed = new Set([
+      "ERR_JWKS_NO_MATCHING_KEY", "ERR_JWKS_MULTIPLE_MATCHING_KEYS",
+      "ERR_JWT_CLAIM_VALIDATION_FAILED", "ERR_JWS_SIGNATURE_VERIFICATION_FAILED",
+      "ERR_JWS_INVALID", "ERR_JWT_EXPIRED", "ERR_JWT_INVALID",
+      "ERR_JOSE_ALG_NOT_ALLOWED", "ERR_JWKS_INVALID", "ERR_JWKS_TIMEOUT"
+    ]);
+    const code = allowed.has(error?.code) ? error.code : "OTHER";
+    console.error("SKV138 TEST JWT validation category:", code);
+    return json(401, { error: "Invalid authentication", testDiagnostic: code });
+  }
   if (!userId) return json(401, { error: "Authentication required" });
 
   // Cross-origin writes are intentionally rejected. The app and function must share an origin.
