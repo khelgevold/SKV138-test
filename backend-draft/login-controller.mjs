@@ -31,11 +31,19 @@ export function createLoginController(authClient) {
       }
       try {
         const response = await authClient.signUp.email({ email: normalizedEmail, password, name: displayName });
-        if (response?.error) return { ok: false, message: "Registreringen mislyktes. E-postadressen kan allerede være i bruk." };
+        if (response?.error) {
+          // Only expose a bounded HTTP status, never backend error text or account details.
+          const status = Number(response.error.status);
+          const hint = Number.isInteger(status) && status >= 400 && status <= 599
+            ? " (HTTP " + status + ")" : "";
+          return { ok: false, message: "Registrering ble avvist av autentiseringstjenesten" + hint + "." };
+        }
         // Registration never adds a user to the SKV138 server-side allowlist.
         return { ok: true };
-      } catch {
-        return { ok: false, message: "Kunne ikke kontakte registreringstjenesten." };
+      } catch (error) {
+        // Distinguish network failure from other SDK/runtime errors without leaking details.
+        const category = error instanceof TypeError ? "nettverk eller nettleserblokkering" : "klientfeil";
+        return { ok: false, message: "Registrering feilet (" + category + ")." };
       }
     },
     async requestPasswordReset(email, redirectTo) {
