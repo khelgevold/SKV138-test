@@ -1,3 +1,15 @@
+# START HER – ny chat SKV138 (18.11.2026 kl. 20:15)
+
+Vi fortsetter SKV138 i GitHub `khelgevold/SKV138-test`, gren `feature/neon-test-integration`. Les gjeldende toppseksjon i `project.md`, `utviklingsregler.md`, `parkeringsplassen.md`, og relevant faktisk kode i `backend-draft/`. **Nyeste status overstyrer eldre historiske tekster lenger ned i dokumentene.** ChatGPT gjør alt mulig GitHub-arbeid selv; brukeren skal kun gjøre nødvendige UI-tester. Ikke gjør mer enn nødvendig; minimer Netlify-deploys og repetisjon.
+
+**Faktisk status:** Neon TEST på https://skv138-neon-test.netlify.app er live. Neon Auth + backend allowlist + initialisert `shared`-tilstand er bekreftet. Brukeren har vist skjermbilde hvor hele V16-hytteappen vises etter innlogging, uten eksempelbookinger. GitHub Actions for nyeste commit `6e45109` er grønne. V16.23 i `main/index.html` er urørt; ingen PROD. TEST-appen er i `backend-draft/test-site/app.html`, innloggingsskallet i `backend-draft/test-site/index.html`; Neon-broen og serialisert lagring er i `backend-draft/v1623-state-bridge.mjs` og `legacy-save-queue.mjs`. SQL-seed er allerede kjørt. **Neon PUT/persistens er IKKE manuelt testet.**
+
+**Første handling i ny chat:** Be brukeren, etter PC-omstart, opprette én testbooking i TEST, oppdatere siden og bekrefte at bookingen fortsatt finnes. Dette er eneste nødvendige test nå. Ikke start med ny kode eller gjentatte kontroller. Hvis lagring feiler, undersøk konkret feil før retting. Hvis den fungerer, avklar konkret PC-layout-avvik og deretter mobilvisning. Brukeren sier layouten ser feil ut; tidligere assistent konstaterte at PC-navigasjonens plassering følger eksisterende V16 CSS og ikke nødvendigvis er Neon-feil. Ikke redesign på spekulasjon. Teksten «V16 · Lokal testprototype» er fortsatt synlig. Ikke endre `main` uten avtale. Senere kan midlertidig JWT-diagnostikk ryddes i samlet release.
+
+Brukeren ba om dokumentasjon og ny chat fordi PC skal restartes. Svar kort, uten å gjenta status i hver melding. Les `project.md` og `utviklingsregler.md` før arbeid.
+
+---
+
 ## 18.11.2026 – Bekreftet etter TEST-seed
 - Brukeren kjørte initialiserings-SQL og viste skjermbilde med «Tilgang bekreftet». Hele innloggings-, tilgangs- og database-GET-kjeden er bekreftet i live TEST. Ingen grunn til å gjenta auth-feilsøking.
 - **Neste arbeid:** implementer V16.23-integrasjon med eksisterende `createSkv138Client`, GET før visning og sikker PUT/409-håndtering i `feature/neon-test-integration`. Undersøk eksisterende `index.html` `save()`/localStorage-mønster før endring; behold `main` uendret. Samle kodeendringer og tester før én planlagt TEST-deploy. Fjern midlertidig JWT-diagnostikk når integrasjonen er ferdig.
