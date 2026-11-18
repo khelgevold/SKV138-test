@@ -1,0 +1,17 @@
+{
+  "name": "skv138-neon-test-integration",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test backend-draft/integration.test.mjs",
+    "build:auth": "esbuild backend-draft/neon-test-entry.mjs --bundle --format=esm --platform=browser --target=es2022 --outfile=backend-draft/dist/neon-test-entry.js"
+  },
+  "dependencies": {
+    "@neondatabase/neon-js": "^0.2.0",
+    "jose": "^6.0.0",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}
