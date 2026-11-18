@@ -1,5 +1,5 @@
 // SKV138 backend draft — NOT deployed. Requires jose + pg dependencies and Netlify configuration.
-// Runtime secrets: DATABASE_URL, NEON_AUTH_JWKS_URL, NEON_AUTH_BASE_URL.
+// Runtime secrets: DATABASE_URL. Required public config: NEON_AUTH_JWKS_URL, NEON_AUTH_ISSUER.
 // Required: SKV138_APP_ORIGIN. Optional: NEON_AUTH_AUDIENCE if issued token has aud. Never commit values.
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import pg from "pg";
@@ -13,13 +13,17 @@ const json = (statusCode, data) => ({
   body: JSON.stringify(data),
 });
 function configuration() {
-  for (const key of ["DATABASE_URL", "NEON_AUTH_JWKS_URL", "NEON_AUTH_BASE_URL", "SKV138_APP_ORIGIN"]) {
+  for (const key of ["DATABASE_URL", "NEON_AUTH_JWKS_URL", "NEON_AUTH_ISSUER", "SKV138_APP_ORIGIN"]) {
     if (!process.env[key]) throw new Error("Missing backend configuration: " + key);
   }
   const jwksUrl = new URL(process.env.NEON_AUTH_JWKS_URL);
-  // Managed Neon Auth documents issuer as the origin of NEON_AUTH_BASE_URL.
-  const issuer = new URL(process.env.NEON_AUTH_BASE_URL).origin;
-  if (new URL(process.env.NEON_AUTH_BASE_URL).protocol !== "https:") throw new Error("Auth URL must use HTTPS");
+  // Verify the EXACT JWT issuer configured for this Neon TEST Auth instance.
+  // Never infer issuer from hostname; doing so can reject legitimate tokens.
+  const issuer = process.env.NEON_AUTH_ISSUER;
+  const issuerUrl = new URL(issuer);
+  if (issuerUrl.protocol !== "https:" || issuerUrl.username || issuerUrl.password || issuerUrl.search || issuerUrl.hash) {
+    throw new Error("Invalid Neon Auth issuer");
+  }
   if (jwksUrl.protocol !== "https:") throw new Error("JWKS must use HTTPS");
   if (!jwks) jwks = createRemoteJWKSet(jwksUrl);
   if (!pool) pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, max: 3 });
