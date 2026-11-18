@@ -1,3 +1,7 @@
+## 18.11.2026 – Bekreftet etter TEST-seed
+- Brukeren kjørte initialiserings-SQL og viste skjermbilde med «Tilgang bekreftet». Hele innloggings-, tilgangs- og database-GET-kjeden er bekreftet i live TEST. Ingen grunn til å gjenta auth-feilsøking.
+- **Neste arbeid:** implementer V16.23-integrasjon med eksisterende `createSkv138Client`, GET før visning og sikker PUT/409-håndtering i `feature/neon-test-integration`. Undersøk eksisterende `index.html` `save()`/localStorage-mønster før endring; behold `main` uendret. Samle kodeendringer og tester før én planlagt TEST-deploy. Fjern midlertidig JWT-diagnostikk når integrasjonen er ferdig.
+
 # Start neste chat – SKV138
 Oppdatert: 2026-11-18
 
