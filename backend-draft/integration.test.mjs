@@ -5,6 +5,7 @@ import { createSkv138Client } from "./client-adapter.mjs";
 import { createLoginController } from "./login-controller.mjs";
 import { mountLoginForm } from "./login-form.mjs";
 import { createTestAccessVerifier } from "./access-verifier.mjs";
+import { readResetToken, clearResetTokenFromUrl } from "./reset-link.mjs";
 
 const state = () => ({
   settings: { checkin: "16:00" },
@@ -194,4 +195,15 @@ test("password reset completion rejects short passwords and invalid links", asyn
   const login = createLoginController({ ...authClient, resetPassword: async () => { throw Error("must not call"); } });
   assert.equal((await login.completePasswordReset("", "new-password-123")).ok, false);
   assert.equal((await login.completePasswordReset("token", "short")).ok, false);
+});
+
+test("reset link accepts a token only from the expected app origin", () => {
+  assert.equal(readResetToken("https://test.example/reset?token=abc_123", "https://test.example"), "abc_123");
+  assert.equal(readResetToken("https://evil.example/reset?token=abc_123", "https://test.example"), null);
+  assert.equal(readResetToken("https://test.example/reset?token=%3Cscript%3E", "https://test.example"), null);
+});
+test("reset link cleanup removes token without changing other query parameters", () => {
+  let target;
+  clearResetTokenFromUrl({ replaceState: (_a, _b, url) => { target = url; } }, "https://test.example/reset?token=abc&view=compact#top");
+  assert.equal(target, "/reset?view=compact#top");
 });
