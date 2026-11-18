@@ -51,7 +51,7 @@ export function createV1623StateBridge({ client, onStatus = () => {} }) {
     getRecoveryData() {
       if (!queue?.isBlocked()) return null;
       // Preserve latest local edits as well as the failed in-flight snapshot.
-      return { latest: copy(current), failed: queue.getFailedSnapshot() };
+      return { latest: queue.getLatestSnapshot() ?? copy(current), failed: queue.getFailedSnapshot() };
     },
     whenIdle: () => queue ? queue.whenIdle() : Promise.resolve(),
   };
