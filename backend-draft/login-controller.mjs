@@ -52,6 +52,24 @@ export function createLoginController(authClient) {
       }
       return { ok: true, message: "Hvis tilbakestilling er tilgjengelig for kontoen, mottar du en e-post." };
     },
+    async completePasswordReset(token, newPassword) {
+      if (typeof token !== "string" || !token.trim() ||
+          typeof newPassword !== "string" || newPassword.length < 8) {
+        return { ok: false, message: "Ugyldig lenke eller for kort passord." };
+      }
+      if (typeof authClient.resetPassword !== "function") {
+        return { ok: false, message: "Passordtilbakestilling er ikke konfigurert." };
+      }
+      try {
+        const response = await authClient.resetPassword({ token, newPassword });
+        if (response?.error) {
+          return { ok: false, message: "Lenken er ugyldig eller utløpt. Be om en ny lenke." };
+        }
+        return { ok: true, message: "Passordet er oppdatert. Du kan logge inn." };
+      } catch {
+        return { ok: false, message: "Kunne ikke oppdatere passordet. Prøv igjen." };
+      }
+    },
     async session() {
       const response = await authClient.getSession();
       return response?.error ? null : (response?.data?.session ? response.data : null);
