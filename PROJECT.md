@@ -170,3 +170,6 @@ Kodecommit `318bcfc`: Ny utleiebooking åpnet fra kalender får «Tilbake til ka
 
 ### V16.15 (2026-11-18)
 Kodecommit `c837837`: Bruker ønsker ankomst/avreise og innsjekk/utsjekk side om side på mobil. Gjeninnført to like brede kolonner i både privat- og utleieskjema, med kompakt iOS Safari-dato-/tidskontroll (redusert padding/font, min-width 0). Må kontrolleres på iPhone for eventuell avklipping. Retur til kalender fra V16.14 beholdt.
+
+### V16.16 (2026-11-18)
+Kodecommit `a26dfba`: Samme ikoner for alle fire tilvalg i skjema for utleiebooking: ♨️ Stamp, ⚡ Elbillading, 🛏️ Sengetøy/håndklær og 🐕 Hund. Ikonene i bookingdetaljer beholdes. Brukeren bekreftet at dato-/tidsfeltene i V16.15 er mye bedre. Ikke ny funksjonalitet.
