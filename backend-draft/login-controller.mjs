@@ -20,6 +20,38 @@ export function createLoginController(authClient) {
         return { ok: false, message: "Kunne ikke kontakte innloggingstjenesten." };
       }
     },
+    async register(email, password, name) {
+      const normalizedEmail = String(email || "").trim().toLowerCase();
+      const displayName = String(name || "").trim();
+      if (!normalizedEmail || typeof password !== "string" || password.length < 8 || !displayName) {
+        return { ok: false, message: "Oppgi navn, e-post og passord på minst 8 tegn." };
+      }
+      if (typeof authClient.signUp?.email !== "function") {
+        return { ok: false, message: "Registrering er ikke konfigurert." };
+      }
+      try {
+        const response = await authClient.signUp.email({ email: normalizedEmail, password, name: displayName });
+        if (response?.error) return { ok: false, message: "Registreringen mislyktes. E-postadressen kan allerede være i bruk." };
+        // Registration never adds a user to the SKV138 server-side allowlist.
+        return { ok: true };
+      } catch {
+        return { ok: false, message: "Kunne ikke kontakte registreringstjenesten." };
+      }
+    },
+    async requestPasswordReset(email) {
+      const normalizedEmail = String(email || "").trim().toLowerCase();
+      if (!normalizedEmail) return { ok: false, message: "Oppgi e-postadresse." };
+      if (typeof authClient.requestPasswordReset !== "function") {
+        return { ok: false, message: "Passordtilbakestilling er ikke konfigurert." };
+      }
+      try {
+        // Only useful when the managed auth service is configured to deliver reset emails.
+        await authClient.requestPasswordReset({ email: normalizedEmail });
+      } catch {
+        // Avoid disclosing whether an email account exists.
+      }
+      return { ok: true, message: "Hvis tilbakestilling er tilgjengelig for kontoen, mottar du en e-post." };
+    },
     async session() {
       const response = await authClient.getSession();
       return response?.error ? null : (response?.data?.session ? response.data : null);
