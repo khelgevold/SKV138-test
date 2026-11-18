@@ -1,0 +1,24 @@
+name: SKV138 Neon TEST checks
+on:
+  push:
+    branches: [feature/neon-test-integration]
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build:auth
+      - name: Verify TEST site contains authorized app
+        run: |
+          test -s backend-draft/test-site/app.html
+          test -s backend-draft/test-site/neon-test-entry.js
+          grep -q 'createV1623StateBridge' backend-draft/test-site/index.html
