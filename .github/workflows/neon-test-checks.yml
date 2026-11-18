@@ -13,8 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: npm
-      - run: npm ci
+      - run: npm install --no-save --package-lock=false
       - run: npm test
       - run: npm run build:auth
       - name: Verify TEST site contains authorized app
