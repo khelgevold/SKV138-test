@@ -54,3 +54,6 @@ The owner supplied the public managed Neon Auth endpoint for SKV138-TEST. It is 
 
 ## Authorization gate correction
 `neon-test-entry.mjs` now requires `verifyAccess()` to return exactly `status: ready` before invoking an explicitly supplied `onAuthorized(payload, client)` callback. The previous entrypoint discarded denied/uninitialized statuses, potentially allowing a caller to assume a successful login was sufficient. This correction is not yet tested in a live environment. Do not activate before verifying the actual Neon Auth token method, password enrollment and backend authorization.
+
+## Password reset request form draft
+`password-reset-form.mjs` implements a form adapter for a password reset *request*, with duplicate-submission protection and neutral account-existence messaging. It requires an injected `login.requestPasswordReset` implementation. This does **not** implement the reset-link landing page or the new-password submission; both must be verified against managed Neon Auth before activation. Not wired to V16.23 or a deployed TEST site. No reset email has been sent by this code.
