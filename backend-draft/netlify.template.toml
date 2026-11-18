@@ -1,0 +1,11 @@
+# SKV138 TEST Netlify configuration TEMPLATE ONLY.
+# This file is deliberately outside the repository root: it is not active.
+# Before activation, review Neon Auth SDK/token behavior, build output,
+# runtime role permissions, function path, environment variables, and first import.
+[build]
+  command = "npm run build:auth"
+  publish = "backend-draft/dist"
+  functions = "backend-draft/netlify-functions"
+
+[functions]
+  node_bundler = "esbuild"
