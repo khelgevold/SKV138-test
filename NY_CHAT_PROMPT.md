@@ -92,3 +92,13 @@ Commit `9065dce26408c917a5719ef94087d58e56fad256`: eldre V11-kode setter dynamis
 Commit `a8815f530bef4351408beef47f1fbe99f3fa3e31`: For Lager → Privat skjules minimumsbeholdning og Fast vare; feltet «Ny plassering» (fritekst) fjernes; nedtrekkslisten for plassering bruker kun administrerte steder fra Innstillinger. Opprettelse av privat vare bruker navn, antall og valgt plassering, lagrer med `min:0`, `fixed:false`, lukker skjemaet etter lagring. Utleie uendret. Test på iPhone gjenstår. Bookinger og Plattformgebyrer allerede godkjent.
 
 V16.23 (18.11.2026): CSS-spesifisitet rettet for Privatlager: Minimumsbeholdning og Fast vare skjules med eksplisitt prioritet i Privat, fortsatt synlige i Utleie. Commit `2d4bd65189eb6e4d5a9e44675d83cb2412a8b24c`. iPhone-test gjenstår.
+
+
+## NYESTE OVERLEVERING – START HER (18.11.2026)
+Du fortsetter prosjektet SKV138 i GitHub-repo `khelgevold/SKV138-test`. Les `PROJECT.md` og `ARBEIDSREGLER.md`, spesielt siste statusblokk datert 18.11.2026. Historiske «ikke godkjent»-meldinger i eldre V16-logg er avløst: **V16.23 er fullt godkjent av brukeren**, alle faner, og skal ikke endres uten ny avtale. Appen er fortsatt localStorage-basert prototype, ikke produksjonsklar.
+
+Vi har valgt å beholde ChatGPT → GitHub → Netlify og begrense deploys for å spare credits. Supabase Pro er vurdert for dyrt. Vi har valgt å prøve **Neon** som database for SKV138, fremfor Firebase. Neon gratisprosjekt `SKV138-TEST` er opprettet i Frankfurt, project ID `lively-block-14962279`, med PostgreSQL og Better Auth aktivert. Standardgren heter `production`, men dette er bare Neons interne navn, ikke SKV138 PROD. Ingen brukere, datatabeller, tilkobling til appen, prod-prosjekt eller Netlify-endringer er opprettet i denne fasen.
+
+**Viktig sikkerhet:** Neon Better Auth advarer at hvem som helst på nettet kan registrere seg. Appen er bare for brukeren og Melinda. Undersøk derfor reell autorisasjon (tillat kun to bruker-ID-er / allowlist med server- eller databasehåndheving), trygg frontend-tilgang, og sikkerhetskopiering. Ikke stol på å skjule registreringsknapper. Ikke be om eller del hemmelige databasepassord/connection strings i chat eller GitHub.
+
+**Start neste chat slik:** Be brukeren åpne Neon `Better Auth → Configure Auth` og sende skjermbilde. Ikke opprett brukere eller endre innstillinger før gjennomgang. Ta ett steg av gangen. Planlegg datamodell og migrering fra localStorage før kodeendringer. Ikke endre `index.html`, ikke deploy, og ikke gjør produksjonsendringer uten eksplisitt godkjenning. Oppdater relevante .md-filer i GitHub underveis, uten å bruke Netlify-credits til dokumentasjonsendringer.
