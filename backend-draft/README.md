@@ -33,3 +33,6 @@ Work-in-progress branch: `feature/neon-test-integration`. `login-controller.mjs`
 
 ## Focused automated tests (not yet executed)
 `integration.test.mjs` uses Node's built-in test runner: `node --test backend-draft/integration.test.mjs`. It covers local preview without writes, invalid/missing data, state validation, token forwarding, version increments, 409 conflict handling, and login-controller shape. These are unit tests with mocks, **not** a live Neon/Auth/Netlify integration test. Do not claim passing results before running them.
+
+## CI result (2026-11-18)
+GitHub Actions screenshot supplied by project owner shows `SKV138 backend draft tests #1` on `feature/neon-test-integration` (commit `dc85b98`) with green success status, duration 10 seconds. This confirms the CI job succeeded, not live Neon integration. The next milestone is verified managed Neon Auth client setup and credential-password onboarding, followed by explicit TEST activation approval.
