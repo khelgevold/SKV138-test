@@ -65,3 +65,8 @@ Privat administrasjonsapp for hytteutleie og privat bruk i Sirdal. Skal brukes a
 ## 18.11.2026 – Auth-verifisering, sikkerhetsretting
 - Backend krever nå `NEON_AUTH_ISSUER` eksplisitt i stedet for å anta at JWT-utsteder er Auth-domenets origin. Må verifiseres mot faktisk Neon TEST-metadata/token før deploy; `NEON_AUTH_JWKS_URL` må samsvare.
 - Fortsatt ingen live innlogging eller TEST-deploy. Ingen endring i V16.23 eller PROD.
+
+## 18.11 – Isolert TEST-publisering: klargjøring
+- Passordtilbakestilling sender nå `redirectTo` tilbake til TEST-sidens URL; test lagt til. Ingen deploy.
+- Bruker har vist at Neon TEST bruker Shared e-postleverandør og at e-postinnlogging er på. Faktisk e-postlevering/passordtilbakestilling er ikke verifisert.
+- Neste: velge separat Netlify TEST-site og kjent hostname, tillate domene i Neon Auth, bekrefte JWT issuer/JWKS, database-rolle og allowlist, deretter godkjent TEST-deploy. V16.23/PROD urørt.
