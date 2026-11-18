@@ -51,3 +51,6 @@ The owner supplied the public managed Neon Auth endpoint for SKV138-TEST. It is 
 
 ## Backend authorization verification (2026-11-18)
 `access-verifier.mjs` injects the existing client adapter to perform authenticated backend GET after sign-in. It distinguishes 401 login-required, 403 user-not-allowlisted and 404 shared-state-not-initialized. Only a validated successful GET yields `status: ready` with payload. Two mocked tests added. Not yet wired to the live browser entrypoint, deployed, or integration-tested.
+
+## Authorization gate correction
+`neon-test-entry.mjs` now requires `verifyAccess()` to return exactly `status: ready` before invoking an explicitly supplied `onAuthorized(payload, client)` callback. The previous entrypoint discarded denied/uninitialized statuses, potentially allowing a caller to assume a successful login was sufficient. This correction is not yet tested in a live environment. Do not activate before verifying the actual Neon Auth token method, password enrollment and backend authorization.
