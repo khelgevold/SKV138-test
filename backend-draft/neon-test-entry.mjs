@@ -36,7 +36,7 @@ export function startSkv138TestLogin({ document, verifyAccess, onAuthorized, neo
       // Must make an authenticated GET to the SKV138 backend before showing app data.
       const result = await verifyAccess(authClient);
       if (result?.status !== "ready") {
-        throw new Error("SKV138 backend access not granted: " + (result?.status || "unknown") + (result?.testDiagnostic ? " TEST_JWT_" + result.testDiagnostic : ""));
+        throw new Error("SKV138 backend access not granted: " + (result?.status || "unknown") + (result?.testDiagnostic ? " TEST_JWT_" + result.testDiagnostic : "") + (result?.testClaim ? " TEST_CLAIM_" + result.testClaim : "") + (result?.testReason ? " TEST_REASON_" + result.testReason : ""));
       }
       await onAuthorized(result.payload, result.client);
     },
