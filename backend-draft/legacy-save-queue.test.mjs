@@ -51,6 +51,7 @@ test("409 blocks further writes without retry or overwrite", async () => {
   assert.equal(queue.isBlocked(), true);
   assert.equal(queue.enqueue({ value: 2 }), false);
   assert.equal(count, 1);
+  assert.deepEqual(queue.getFailedSnapshot(), { value: 1 });
   assert.deepEqual(statuses, ["pending", "conflict"]);
 });
 
