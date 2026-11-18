@@ -1,3 +1,15 @@
+# START HER – SKV138, oppdatert 18.11.2026 kl. 21:20
+
+Vi fortsetter SKV138 i GitHub `khelgevold/SKV138-test`, aktiv gren `feature/neon-test-integration`. Les først **øverste status i `project.md`**, deretter `utviklingsregler.md`, `parkeringsplassen.md` og relevant kode. Nyeste status overstyrer eldre historikk i dokumentene. ChatGPT gjør GitHub-arbeid selv, minimerer unødvendige Netlify-deploys og ber om kun én nødvendig brukerhandling av gangen.
+
+**Nåværende status:** Neon TEST på https://skv138-neon-test.netlify.app fungerer i Safari på iPhone og PC. Innlogging, Neon GET/PUT og privat booking fungerer. Utleiebooking fungerte ikke pga. rekursiv `saveBooking`/hoisting, rettet i `backend-draft/test-site/app.html` commit `39709cc`; brukeren bekreftet at vanlig utleiebooking nå kan lagres. Netlify `SKV138_APP_ORIGIN` er korrigert (fjernet avsluttende skråstrek). PC-bunnmeny er gjort fast i TEST-koden. Godkjent V16.23 i `main` er urørt; ingen PROD.
+
+**Brukeren tester nå hele appen** (booking, utbetaling, kansellering, oppgaver/sjekklister, lager, statistikk og innstillinger). Ikke avbryt med unødvendige tester. Hvis et problem hindrer videre testing, undersøk og rett målrettet. Ellers samle funn til en samlet kodepakke. Sjekk ved anledning at lagret utleiebooking finnes etter refresh (ikke eksplisitt bekreftet). **Åpen feil:** iPhone installert webapp/PWA får `TEST_DIAG_TOKEN_EXCEPTION` ved innlogging, mens Safari fungerer; må utredes før PROD. Midlertidig auth-diagnostikk skal fjernes før produksjon.
+
+**Arbeidsregler:** Ingen endringer i `main`, Neon-data eller PROD uten avtale. Unngå ekstra CI-tester og Netlify-publiseringer uten behov. Oppdater `project.md` og `startnestechat.md` ved milepæler; `parkeringsplassen.md` kun for avtalte utsatte ønsker. Ikke forveksle gammel historikk under denne toppseksjonen med gjeldende status.
+
+---
+
 # START HER – ny chat SKV138 (18.11.2026 kl. 20:15)
 
 Vi fortsetter SKV138 i GitHub `khelgevold/SKV138-test`, gren `feature/neon-test-integration`. Les gjeldende toppseksjon i `project.md`, `utviklingsregler.md`, `parkeringsplassen.md`, og relevant faktisk kode i `backend-draft/`. **Nyeste status overstyrer eldre historiske tekster lenger ned i dokumentene.** ChatGPT gjør alt mulig GitHub-arbeid selv; brukeren skal kun gjøre nødvendige UI-tester. Ikke gjør mer enn nødvendig; minimer Netlify-deploys og repetisjon.
