@@ -36,3 +36,6 @@ Work-in-progress branch: `feature/neon-test-integration`. `login-controller.mjs`
 
 ## CI result (2026-11-18)
 GitHub Actions screenshot supplied by project owner shows `SKV138 backend draft tests #1` on `feature/neon-test-integration` (commit `dc85b98`) with green success status, duration 10 seconds. This confirms the CI job succeeded, not live Neon integration. The next milestone is verified managed Neon Auth client setup and credential-password onboarding, followed by explicit TEST activation approval.
+
+## Neon Auth SDK integration (draft)
+`neon-auth-bootstrap.mjs` now uses Neon's documented `createAuthClient` from `@neondatabase/neon-js/auth`, configured with the public TEST branch Auth URL. It is a bundler module, not a directly executable standalone HTML script. It is not connected to `login-preview.html` or `index.html`. Do not add the database connection string to browser code. The previously created Neon dashboard user has a credential account without a password; password enrollment must use supported Neon/Better Auth flows, not direct database updates. Before enabling the login screen, confirm the exact managed Auth endpoint, allowed origins, SDK token method and server-side JWT validation against the actual TEST service. Reference: https://neon.com/blog/handling-auth-in-a-staging-environment .
