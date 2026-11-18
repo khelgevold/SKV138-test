@@ -6,10 +6,10 @@ import { SKV138_TEST_AUTH_URL } from "./neon-test-config.mjs";
 import { mountLoginForm } from "./login-form.mjs";
 import { createTestAccessVerifier } from "./access-verifier.mjs";
 
-export function startSkv138TestLogin({ document, verifyAccess, onAuthorized }) {
+export function startSkv138TestLogin({ document, verifyAccess, onAuthorized, neonLogin }) {
   if (typeof verifyAccess !== "function") throw new Error("Backend access verifier required");
   if (typeof onAuthorized !== "function") throw new Error("Authorized state handler required");
-  const { login, authClient } = createNeonTestLogin(SKV138_TEST_AUTH_URL);
+  const { login, authClient } = neonLogin || createNeonTestLogin(SKV138_TEST_AUTH_URL);
   const unmount = mountLoginForm({
     document,
     login,
@@ -27,12 +27,13 @@ export function startSkv138TestLogin({ document, verifyAccess, onAuthorized }) {
 
 // Use this entrypoint once a bundler and TEST backend have been configured.
 // The backend GET checks the allowlist; only then is onAuthorized invoked.
-export function startConfiguredSkv138TestLogin({ document, fetchImpl, storage, onAuthorized }) {
+export function startConfiguredSkv138TestLogin({ document, fetchImpl, storage, onAuthorized, neonLogin }) {
   const verifyAccess = createTestAccessVerifier({ fetchImpl, storage });
-  return startSkv138TestLogin({ document, verifyAccess, onAuthorized });
+  return startSkv138TestLogin({ document, verifyAccess, onAuthorized, neonLogin });
 }
  
 export { mountPasswordResetForm } from "./password-reset-form.mjs";
 export { mountNewPasswordForm } from "./new-password-form.mjs";
 export { readResetToken, clearResetTokenFromUrl } from "./reset-link.mjs";
 export function createNeonTestLoginController() { return createNeonTestLogin(SKV138_TEST_AUTH_URL).login; }
+export function createNeonTestSession() { return createNeonTestLogin(SKV138_TEST_AUTH_URL); }
