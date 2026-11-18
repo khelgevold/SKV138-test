@@ -39,6 +39,9 @@ export function createSkv138Client({ authClient, fetchImpl, storage, endpoint = 
     if (!response.ok) {
       const error = new Error(response.status === 409 ? "Conflict: reload before saving" : (data.error || "Request failed"));
       error.status = response.status;
+      if (response.status === 401 && typeof data.testDiagnostic === "string" && /^[A-Z_]{2,60}$/.test(data.testDiagnostic)) {
+        error.testDiagnostic = data.testDiagnostic;
+      }
       throw error;
     }
     return data;
