@@ -41,6 +41,8 @@ export function createSkv138Client({ authClient, fetchImpl, storage, endpoint = 
       error.status = response.status;
       if (response.status === 401 && typeof data.testDiagnostic === "string" && /^[A-Z_]{2,60}$/.test(data.testDiagnostic)) {
         error.testDiagnostic = data.testDiagnostic;
+        if (["iss", "aud", "sub", "exp", "nbf", "iat", "jti", "unknown"].includes(data.testClaim)) error.testClaim = data.testClaim;
+        if (["check_failed", "missing", "invalid", "unknown"].includes(data.testReason)) error.testReason = data.testReason;
       }
       throw error;
     }
