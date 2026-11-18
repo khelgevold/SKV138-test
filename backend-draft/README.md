@@ -21,3 +21,6 @@ Official Neon Functions documentation: https://neon.com/docs/compute/functions/a
 - `createMigrationPreview(storage)` only reads, validates and summarizes data. No writes, database calls or automatic import.
 - Backend PUT validation now checks the V16.23 shape and `privateLocations`.
 - Initial import, explicit confirmation, backup, authorization and TEST deployment remain unimplemented.
+
+## Client adapter – inactive
+`client-adapter.mjs` accepts an injected Neon Better Auth client with `token()`, an injected fetch and a localStorage reader. It acquires a short-lived token per request, uses Bearer authorization, checks returned state, tracks version, and refuses saves before load or after 409. It never stores tokens or modifies the V16.23 prototype. The real auth client configuration, session UX, Netlify wiring and tests remain open.
