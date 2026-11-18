@@ -55,7 +55,12 @@ export async function handler(event) {
     if (!expectedOrigin || origin !== expectedOrigin) return json(403, { error: "Origin denied" });
   }
 
-  const client = await pool.connect();
+  let client;
+  try { client = await pool.connect(); }
+  catch (error) {
+    console.error("SKV138 database connection failed", error);
+    return json(503, { error: "Database unavailable" });
+  }
   try {
     if (!(await permitted(client, userId))) return json(403, { error: "Access denied" });
     if (event.httpMethod === "GET") {
