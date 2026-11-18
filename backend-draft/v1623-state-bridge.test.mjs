@@ -54,3 +54,15 @@ test("bridge blocks writes on conflict and preserves latest unsaved edit", async
   assert.deepEqual(bridge.getRecoveryData().failed.bookings, [{ id: 1 }]);
   assert.equal(statuses.at(-1), "conflict");
 });
+
+test("authorized payload is reused without a second database GET", async () => {
+  let loads=0;
+  const bridge=createV1623StateBridge({
+    client:{load:async()=>{loads++;return initial()},save:async()=>{}},
+  });
+  const server=initial();
+  server.privateLocations.push("Kjøkkenskap");
+  const result=await bridge.initialize(server);
+  assert.equal(loads,0);
+  assert.deepEqual(result.privateLocations,["Bod","Kjøkkenskap"]);
+});
