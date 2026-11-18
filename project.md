@@ -49,3 +49,7 @@ Privat administrasjonsapp for hytteutleie og privat bruk i Sirdal. Skal brukes a
 - Faktisk `index.html` kontrollert: `hytteokonomi-v3-test`, `skv138_private_locations`, `hytteokonomi-theme`.
 - `backend-draft/state-contract.mjs` opprettet med skrivefri importforhåndsvisning. Backend-validering tilpasset.
 - Ikke aktivert, testet, deployet eller importert. V16.23 urørt.
+
+## 18.11.2026 – Klientadapter klargjort (ikke aktiv)
+- `backend-draft/client-adapter.mjs` opprettet: injisert Neon Auth-klient, kortvarig token per forespørsel, GET/PUT med versjonskontroll og 409-håndtering.
+- Ikke koblet til `index.html`, ikke deployet eller testet. Ingen data endret.
