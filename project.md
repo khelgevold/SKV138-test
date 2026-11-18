@@ -10,6 +10,10 @@
 - Midlertidige `TEST_DIAG_*`-diagnostikkmeldinger i auth-klienten gjenstår å rydde før produksjon. Unngå unødvendige enkeltdeploys.
 - **Neste handling:** La brukeren fullføre funksjonstesten og rapportere konkrete feil fortløpende. Rett nødvendige blokkere når de hindrer videre testing, ellers samle rettelser for færrest mulig Netlify-deploys. Én nødvendig brukerhandling om gangen. Ved videre arbeid: les `utviklingsregler.md`, dette dokumentet og faktisk kode. Ikke gjør unødvendige tester, endringer i main eller databaseoperasjoner.
 
+## Avtalt forbedring under funksjonstest – oppgaver for private bookinger (18.11.2026 kl. 22:26)
+Brukeren ønsker å beholde eksisterende oppgavemal-skjema og regler. Legg til «Privat booking» som ekstra valg i eksisterende «Plattform»-nedtrekk (Alle plattformer, Finn.no, Airbnb, Booking.com, Direkte, Privat booking). «Alle plattformer» skal fortsatt bety utleieplattformene, ikke privat. Når Privat booking er valgt, skal oppgavemalen generere oppgaver for private opphold med samme relevante frister, oppgavetype, gjennomføring og visning i Oppgaver-fanen, tilpasset at private opphold har annen datamodell/skjema enn utleiebookinger. Eksempel: «Skru på varme». Ikke automatisk legg alle utleieoppgaver på privat. Ikke endre kode eller deploy nå; ta med i samlet forbedringspakke etter funksjonstest.
+
+
 ---
 
 # GJELDENDE STATUS – 18.11.2026 kl. 20:15 (les først)
