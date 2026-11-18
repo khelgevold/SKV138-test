@@ -2,7 +2,7 @@
 // The Auth URL is public configuration, not a database credential.
 // Bundler must resolve @neondatabase/auth; do not load this file directly
 // as a raw browser ES module without bundling.
-import { createAuthClient } from "@neondatabase/neon-js/auth";
+import { createAuthClient } from "@neondatabase/auth";
 import { createLoginController } from "./login-controller.mjs";
 
 export function createNeonTestLogin(authUrl) {
