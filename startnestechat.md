@@ -17,3 +17,7 @@ Neste konkrete steg: Be brukeren åpne `Better Auth → Configure Auth` i Neon T
 - Neon TEST SQL-migrering med tre skv138-tabeller er kjørt vellykket av brukeren; ingen appdata migrert. Én Better Auth-bruker er opprettet i dashboard uten passord. Ikke be om å gjenta dette.
 - Les [neon-backend-plan.md](neon-backend-plan.md) for API- og sikkerhetsplan.
 - Neste: avklar faktisk Neon Better Auth-token/sesjonsverifisering og trygg passordflyt, bygg deretter API med eksplisitt tilgangsliste og atomisk versjonering. Ikke endre V16.23 eller deploy uten godkjenning. Følg utviklingsregler.md.
+
+## 18.11.2026 – Backend-utkast i GitHub
+- `backend-draft/skv138-state.mjs` og `backend-draft/README.md` er lagret, men ikke aktivert eller deployet. Les README for blokkere og sikkerhetspunkter. Ikke beskriv dette som ferdig API.
+- Neste: verifiser Neon JWT-tokenflyt og issuer, opprett begrenset runtime-rolle/GRANT, bygg frontend-innlogging og migreringsflyt; samlet TEST-deploy først etter avklaring. V16.23 urørt.
