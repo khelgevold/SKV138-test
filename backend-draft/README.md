@@ -45,3 +45,6 @@ GitHub Actions screenshot supplied by project owner shows `SKV138 backend draft 
 
 ## Form event adapter
 `login-form.mjs` provides `mountLoginForm({document,login,onSignedIn})` for the TEST login form. It disables repeat submissions while pending, clears the password field after an attempted sign-in, and delegates successful sign-in to a separate backend-access check. It is intentionally not activated in `login-preview.html`: real managed Auth configuration and a verified backend access check are still prerequisites. The module is not yet covered by automated tests.
+
+## Supplied TEST Auth URL (2026-11-18)
+The owner supplied the public managed Neon Auth endpoint for SKV138-TEST. It is stored in `neon-test-config.mjs` (not a secret). `neon-test-entry.mjs` connects the config to the isolated login controller and form adapter, requiring an injected `verifyAccess(authClient)` callback. It is not loaded in the current HTML preview, not bundled, not deployed, and not functionally verified. Before any activation, implement a real authenticated backend verifier and confirm the SDK client/token API and existing-user password enrollment. No production URL has been configured.
