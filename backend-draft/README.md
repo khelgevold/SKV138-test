@@ -78,3 +78,6 @@ The isolated TEST shell now contains password-reset request and new-password for
 
 ## Shared Auth client correction (18 Nov)
 The TEST shell now creates a single Neon Auth client/controller and passes the same instance to sign-in, backend access verification and password reset, instead of constructing two independent clients. This avoids session inconsistency between forms. New changes await CI verification. Before live TEST deployment, verify SDK token and reset methods and the backend JWT contract with the actual managed Neon Auth service; do not assume passing mocks prove compatibility.
+
+## User-facing access errors
+The login form now distinguishes backend authorization denial (`not_authorized`) and uninitialized shared data (`not_initialized`) from generic connection errors. This is a UI-only draft change; it does not bypass authorization or initialize data. No live Neon verification has occurred.
