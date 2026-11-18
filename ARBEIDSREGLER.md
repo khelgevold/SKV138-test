@@ -1,5 +1,8 @@
 # SKV138 – ARBEIDSREGLER.md
 
+> **NY DOKUMENTSTRUKTUR (18.11.2026):** Gjeldende status og regler ligger nå i `project.md`, `startnestechat.md`, `utviklingsregler.md` og `parkeringsplassen.md`. Dette dokumentet beholdes for historikk/kompatibilitet. Eldre statuslinjer under kan være utdaterte. Les de nye dokumentene først.
+
+
 **Opprettet:** 2026-11-16  
 **Gjelder:** Alle fremtidige SKV138-chatter og versjoner.  
 **Prioritet:** Brukerens nyeste eksplisitte instruksjon går foran dette dokumentet. Ved motstrid mellom dokumenter: avklar med brukeren, ikke gjett.
