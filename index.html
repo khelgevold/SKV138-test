@@ -158,6 +158,31 @@ html{-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{font-size:15px;l
 #nav.nav button.active .v16-nav-icon{stroke-width:2.3}
 #nav.nav button span{white-space:nowrap}
 @media(min-width:500px){#nav.nav .v16-nav-icon{width:30px;height:30px}}
+</style><style id="v1610-mobile-fixes">
+.v1610-booking-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+.v1610-booking-filters label{min-width:0;font-size:.86rem}.v1610-booking-filters select{width:100%;min-width:0;box-sizing:border-box}
+#lager .v1610-stock-list{padding:8px 12px}
+#lager .v1610-stock-list>.stock-item{display:flex;align-items:center;flex-wrap:nowrap;gap:8px;padding:9px 0;margin:0;border-bottom:1px solid var(--border,#45564e)}
+#lager .v1610-stock-list>.stock-item>div:first-child{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+#lager .v1610-stock-list .stock-counter{flex:0 0 auto;display:flex;align-items:center;gap:7px}
+#lager .v1610-stock-list .stock-counter button{min-width:34px;width:34px;height:36px;padding:0}
+#lager .v1610-stock-list .stock-edit{font-size:1.2rem;padding:2px 7px;min-height:30px;min-width:30px}
+#lager .v1610-stock-list .v16-location-label{font-size:.75rem}
+#lager .v1610-stock-add{padding:12px 14px}
+#lager .v1610-stock-add>h2{font-size:1rem}
+#innstillinger .v16-settings-accordion label,#innstillinger .v16-settings-accordion input,#innstillinger .v16-settings-accordion select{min-width:0;max-width:100%;box-sizing:border-box}
+#innstillinger .v16-settings-accordion input[type=time]{width:100%;max-width:100%;min-width:0}
+#innstillinger .v16-settings-accordion .message-row{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:12px 0}
+#innstillinger .v16-settings-accordion .message-row>div:first-child{width:100%;min-width:0;overflow-wrap:anywhere}
+#innstillinger .v16-settings-accordion .message-actions{width:100%;display:flex;gap:6px;justify-content:flex-start;flex-wrap:wrap}
+#innstillinger .v16-settings-accordion .message-actions button{flex:1 1 0;min-width:0;padding:9px 5px;font-size:.9rem}
+#innstillinger .v16-settings-accordion .fee-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#innstillinger .v16-settings-accordion .fee-row label:first-child{grid-column:1/-1}
+@media(max-width:650px){
+#innstillinger .v16-settings-accordion label:has(>input[type=time]){display:block;width:100%;min-width:0}
+#innstillinger .v16-settings-accordion .row:has(input[type=time]){display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+#innstillinger .v16-settings-accordion .row:has(input[type=time])>label{width:100%;min-width:0}
+}
 </style></head><body><header><div><h1>⌂ SKV138</h1><div style="opacity:.8;font-size:13px">V16 · Lokal testprototype</div></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
 <section id="oversikt" class="active"><div class="row"><button onclick="changeYear(-1)">‹</button><span class="year" id="yearTitle"></span><button onclick="changeYear(1)">›</button></div><div class="grid" id="metrics"></div><div class="card"><h2>Utbetalinger og skatt hittil i år</h2><div class="grid" id="v15YtdMetrics"></div></div><div class="card"><div class="row"><h2>Neste oppgaver</h2><button onclick="show('oppgaver')">Se alle</button></div><div id="nextTasks"></div></div></section>
 <section id="bookinger"><div class="row"><h2>Bookinger</h2><div class="booking-create"><button class="primary" onclick="newBooking()">+ Ny booking</button><button onclick="newPrivateStay()">+ Privat booking</button></div></div><div class="segmented triple" id="bookingTypeFilters"><button onclick="setBookingTypeFilter('all')">Alle</button><button onclick="setBookingTypeFilter('rental')">Utleie</button><button onclick="setBookingTypeFilter('private')">Privat</button></div><div id="bookingList"></div><div id="bookingDetail"></div></section>
@@ -944,6 +969,117 @@ editRule=function(id){
 
 /* V16.9: clear, consistently sized vector icons in bottom navigation. */
 $('nav').innerHTML="<button data-tab=\"oversikt\" class=\"active\" onclick=\"show('oversikt')\" aria-label=\"Oversikt\"><svg class=\"v16-nav-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/></svg><span>Oversikt</span></button><button data-tab=\"bookinger\" class=\"\" onclick=\"show('bookinger')\" aria-label=\"Bookinger\"><svg class=\"v16-nav-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"4\" y=\"5\" width=\"16\" height=\"16\" rx=\"2\"/><path d=\"M8 3v4M16 3v4M4 10h16M8 14h3M8 18h7\"/></svg><span>Bookinger</span></button><button data-tab=\"kalender\" class=\"\" onclick=\"show('kalender')\" aria-label=\"Kalender\"><svg class=\"v16-nav-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M7 3v4M17 3v4M3 10h18M8 14h3M14 14h3M8 18h3\"/></svg><span>Kalender</span></button><button data-tab=\"oppgaver\" class=\"\" onclick=\"show('oppgaver')\" aria-label=\"Oppgaver\"><svg class=\"v16-nav-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"4\" y=\"3\" width=\"16\" height=\"18\" rx=\"2\"/><path d=\"m8 12 2.5 2.5L16 9M8 18h8\"/></svg><span>Oppgaver</span></button><button data-tab=\"lager\" class=\"\" onclick=\"show('lager')\" aria-label=\"Lager\"><svg class=\"v16-nav-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 7h18v14H3zM2 3h20v4H2zM10 3v4M8 12h8\"/></svg><span>Lager</span></button><button data-tab=\"mer\" class=\"\" onclick=\"show('mer')\" aria-label=\"Mer\"><svg class=\"v16-nav-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"5\" cy=\"12\" r=\"1.5\"/><circle cx=\"12\" cy=\"12\" r=\"1.5\"/><circle cx=\"19\" cy=\"12\" r=\"1.5\"/></svg><span>Mer</span></button>";
+
+
+/* V16.10 – consolidated mobile corrections. */
+const v1610BookingIcon='<svg class="v16-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h8l4 4v14H5V3h2zM15 3v5h5M8 12h8M8 16h5"/></svg>';
+const v1610BookingTab=$('nav')?.querySelector('[data-tab="bookinger"] .v16-nav-icon');
+if(v1610BookingTab)v1610BookingTab.outerHTML=v1610BookingIcon;
+const v1610BookingType=$('bookingTypeFilters');
+if(v1610BookingType)v1610BookingType.style.display='none';
+function v1610SetBookingFilter(which,value){
+ if(which==='period')v16BookingPeriod=value;
+ else bookingTypeFilter=value;
+ renderBookings();
+}
+const v1610BookingRenderBase=renderBookings;
+renderBookings=function(){
+ v1610BookingRenderBase();
+ const panel=$('v16BookingPeriod');
+ if(panel){
+  panel.className='v1610-booking-filters';
+  panel.innerHTML='<label>Periode<select aria-label="Periode" onchange="v1610SetBookingFilter(\'period\',this.value)"><option value="upcoming">Aktuelle</option><option value="past">Tidligere</option><option value="cancelled">Kansellerte</option></select></label><label>Type<select aria-label="Type" onchange="v1610SetBookingFilter(\'type\',this.value)"><option value="all">Alle</option><option value="rental">Utleie</option><option value="private">Privat</option></select></label>';
+  panel.querySelector('select[aria-label="Periode"]').value=v16BookingPeriod;
+  panel.querySelector('select[aria-label="Type"]').value=bookingTypeFilter;
+ }
+ const section=$('bookinger');
+ if(section)section.classList.toggle('v16-booking-detail',!!$('bookingDetail')?.querySelector('#bookingOpen,#bookingForm'));
+};
+const v1610TasksBase=renderTasks;
+renderTasks=function(){
+ v1610TasksBase();
+ if(taskFilterV8!=='done')return;
+ const list=$('taskList');if(!list)return;
+ const shown=tasks().filter(done).reverse();
+ const groups=[];
+ for(const t of shown){
+  const last=groups[groups.length-1];
+  if(last&&String(last.bookingId)===String(t.bookingId))last.items.push(t);
+  else groups.push({bookingId:t.bookingId,guest:t.guest,platform:t.platform,items:[t]});
+ }
+ list.innerHTML=groups.length?groups.map(g=>`<div class="v16-task-group"><div class="v16-task-heading"><strong>${esc(g.guest)}</strong><span class="sub">${esc(g.platform)}</span></div>${g.items.map(v16TaskItemHtml).join('')}</div>`).join(''):'<div class="empty">Ingen oppgaver</div>';
+};
+const v1610StockBase=renderStock;
+renderStock=function(){
+ v1610StockBase();
+ const list=$('stockList');if(!list)return;
+ list.classList.add('v1610-stock-list');
+ list.querySelectorAll(':scope > .stock-item').forEach(row=>{
+  const button=row.querySelector('button.stock-edit');
+  if(button){button.textContent='✎';button.title='Rediger vare';button.setAttribute('aria-label','Rediger vare');}
+ });
+ const addCard=$('stockName')?.closest('.card');
+ if(addCard){addCard.classList.add('v1610-stock-add');const h=addCard.querySelector('h2');if(h)h.textContent='Ny vare';}
+};
+const v1610YearStatsBase=v10YearStats;
+v10YearStats=function(y){
+ const v=v1610YearStatsBase(y);
+ const platforms={};
+ for(const b of state.bookings){
+  const a=bookingAmounts(b);
+  let fraction=0;
+  if(b.cancelled)fraction=Number((b.cancelDate||b.start).slice(0,4))===y?1:0;
+  else{const n=nights(b);fraction=n>0?v10YearNights(b,y)/n:0}
+  if(!fraction)continue;
+  const p=platforms[b.platform]||(platforms[b.platform]={gross:0,fees:0,count:0});
+  p.gross+=a.gross*fraction;p.fees+=a.fee*fraction;p.count++;
+ }
+ v.platforms=platforms;
+ return v;
+};
+function v1610CalendarPaint(){
+ const grid=$('calendarGrid');if(!grid)return;
+ grid.querySelectorAll('button.calendar-cell').forEach(btn=>{
+  const match=(btn.getAttribute('onclick')||'').match(/selectCalendarDay\('([^']+)'\)/);
+  if(!match)return;
+  const day=match[1];
+  btn.onclick=()=>v16PickCalendarDate(day);
+  btn.removeAttribute('onclick');
+  btn.classList.toggle('selected',!!v16RangeStart&&day>=v16RangeStart&&day<=(v16RangeEnd||v16RangeStart));
+ });
+ const panel=$('calendarDay');if(!panel)return;
+ if(!v16RangeStart)return;
+ panel.innerHTML='<div class="card calendar-day-card"><div class="row wrap"><h2>'+(v16RangeEnd?'Valgt periode':'Velg avreisedato')+'</h2><button onclick="v16ClearRange()">Nullstill</button></div><p>'+fmt(v16RangeStart)+(v16RangeEnd?' – '+fmt(v16RangeEnd):' · Velg en senere dato')+'</p>'+(v16RangeEnd?'<div class="private-actions"><button onclick="v16CreatePrivate()">+ Privat booking</button><button onclick="v16CreateRental()">+ Utleiebooking</button></div>':'')+'</div>';
+}
+const v1610CalendarBase=renderCalendar;
+renderCalendar=function(){v1610CalendarBase();v1610CalendarPaint()};
+const v1610PickBase=v16PickCalendarDate;
+v16PickCalendarDate=function(day){
+ if(v16RangeStart&&!v16RangeEnd&&day>v16RangeStart){
+  const conflict=v10Stays().find(s=>v16RangeStart<s.end&&day>s.start);
+  if(conflict){alert('Perioden overlapper med '+conflict.name+'. Velg andre datoer.');return}
+ }
+ v1610PickBase(day);
+};
+function v1610TrimInfo(){
+ const calendar=$('calendarGrid')?.parentElement;
+ if(calendar)calendar.querySelectorAll(':scope > p.hint').forEach(p=>p.remove());
+ const settings=$('innstillinger');if(!settings)return;
+ const appearance=[...settings.querySelectorAll('.card')].find(card=>card.querySelector('h2')?.textContent.trim()==='Utseende'||card.querySelector('summary')?.textContent.trim()==='Utseende');
+ if(appearance)appearance.remove();
+ const removeSnippets=['Disse standardtidene brukes på nye bookinger','Frister og oppgaver redigeres nå','Opprett, rediger og kopier meldinger','Reglene lager oppgaver automatisk','Legg inn hva du vil sitte igjen med','Velg per plattform. Utvask inkludert','Prisene er veiledende, avrundet','Rabatten regnes fra grunnprisen','Administrer gebyrer separat fra priskalkulatoren'];
+ settings.querySelectorAll('p.hint,p.sub').forEach(p=>{if(removeSnippets.some(x=>p.textContent.includes(x)))p.remove()});
+ settings.querySelectorAll('button').forEach(b=>{if(b.textContent.trim()==='Lukk gebyrer')b.remove()});
+}
+const v1610SettingsBase=renderSettings;
+renderSettings=function(){v1610SettingsBase();v1610TrimInfo()};
+const v1610PriceBase=renderPriceResults;
+renderPriceResults=function(){
+ v1610PriceBase();
+ const mode=$('priceModeSettings');if(mode)mode.querySelectorAll('p.hint').forEach(p=>p.remove());
+ const results=$('priceResults');if(results)results.querySelectorAll('p.hint,p.sub').forEach(p=>{if(/Prisene er veiledende|Rabatten regnes fra grunnprisen/.test(p.textContent))p.remove()});
+};
+v1610TrimInfo();
 
 render();
 if(!hytteStoragePersistent)hytteShowStorageWarning();
