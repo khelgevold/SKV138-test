@@ -1,8 +1,9 @@
 // SKV138 backend draft — NOT deployed. Requires jose + pg dependencies and Netlify configuration.
-// Runtime secrets: DATABASE_URL, NEON_AUTH_JWKS_URL, NEON_AUTH_ISSUER.
+// Runtime secrets: DATABASE_URL, NEON_AUTH_JWKS_URL, NEON_AUTH_BASE_URL.
 // Required: SKV138_APP_ORIGIN. Optional: NEON_AUTH_AUDIENCE if issued token has aud. Never commit values.
 import { createRemoteJWKSet, jwtVerify } from "jose";
-import pg from "pg";\nimport { validateSharedState, validateLocations } from "./state-contract.mjs";
+import pg from "pg";
+import { validateSharedState, validateLocations } from "./state-contract.mjs";
 
 let jwks;
 let pool;
@@ -16,7 +17,9 @@ function configuration() {
     if (!process.env[key]) throw new Error("Missing backend configuration: " + key);
   }
   const jwksUrl = new URL(process.env.NEON_AUTH_JWKS_URL);
-  // Managed Neon Auth documents issuer as the origin of NEON_AUTH_BASE_URL.\n  const issuer = new URL(process.env.NEON_AUTH_BASE_URL).origin;\n  if (new URL(process.env.NEON_AUTH_BASE_URL).protocol !== "https:") throw new Error("Auth URL must use HTTPS");
+  // Managed Neon Auth documents issuer as the origin of NEON_AUTH_BASE_URL.
+  const issuer = new URL(process.env.NEON_AUTH_BASE_URL).origin;
+  if (new URL(process.env.NEON_AUTH_BASE_URL).protocol !== "https:") throw new Error("Auth URL must use HTTPS");
   if (jwksUrl.protocol !== "https:") throw new Error("JWKS must use HTTPS");
   if (!jwks) jwks = createRemoteJWKSet(jwksUrl);
   if (!pool) pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, max: 3 });
@@ -25,7 +28,7 @@ function configuration() {
 async function authenticatedUser(event, issuer) {
   const match = /^Bearer (\S+)$/i.exec(event.headers.authorization || event.headers.Authorization || "");
   if (!match) return null;
-  const options = { issuer, algorithms: ["RS256", "ES256", "EdDSA"] };
+  const options = { issuer, algorithms: ["EdDSA"] };
   if (process.env.NEON_AUTH_AUDIENCE) options.audience = process.env.NEON_AUTH_AUDIENCE;
   const { payload } = await jwtVerify(match[1], jwks, options);
   return typeof payload.sub === "string" && payload.sub ? payload.sub : null;
@@ -68,9 +71,7 @@ export async function handler(event) {
     catch { return json(400, { error: "Invalid JSON" }); }
     const { payload, expectedVersion } = request;
     if (!Number.isSafeInteger(expectedVersion) || expectedVersion < 1 ||
-        !payload || typeof payload !== "object" || Array.isArray(payload) ||
-        !Array.isArray(payload.bookings) || !Array.isArray(payload.stock) ||
-        !payload.templates || !payload.completed) {
+        !validateSharedState(payload) || !validateLocations(payload.privateLocations)) {
       return json(400, { error: "Invalid state or version" });
     }
     await client.query("BEGIN");
