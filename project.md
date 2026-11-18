@@ -1,3 +1,17 @@
+# GJELDENDE STATUS – 18.11.2026 kl. 21:20 (les først)
+
+**Neon TEST fungerer i Safari på iPhone og i PC-nettleser. Vanlig utleiebooking er nå opprettet med hell av brukeren etter rettelse av rekursiv `saveBooking` (commit `39709cc`).** Privat booking fungerte allerede. Brukeren fortsetter nå en samlet funksjonstest (bookinger, kansellering, utbetaling, oppgaver/sjekklister, lager, statistikk og innstillinger). Ikke påstå at hele appen er ferdig testet eller produksjonsklar.
+
+- GitHub: `khelgevold/SKV138-test`, aktiv gren `feature/neon-test-integration`. Godkjent V16.23 i `main` er urørt; ingen SKV138 PROD. TEST: https://skv138-neon-test.netlify.app.
+- Neon Auth, allowlist, GET og PUT fungerer i vanlig nettleser. Lagring var først blokkert av `Origin denied`: `SKV138_APP_ORIGIN` i Netlify hadde feilaktig avsluttende `/`. Brukeren fjernet skråstreken og deployet; lagring fungerer. Neon TEST-seed er kjørt.
+- PC-bunnmenyen ble gjort fast med en avgrenset CSS-overstyring i TEST-kopien `backend-draft/test-site/app.html`; brukeren bekreftet at appen fungerer på mobil og PC. Merk at eventuell separat PC-verifisering av fast meny ikke er uttrykkelig dokumentert.
+- **Feil rettet:** Vanlig utleiebooking reagerte ikke på lagreknappen. Midlertidig diagnostikk viste `Maximum call stack size exceeded` med gjentatte `saveBooking`-rammer. V10-wrapperen var deklarert med `function saveBooking` og ble hoistet slik at `oldSaveBookingV10` pekte tilbake på wrapperen. Endret wrapperen til `saveBooking=function(...)` slik at tidligere funksjon fanges korrekt; fjernet midlertidig booking-feildiagnostikk. Brukeren bekreftet 18.11 kl. 21:15 at lagring nå fungerer. **Ved neste naturlige test: kontroller at bookingen fortsatt finnes etter sideoppdatering**; dette er ikke eksplisitt bekreftet for den siste utleiebookingen.
+- **Åpen feil før PROD:** iPhone installert som webapp via Hjem-skjerm feiler ved innlogging med `TEST_DIAG_TOKEN_EXCEPTION`, selv med manuelt passord. Safari på samme iPhone og PC-nettleser fungerer. Undersøk Neon Auth-token/sesjon i iOS standalone/PWA; ikke anta årsaken eller endre sikkerhet. Kan samles med øvrige funn i én rettelsespakke.
+- Midlertidige `TEST_DIAG_*`-diagnostikkmeldinger i auth-klienten gjenstår å rydde før produksjon. Unngå unødvendige enkeltdeploys.
+- **Neste handling:** La brukeren fullføre funksjonstesten og rapportere konkrete feil fortløpende. Rett nødvendige blokkere når de hindrer videre testing, ellers samle rettelser for færrest mulig Netlify-deploys. Én nødvendig brukerhandling om gangen. Ved videre arbeid: les `utviklingsregler.md`, dette dokumentet og faktisk kode. Ikke gjør unødvendige tester, endringer i main eller databaseoperasjoner.
+
+---
+
 # GJELDENDE STATUS – 18.11.2026 kl. 20:15 (les først)
 
 **Milepæl: Neon TEST-integrert V16-app er publisert og åpner etter innlogging.** Brukeren viste skjermbilde fra https://skv138-neon-test.netlify.app med SKV138-grensesnittet, fem navigasjonsvalg (Oversikt, Bookinger, Oppgaver, Lager, Mer), og tom oversikt uten eksempelbookinger. Tidligere «Tilgang bekreftet»-skall er erstattet. Neon Auth, tilgangssjekk og innlasting av delt initialtilstand ble tidligere bekreftet; live skjermbilde viser at appen nå rendres. **Skriving/PUT og lagringspersistens er ennå IKKE funksjonstestet.** Ikke påstå full ende-til-ende godkjenning.
