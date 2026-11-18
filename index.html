@@ -302,6 +302,12 @@ html{-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{font-size:15px;l
 #innstillinger .v1620-fee-grid label{display:block!important;min-width:0!important;width:100%!important;margin:0!important}
 #innstillinger .v1620-fee-grid input,#innstillinger .v1620-fee-grid select{width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
 #innstillinger .v1620-fee-group+.v1620-fee-group{margin-top:6px}
+</style><style id="v1621-private-stock-fix">
+#lager #stockAddCard.v1621-private-add:not(.v1621-open){background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;margin:12px 0!important;min-height:0!important}
+#lager #stockAddCard.v1621-private-add:not(.v1621-open)>:not(#privateAddToggle){display:none!important}
+#lager #stockAddCard.v1621-private-add #privateAddToggle{display:inline-flex!important;visibility:visible!important;opacity:1!important;margin:0!important}
+#lager #stockAddCard.v1621-private-add.v1621-open .stock-add-panel{display:block!important}
+#lager #stockAddCard.v1621-private-add.v1621-open #v16AddLocationHost{display:block!important}
 </style></head><body><header><div><h1>⌂ SKV138</h1><div style="opacity:.8;font-size:13px">V16 · Lokal testprototype</div></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
 <section id="oversikt" class="active"><div class="row"><button onclick="changeYear(-1)">‹</button><span class="year" id="yearTitle"></span><button onclick="changeYear(1)">›</button></div><div class="grid" id="metrics"></div><div class="card"><h2>Utbetalinger og skatt hittil i år</h2><div class="grid" id="v15YtdMetrics"></div></div><div class="card"><div class="row"><h2>Neste oppgaver</h2><button onclick="show('oppgaver')">Se alle</button></div><div id="nextTasks"></div></div></section>
 <section id="bookinger"><div class="row"><h2>Bookinger</h2><div class="booking-create"><button class="primary" onclick="newBooking()">+ Ny booking</button><button onclick="newPrivateStay()">+ Privat booking</button></div></div><div class="segmented triple" id="bookingTypeFilters"><button onclick="setBookingTypeFilter('all')">Alle</button><button onclick="setBookingTypeFilter('rental')">Utleie</button><button onclick="setBookingTypeFilter('private')">Privat</button></div><div id="bookingList"></div><div id="bookingDetail"></div></section>
@@ -1607,6 +1613,39 @@ renderPricePanels=function(){
  });
 };
 renderPricePanels();
+
+
+/* V16.21 – correct the real legacy stockAddCard and old location host. */
+const v1621StockBase=renderStock;
+renderStock=function(){
+ v1621StockBase();
+ if(stockKind!=='Privat')return;
+ const card=$('stockAddCard');
+ if(card){
+  const legacy=$('privateAddToggle');
+  const duplicate=$('v1618NewStockButton');
+  if(duplicate)duplicate.remove();
+  if(legacy){
+   legacy.style.display='inline-flex';
+   legacy.textContent=card.dataset.open==='true'?'Avbryt':'+ Ny vare';
+   legacy.onclick=function(){card.dataset.open=card.dataset.open==='true'?'false':'true';renderStock()};
+  }
+  card.classList.add('v1621-private-add');
+  card.classList.toggle('v1621-open',card.dataset.open==='true');
+  const field=$('v16AddLocationHost');
+  if(field)field.style.display=card.dataset.open==='true'?'block':'none';
+  const newer=$('v1617StockLocation');if(newer)newer.remove();
+ }
+ const rows=$('stockList')?.querySelectorAll(':scope > .stock-item')||[];
+ rows.forEach(row=>{
+  const name=row.querySelector('strong')?.textContent;
+  const item=state.stock.find(x=>x.kind==='Privat'&&x.name===name);
+  if(!item)return;
+  const first=row.firstElementChild;if(!first)return;
+  first.querySelectorAll('.sub,.v16-location-label').forEach(el=>el.remove());
+  if(item.location){const label=document.createElement('small');label.className='sub';label.textContent=item.location;first.appendChild(label)}
+ });
+};
 
 render();
 if(!hytteStoragePersistent)hytteShowStorageWarning();
