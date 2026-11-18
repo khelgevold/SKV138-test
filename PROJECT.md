@@ -161,3 +161,6 @@ Kodecommit `15cbd68bdc7c463aa5bbb5107ea940416a913b6a`: beløpskortene på Oversi
 
 ### V16.12 – Kalender og bookingdetaljer
 Kodecommit `eb46cf6`: kalenderdato-knapper får ny klikkhåndtering etter at gammel inline-handler er fjernet (retting av regresjon ved datovalg). Doble tilbakeknapper i bookingdetaljer fjernes; årsfordeling skjules for booking innen samme kalenderår; utbetalingsseksjonen komprimeres og presiserer mottatt beløp etter plattformgebyr, før skatt; meldingsrader får venstre/høyre-justering. Oversikt godkjent av bruker. Bookinger visuelt godkjent, men «Aktuelle» skal endres til «Kommende» i samlet tekstjustering. V16.12 må testes på iPhone før godkjenning.
+
+### V16.13 – bookingformularer (2026-11-18)
+Kodecommit `d080867`: Ved åpning av privatopphold skjules bookinglisten og eksisterende bookingdetaljer slik at skjemaet står alene. Ved lukking gjenopprettes visningene. Nye og redigerte utleiebookinger og private opphold rulles til toppen. Dato-/klokkeslettfelter gis begrenset bredde, mindre mobilskrift og korrekt min-width i to kolonner. To-datovalg i kalender bekreftet fungerende av bruker. Ikke ennå iPhone-verifisert for skjemarettelsene.
