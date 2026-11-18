@@ -1,6 +1,6 @@
 // Neon TEST auth bootstrap. Not activated in V16.23.
 // The Auth URL is public configuration, not a database credential.
-// Bundler must resolve @neondatabase/neon-js/auth; do not load this file directly
+// Bundler must resolve @neondatabase/auth; do not load this file directly
 // as a raw browser ES module without bundling.
 import { createAuthClient } from "@neondatabase/neon-js/auth";
 import { createLoginController } from "./login-controller.mjs";
