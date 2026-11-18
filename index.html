@@ -1647,6 +1647,38 @@ renderStock=function(){
  });
 };
 
+
+/* V16.22: private inventory form only name, quantity, managed location. */
+const v1622StockBase=renderStock;
+renderStock=function(){
+ v1622StockBase();
+ if(stockKind!=='Privat')return;
+ const card=$('stockAddCard');if(!card)return;
+ for(const id of ['stockMinRow','newFixedRow']){const el=$(id);if(el)el.style.display='none'}
+ const host=$('v16AddLocationHost');
+ if(host){
+  host.querySelectorAll('#addCustomRow').forEach(el=>el.remove());
+  const select=$('addLocation');
+  if(select){
+   const selected=select.value;
+   select.innerHTML=v1617LocationOptions(selected);
+   if(v1617Locations.includes(selected))select.value=selected;
+  }
+ }
+ const legacy=$('v1617StockLocation');if(legacy)legacy.remove();
+};
+addStock=function(){
+ if(stockKind!=='Privat')return v1619AddStockBase();
+ const name=$('stockName')?.value.trim();
+ const qty=Number($('stockQty')?.value);
+ const location=$('addLocation')?.value;
+ if(!name||!Number.isInteger(qty)||qty<0||!location){alert('Oppgi navn, antall og plassering.');return}
+ state.stock.push({id:Math.max(0,...state.stock.map(x=>Number(x.id)||0))+1,name,qty,min:0,fixed:false,kind:'Privat',location});
+ save();$('stockName').value='';$('stockQty').value='1';
+ const card=$('stockAddCard');if(card)card.dataset.open='false';
+ renderStock();
+};
+
 render();
 if(!hytteStoragePersistent)hytteShowStorageWarning();
 </script></body></html>
