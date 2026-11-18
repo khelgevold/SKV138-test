@@ -29,7 +29,13 @@ export function createSkv138Client({ authClient, fetchImpl, storage, endpoint = 
     } catch { throw new Error("TEST_DIAG_FETCH_FAILED"); }
     let data;
     try { data = await response.json(); }
-    catch { throw new Error("TEST_DIAG_RESPONSE_NOT_JSON"); }
+    catch {
+      // TEST-only: reveal HTTP status and content type, never response body or token.
+      const code = Number.isInteger(response.status) ? response.status : "unknown";
+      const type = response.headers?.get?.("content-type") || "missing";
+      const kind = type.includes("text/html") ? "HTML" : type.includes("text/plain") ? "TEXT" : type.includes("application/json") ? "JSON" : "OTHER";
+      throw new Error("TEST_DIAG_RESPONSE_NOT_JSON_HTTP_" + code + "_TYPE_" + kind);
+    }
     if (!response.ok) {
       const error = new Error(response.status === 409 ? "Conflict: reload before saving" : (data.error || "Request failed"));
       error.status = response.status;
