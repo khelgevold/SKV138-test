@@ -2,6 +2,12 @@
 Oppdatert: 2026-11-18
 
 
+## 18.11.2026 – JWT og backend-tilgang verifisert; tom TEST-seed klargjort
+- Neon TEST JWT-validering, allowlist og databaselesing er nå bekreftet i live TEST. Årsak til 401 var avsluttende `/` i Netlify `NEON_AUTH_ISSUER`; rettet og deployet. GET returnerer nå forventet 404 `Not initialized`, fordi `shared` mangler.
+- Brukeren bekrefter at V16.23 bare har eksempeldata. Avtalt: ren TEST-start uten eksempelbookinger og lagervarer, men med standardinnstillinger, oppgavemaler og lagerplasseringer fra godkjent V16.23.
+- `database/seed-neon-test.sql` er klargjort som idempotent `INSERT ... ON CONFLICT DO NOTHING`. **Ikke kjørt ennå.** Brukeren må kjøre i Neon TEST SQL Editor; ingen PROD-data påvirkes. Deretter én målrettet innlogging for å bekrefte 200 og backend-tilgang.
+- TEST-innloggingsskallet er ennå ikke koblet til hele V16.23-grensesnittet. Neste utviklingspakke: integrere felles GET/PUT, sikre initial lasting/lagring og håndtere versjonskonflikt, så målrettet TEST-verifisering. Midlertidige JWT-diagnostikkfelter fjernes før ferdigstilling.
+
 ## GJELDENDE STATUS 18.11.2026 – Neon TEST i drift, JWT-validering gjenstår
 **Denne seksjonen overstyrer eldre tidsstemplede «neste steg» og «ikke deployet»-opplysninger nedenfor.** V16.23 i `main` er fortsatt godkjent og urørt. Ingen SKV138 PROD er etablert.
 
