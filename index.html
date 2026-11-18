@@ -204,6 +204,14 @@ html{-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{font-size:15px;l
 #bookinger input[type="date"],#bookinger input[type="time"],#privateEditor input[type="date"],#privateEditor input[type="time"]{display:block;box-sizing:border-box;width:100%;min-width:0;max-width:100%;font-size:clamp(13px,3.4vw,16px);padding:10px 4px;text-align:center}
 #privateEditor .v16-private-back{margin-bottom:16px}
 @media(max-width:390px){#bookinger .field-grid,#privateEditor .field-grid,#bookingForm .field-grid{gap:8px}}
+</style><style id="v1614-date-fields">
+/* iOS Safari reserves intrinsic width for native date/time controls.
+   Full-width rows avoid clipped date pickers on narrow phones. */
+@media(max-width:650px){
+ #bookingForm .field-grid,#privateEditor .field-grid,#bookinger .field-grid{grid-template-columns:minmax(0,1fr)!important;gap:10px!important}
+ #bookingForm .field-grid>label,#privateEditor .field-grid>label{width:100%;overflow:visible}
+ #bookingForm input[type="date"],#bookingForm input[type="time"],#privateEditor input[type="date"],#privateEditor input[type="time"]{width:100%!important;max-width:100%!important;min-width:0!important;text-align:left!important;font-size:16px!important;padding:12px 14px!important}
+}
 </style></head><body><header><div><h1>⌂ SKV138</h1><div style="opacity:.8;font-size:13px">V16 · Lokal testprototype</div></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
 <section id="oversikt" class="active"><div class="row"><button onclick="changeYear(-1)">‹</button><span class="year" id="yearTitle"></span><button onclick="changeYear(1)">›</button></div><div class="grid" id="metrics"></div><div class="card"><h2>Utbetalinger og skatt hittil i år</h2><div class="grid" id="v15YtdMetrics"></div></div><div class="card"><div class="row"><h2>Neste oppgaver</h2><button onclick="show('oppgaver')">Se alle</button></div><div id="nextTasks"></div></div></section>
 <section id="bookinger"><div class="row"><h2>Bookinger</h2><div class="booking-create"><button class="primary" onclick="newBooking()">+ Ny booking</button><button onclick="newPrivateStay()">+ Privat booking</button></div></div><div class="segmented triple" id="bookingTypeFilters"><button onclick="setBookingTypeFilter('all')">Alle</button><button onclick="setBookingTypeFilter('rental')">Utleie</button><button onclick="setBookingTypeFilter('private')">Privat</button></div><div id="bookingList"></div><div id="bookingDetail"></div></section>
@@ -1177,6 +1185,24 @@ const v1613EditBookingBase=editBooking;
 editBooking=function(id){
  v1613EditBookingBase(id);
  requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'instant'}));
+};
+
+/* V16.14: correct rental-form return destination. */
+const v1614BookingFormBase=bookingForm;
+bookingForm=function(b){
+ v1614BookingFormBase(b);
+ const back=$('v16BookingBack');
+ if(back){
+  const fromCalendar=v16BookingOrigin==='kalender';
+  back.textContent=fromCalendar?'‹ Tilbake til kalender':'‹ Tilbake til bookinger';
+  back.onclick=()=>{
+   $('bookingDetail').innerHTML='';
+   selected=null;
+   if(fromCalendar){v16ReturnCalendar()}
+   else{v16BookingOrigin='';show('bookinger');renderBookings()}
+  };
+ }
+ requestAnimationFrame(()=>window.scrollTo(0,0));
 };
 
 render();
