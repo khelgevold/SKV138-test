@@ -97,3 +97,19 @@ test("unexpected server version never advances local version", async () => {
   await assert.rejects(client.save(state()), /Invalid server version/);
   assert.equal(client.getVersion(), 3);
 });
+
+test("registration cannot grant SKV138 app access", async () => {
+  let submitted;
+  const client = { ...authClient, signUp: { email: async input => { submitted = input; return { data: { user: { id: "unapproved" } } }; } } };
+  const login = createLoginController(client);
+  assert.deepEqual(await login.register(" NEW@EXAMPLE.COM ", "long-enough-password", "Test"), { ok: true });
+  assert.equal(submitted.email, "new@example.com");
+  assert.equal(submitted.name, "Test");
+  assert.equal("access" in (await login.register("another@example.com", "long-enough-password", "Test")), false);
+});
+test("password reset request never reveals account existence", async () => {
+  const client = { ...authClient, requestPasswordReset: async () => { throw Error("unknown email"); } };
+  const result = await createLoginController(client).requestPasswordReset("missing@example.com");
+  assert.equal(result.ok, true);
+  assert.match(result.message, /Hvis tilbakestilling/);
+});
