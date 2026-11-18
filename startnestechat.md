@@ -21,3 +21,7 @@ Neste konkrete steg: Be brukeren åpne `Better Auth → Configure Auth` i Neon T
 ## 18.11.2026 – Backend-utkast i GitHub
 - `backend-draft/skv138-state.mjs` og `backend-draft/README.md` er lagret, men ikke aktivert eller deployet. Les README for blokkere og sikkerhetspunkter. Ikke beskriv dette som ferdig API.
 - Neste: verifiser Neon JWT-tokenflyt og issuer, opprett begrenset runtime-rolle/GRANT, bygg frontend-innlogging og migreringsflyt; samlet TEST-deploy først etter avklaring. V16.23 urørt.
+
+## 18.11.2026 – Siste milepæl
+- Les `backend-draft/state-contract.mjs`: V16.23 datakontrakt og skrivefri importforhåndsvisning er kodet, men ikke testet/aktivert.
+- Neste: TEST-verifisering av Neon Auth, begrenset DB-login, trygg initialisering/import med godkjenning og frontend-integrasjon. Ingen deploy; V16.23 urørt.
