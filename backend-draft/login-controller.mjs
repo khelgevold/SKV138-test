@@ -42,8 +42,11 @@ export function createLoginController(authClient) {
         return { ok: true };
       } catch (error) {
         // Distinguish network failure from other SDK/runtime errors without leaking details.
-        const category = error instanceof TypeError ? "nettverk eller nettleserblokkering" : "klientfeil";
-        return { ok: false, message: "Registrering feilet (" + category + ")." };
+        const name = typeof error?.name === "string" ? error.name : "";
+        const code = typeof error?.code === "string" ? error.code : "";
+        const safeName = /^[A-Za-z][A-Za-z0-9]{0,39}$/.test(name) ? name : "UkjentFeil";
+        const safeCode = /^[A-Z][A-Z0-9_]{0,39}$/.test(code) ? ", " + code : "";
+        return { ok: false, message: "Registrering feilet (" + safeName + safeCode + ")." };
       }
     },
     async requestPasswordReset(email, redirectTo) {
