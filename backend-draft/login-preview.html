@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="nb"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SKV138 – innlogging (TEST-utkast)</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color-scheme:light;background:#f4f5f2;color:#182a24}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px}
+main{width:min(100%,420px);background:white;border:1px solid #dce4dc;border-radius:18px;padding:28px;box-shadow:0 12px 40px #12291b12}
+h1{font-size:1.65rem;margin:0 0 8px}p{color:#52665a;line-height:1.5}
+label{display:block;font-weight:600;margin:20px 0 7px}input{width:100%;padding:13px;border:1px solid #9eafa4;border-radius:10px;font:inherit}
+button{width:100%;padding:13px;background:#225943;color:#fff;border:0;border-radius:10px;font:inherit;font-weight:650;margin-top:22px;cursor:pointer}
+button:disabled{opacity:.65;cursor:wait}#status{min-height:1.5em}#status[data-error=true]{color:#a52a2a}
+small{display:block;color:#52665a;margin-top:18px}
+</style></head>
+<body><main>
+<h1>SKV138</h1><p>Logg inn for å få tilgang til hytteadministrasjonen.</p>
+<form id="login">
+<label for="email">E-post</label><input id="email" type="email" autocomplete="username" required>
+<label for="password">Passord</label><input id="password" type="password" autocomplete="current-password" required>
+<button id="submit" type="submit">Logg inn</button>
+</form><p id="status" role="status" aria-live="polite"></p>
+<small>TEST-utkast. Ingen passord lagres på denne siden.</small>
+</main>
+<script type="module">
+import { createLoginController } from "./login-controller.mjs";
+// This page is intentionally not connected to a real Neon Auth endpoint.
+// Configure the client through a separately reviewed TEST bootstrap before use.
+const form=document.querySelector("#login"), status=document.querySelector("#status"), button=document.querySelector("#submit");
+form.addEventListener("submit",e=>{
+  e.preventDefault();
+  status.dataset.error="true";
+  status.textContent="Innlogging er ikke aktivert ennå. Neon TEST må kobles til først.";
+});
+// Import is retained to make the intended controller integration explicit.
+void createLoginController;
+</script></body></html>
