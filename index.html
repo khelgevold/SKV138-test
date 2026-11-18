@@ -1485,11 +1485,34 @@ renderStock=function(){
    const first=row.firstElementChild,name=first?.querySelector('strong')?.textContent;
    const item=state.stock.find(x=>x.kind==='Privat'&&x.name===name);
    if(!first||!item)return;
-   first.querySelectorAll('small.sub').forEach(el=>el.remove());
+   first.querySelectorAll('.sub,.v16-location-label').forEach(el=>el.remove());
    const location=item.location||item.place||item.placement||'';
    if(location){const el=document.createElement('small');el.className='sub';el.textContent=location;first.appendChild(el)}
   });
  }
+};
+/* Private stock uses the single managed location selector; avoid legacy v16 selector. */
+const v1619AddStockBase=addStock;
+addStock=function(){
+ if(stockKind!=='Privat')return v1619AddStockBase();
+ const name=$('stockName')?.value.trim(),qty=Number($('stockQty')?.value),location=$('v1617NewLocation')?.value||'';
+ if(!name||!Number.isInteger(qty)||qty<0||!location){alert('Oppgi varenavn, antall og plassering.');return}
+ state.stock.push({id:Math.max(0,...state.stock.map(x=>Number(x.id)||0))+1,name,qty,min:0,kind:'Privat',fixed:false,location});
+ save();$('stockName').value='';$('v1619StockAdd')?.classList.remove('v1618-add-open');renderStock();
+};
+const v1619EditStockBase=editStock;
+editStock=function(id){
+ v1619EditStockBase(id);
+ const item=state.stock.find(x=>x.id===id),editor=$('stockList')?.querySelector('.stock-editor');
+ if(item?.kind==='Privat'&&editor){editor.querySelectorAll('.v16-location-field').forEach(e=>e.remove())}
+};
+const v1619SaveStockEditBase=saveStockEdit;
+saveStockEdit=function(){
+ const item=state.stock.find(x=>x.id===editingStock);
+ if(!item||item.kind!=='Privat')return v1619SaveStockEditBase();
+ const name=$('editStockName')?.value.trim(),qty=Number($('editStockQty')?.value),location=$('v1617EditLocation')?.value||'';
+ if(!name||!Number.isInteger(qty)||qty<0||!location){alert('Kontroller navn, antall og plassering.');return}
+ Object.assign(item,{name,qty,location,min:0,fixed:false});editingStock=null;save();renderStock();
 };
 const v1619SettingsBase=renderSettings;
 renderSettings=function(){
@@ -1507,7 +1530,7 @@ renderPriceResults=function(){
  v1619PriceBase();
  const root=$('innstillinger');if(!root)return;
  root.querySelectorAll('.price-platform p.hint').forEach(p=>p.remove());
- const discounts=$('priceDiscountResults');if(discounts)discounts.querySelectorAll('p.hint').forEach(p=>p.remove());
+ const discounts=$('priceDiscounts');if(discounts)discounts.querySelectorAll('p.hint').forEach(p=>p.remove());
 };
 
 render();
