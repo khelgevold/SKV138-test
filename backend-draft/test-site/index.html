@@ -23,10 +23,11 @@ small{color:#526b5c}#authorized{display:none}
 <small>Ingen passord lagres i denne siden. Ikke bruk PROD-data i TEST.</small>
 </main>
 <script type="module">
-import { startConfiguredSkv138TestLogin, createNeonTestLoginController, mountPasswordResetForm, mountNewPasswordForm, readResetToken, clearResetTokenFromUrl } from "./neon-test-entry.js";
+import { startConfiguredSkv138TestLogin, createNeonTestSession, mountPasswordResetForm, mountNewPasswordForm, readResetToken, clearResetTokenFromUrl } from "./neon-test-entry.js";
 const status=document.querySelector("#status");
 try {
-  const login=createNeonTestLoginController();
+  const neonLogin=createNeonTestSession();
+  const {login}=neonLogin;
   const token=readResetToken(window.location.href,window.location.origin);
   if(token){
     document.querySelector("#login").hidden=true;
@@ -44,6 +45,7 @@ try {
   }
   if (!token) startConfiguredSkv138TestLogin({
     document,
+    neonLogin,
     fetchImpl: (...args)=>fetch(...args),
     storage: window.localStorage,
     onAuthorized: async () => {
