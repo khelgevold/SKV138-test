@@ -30,3 +30,6 @@ Work-in-progress branch: `feature/neon-test-integration`. `login-controller.mjs`
 
 ## Login screen preview
 `login-preview.html` is a standalone responsive Norwegian login form with email/password fields and accessible status messages. Submission is intentionally disabled until a real Neon TEST auth client is configured. It is not linked from `index.html` and does not send or store credentials. Next: verify password setup for the existing dashboard-created user, configure the managed Neon auth client in TEST, then connect the controller and test unauthorized/authorized sessions.
+
+## Focused automated tests (not yet executed)
+`integration.test.mjs` uses Node's built-in test runner: `node --test backend-draft/integration.test.mjs`. It covers local preview without writes, invalid/missing data, state validation, token forwarding, version increments, 409 conflict handling, and login-controller shape. These are unit tests with mocks, **not** a live Neon/Auth/Netlify integration test. Do not claim passing results before running them.
