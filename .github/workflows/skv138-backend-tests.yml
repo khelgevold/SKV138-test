@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - run: node --test backend-draft/integration.test.mjs
+      - run: node --test backend-draft/*.test.mjs
       - name: Install draft dependencies
         run: npm install --no-audit --no-fund
       - name: Validate browser bundle
