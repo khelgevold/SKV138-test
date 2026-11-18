@@ -11,19 +11,25 @@ export function createSkv138Client({ authClient, fetchImpl, storage, endpoint = 
 
   async function request(method, body) {
     // Always acquire a fresh short-lived JWT. Never persist JWT to localStorage.
-    const result = await authClient.token();
-    if (result?.error || !result?.data?.token) throw new Error("Login required");
-    const response = await fetchImpl(endpoint, {
-      method,
-      credentials: "omit",
-      headers: {
-        Authorization: "Bearer " + result.data.token,
-        ...(body ? { "Content-Type": "application/json" } : {}),
-      },
-      ...(body ? { body: JSON.stringify(body) } : {}),
-    });
+    let result;
+    try { result = await authClient.token(); }
+    catch { throw new Error("TEST_DIAG_TOKEN_EXCEPTION"); }
+    if (result?.error || !result?.data?.token) throw new Error("TEST_DIAG_TOKEN_MISSING");
+    let response;
+    try {
+      response = await fetchImpl(endpoint, {
+        method,
+        credentials: "omit",
+        headers: {
+          Authorization: "Bearer " + result.data.token,
+          ...(body ? { "Content-Type": "application/json" } : {}),
+        },
+        ...(body ? { body: JSON.stringify(body) } : {}),
+      });
+    } catch { throw new Error("TEST_DIAG_FETCH_FAILED"); }
     let data;
-    try { data = await response.json(); } catch { throw new Error("Invalid server response"); }
+    try { data = await response.json(); }
+    catch { throw new Error("TEST_DIAG_RESPONSE_NOT_JSON"); }
     if (!response.ok) {
       const error = new Error(response.status === 409 ? "Conflict: reload before saving" : (data.error || "Request failed"));
       error.status = response.status;
