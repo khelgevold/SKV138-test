@@ -75,3 +75,6 @@ Root `package.json` provides a first-pass TEST dependency manifest, unit-test co
 
 ## Password reset UI assembled (18 Nov)
 The isolated TEST shell now contains password-reset request and new-password forms. Their handlers are exported from the same browser bundle entrypoint, so no extra unbundled browser modules are required. The reset token is removed from the visible URL before the form is used. **Not verified against live Neon Auth**: actual reset callback URL, SDK method support, email delivery, and existing dashboard-created account with null password are still blockers. Do not treat a green build as a completed password reset test or deploy this without checking the real flow.
+
+## Shared Auth client correction (18 Nov)
+The TEST shell now creates a single Neon Auth client/controller and passes the same instance to sign-in, backend access verification and password reset, instead of constructing two independent clients. This avoids session inconsistency between forms. New changes await CI verification. Before live TEST deployment, verify SDK token and reset methods and the backend JWT contract with the actual managed Neon Auth service; do not assume passing mocks prove compatibility.
