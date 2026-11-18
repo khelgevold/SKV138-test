@@ -2,6 +2,12 @@
 Oppdatert: 2026-11-18
 
 
+## 18.11.2026 – NYESTE STATUS: backend verifisert, seed klar
+- **Overstyrer eldre 401-blokker:** JWT, allowlist og databaseforbindelse fungerer i live Neon/Netlify TEST. Feilen var en ekstra `/` på slutten av `NEON_AUTH_ISSUER` i Netlify; rettet. Forventet melding er nå «SKV138 TEST er ikke klargjort med data ennå» (HTTP 404 fordi `shared` mangler).
+- V16.23 inneholder kun eksempeldata. Brukeren godkjente ren oppstart uten eksempelbookinger/-varer, med standardinnstillinger, oppgavemaler og lagerplasseringer.
+- **Neste handling:** Be brukeren kjøre kopierbar `database/seed-neon-test.sql` i Neon **TEST** SQL Editor (idempotent, skriver kun dersom `shared` ikke finnes). SQL er lagret i GitHub, men **ikke kjørt**. Deretter bekreft at innlogging går til «Tilgang bekreftet».
+- Fortsett deretter GitHub-arbeid i `feature/neon-test-integration` for å koble godkjent V16.23 UI til felles GET/PUT, uten å endre `main`. Begrens deploys, behold sikker autorisasjon og fjern midlertidig diagnostikk før ferdigstilling.
+
 ## GJELDENDE OVERLEVERING 18.11.2026 – LES DENNE FØRST
 **Denne seksjonen overstyrer alle eldre «neste steg» og opplysninger om manglende TEST-deploy nedenfor.** Hent oppdatert `project.md`, `utviklingsregler.md`, `neon-backend-plan.md` og relevante backend-filer fra GitHub før nye endringer.
 
