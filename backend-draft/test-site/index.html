@@ -88,6 +88,10 @@ try {
       });
       await bridge.initialize(payload);
       window.__SKV138_TEST_BRIDGE__=bridge;
+      window.addEventListener("beforeunload", event => {
+        const state=bridge.getStatus();
+        if (state.dirty || state.blocked) { event.preventDefault(); event.returnValue=""; }
+      });
       document.querySelector("#download-recovery").addEventListener("click",()=>{
         const data=bridge.getRecoveryData();
         if(!data)return;
