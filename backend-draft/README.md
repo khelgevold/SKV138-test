@@ -81,3 +81,6 @@ The TEST shell now creates a single Neon Auth client/controller and passes the s
 
 ## User-facing access errors
 The login form now distinguishes backend authorization denial (`not_authorized`) and uninitialized shared data (`not_initialized`) from generic connection errors. This is a UI-only draft change; it does not bypass authorization or initialize data. No live Neon verification has occurred.
+
+## JWT issuer correction (18 Nov)
+The backend no longer guesses the issuer from the Auth URL hostname. It now requires explicit `NEON_AUTH_ISSUER`, and `jwtVerify` checks that exact string. Before TEST activation, confirm the issuer from trusted Neon Auth metadata or a securely inspected real TEST JWT (do not share the JWT itself). Configure `NEON_AUTH_JWKS_URL` consistently. The old `NEON_AUTH_BASE_URL` backend env is no longer used by this handler. This is not live-verified. Do not relax JWT issuer/signature checks to make tests pass.
