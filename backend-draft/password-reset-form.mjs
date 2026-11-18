@@ -1,6 +1,6 @@
 // TEST-only password reset request form. Requires an injected Better Auth login controller.
 // Never stores passwords or exposes whether an account exists.
-export function mountPasswordResetForm({ document, login }) {
+export function mountPasswordResetForm({ document, login, redirectTo }) {
   if (!document?.querySelector || typeof login?.requestPasswordReset !== "function") {
     throw new Error("Document and password reset controller required");
   }
@@ -17,7 +17,7 @@ export function mountPasswordResetForm({ document, login }) {
     button.disabled = true;
     status.textContent = "Sender forespørsel …";
     try {
-      const result = await login.requestPasswordReset(email.value);
+      const result = await login.requestPasswordReset(email.value, redirectTo);
       status.textContent = result.message || "Hvis kontoen kan tilbakestilles, mottar du en e-post.";
     } catch {
       status.textContent = "Kunne ikke sende forespørselen. Prøv igjen senere.";
