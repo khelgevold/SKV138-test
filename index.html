@@ -1436,7 +1436,7 @@ renderPriceResults=function(){
   row.classList.add('v1618-price-row');
   if(i===0){const h=document.createElement('strong');h.textContent='Totalpris';row.appendChild(h);return}
   const note=notes[i-1];if(!note)return;
-  const match=note.textContent.match(/Totalpris:\\s*([^·]+)/);
+  const match=note.textContent.match(/Totalpris:\s*([^·]+)/);
   const val=document.createElement('strong');val.textContent=match?match[1].trim():'–';row.appendChild(val);note.remove();
  });
 };
