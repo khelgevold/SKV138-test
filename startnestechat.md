@@ -12,3 +12,8 @@ Vi beholder ChatGPT → GitHub → Netlify og samler endringer for å spare Netl
 Neon Better Auth advarer om at alle på nettet kan registrere seg. Appen skal kun brukes av to godkjente personer (brukeren og Melinda). Sikker autorisasjon er et absolutt krav. Ingen hemmelige tilkoblingsstrenger i chat eller offentlig kode.
 
 Neste konkrete steg: Be brukeren åpne `Better Auth → Configure Auth` i Neon TEST og sende skjermbilde. Kontroller innstillingene før endringer. Deretter planlegg datamodell, trygg nettlesertilgang, datamigrering og backup. Jobb selvstendig innenfor avtalte rammer, presenter kort plan og milepæler/prosent, og be bare om nødvendige brukerhandlinger. Ikke endre appkode eller publiser uten avtale.
+
+## Oppdatert overlevering 18.11.2026 (overstyrer eldre status over)
+- Neon TEST SQL-migrering med tre skv138-tabeller er kjørt vellykket av brukeren; ingen appdata migrert. Én Better Auth-bruker er opprettet i dashboard uten passord. Ikke be om å gjenta dette.
+- Les [neon-backend-plan.md](neon-backend-plan.md) for API- og sikkerhetsplan.
+- Neste: avklar faktisk Neon Better Auth-token/sesjonsverifisering og trygg passordflyt, bygg deretter API med eksplisitt tilgangsliste og atomisk versjonering. Ikke endre V16.23 eller deploy uten godkjenning. Følg utviklingsregler.md.
