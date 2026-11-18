@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test backend-draft/integration.test.mjs",
+    "test": "node --test backend-draft/*.test.mjs",
     "build:auth": "esbuild backend-draft/neon-test-entry.mjs --bundle --format=esm --platform=browser --target=es2022 --outfile=backend-draft/test-site/neon-test-entry.js"
   },
   "dependencies": {
