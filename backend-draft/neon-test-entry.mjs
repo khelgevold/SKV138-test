@@ -31,3 +31,8 @@ export function startConfiguredSkv138TestLogin({ document, fetchImpl, storage, o
   const verifyAccess = createTestAccessVerifier({ fetchImpl, storage });
   return startSkv138TestLogin({ document, verifyAccess, onAuthorized });
 }
+ 
+export { mountPasswordResetForm } from "./password-reset-form.mjs";
+export { mountNewPasswordForm } from "./new-password-form.mjs";
+export { readResetToken, clearResetTokenFromUrl } from "./reset-link.mjs";
+export function createNeonTestLoginController() { return createNeonTestLogin(SKV138_TEST_AUTH_URL).login; }
