@@ -42,7 +42,7 @@ try {
       document.querySelector("#reset-form").hidden=false;
     });
   }
-  startConfiguredSkv138TestLogin({
+  if (!token) startConfiguredSkv138TestLogin({
     document,
     fetchImpl: (...args)=>fetch(...args),
     storage: window.localStorage,
