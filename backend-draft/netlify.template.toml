@@ -4,7 +4,7 @@
 # runtime role permissions, function path, environment variables, and first import.
 [build]
   command = "npm run build:auth"
-  publish = "backend-draft/dist"
+  publish = "backend-draft/test-site"
   functions = "backend-draft/netlify-functions"
 
 [functions]
