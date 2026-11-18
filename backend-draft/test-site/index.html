@@ -16,7 +16,9 @@ small{color:#526b5c}#authorized{display:none}
 <label for="password">Passord</label><input id="password" type="password" autocomplete="current-password" required>
 <button id="submit" type="submit">Logg inn</button></form>
 <p id="status" role="status" aria-live="polite"></p>
+<button id="show-register" type="button" class="secondary">Opprett TEST-bruker</button>
 <button id="show-reset" type="button" class="secondary">Glemt passord?</button>
+<form id="register-form" hidden><label for="register-name">Navn</label><input id="register-name" autocomplete="name" required><label for="register-email">E-post</label><input id="register-email" type="email" autocomplete="email" required><label for="register-password">Passord (minst 8 tegn)</label><input id="register-password" type="password" autocomplete="new-password" minlength="8" required><button id="register-submit" type="submit">Opprett bruker</button><p id="register-status" role="status" aria-live="polite"></p></form>
 <form id="reset-form" hidden><label for="reset-email">E-post for tilbakestilling</label><input id="reset-email" type="email" autocomplete="email" required><button id="reset-submit" type="submit">Be om ny lenke</button><p id="reset-status" role="status" aria-live="polite"></p></form>
 <form id="new-password-form" hidden><label for="new-password">Nytt passord</label><input id="new-password" type="password" autocomplete="new-password" minlength="8" required><label for="confirm-password">Gjenta passord</label><input id="confirm-password" type="password" autocomplete="new-password" minlength="8" required><button id="new-password-submit" type="submit">Oppdater passord</button><p id="new-password-status" role="status" aria-live="polite"></p></form>
 <section id="authorized"><h2>Tilgang bekreftet</h2><p>Backend har bekreftet at kontoen har tilgang. Hytteappen er ikke koblet til dette TEST-skallet ennå.</p></section>
@@ -32,11 +34,34 @@ try {
   if(token){
     document.querySelector("#login").hidden=true;
     document.querySelector("#show-reset").hidden=true;
+    document.querySelector("#show-register").hidden=true;
     document.querySelector("#new-password-form").hidden=false;
     clearResetTokenFromUrl(window.history,window.location.href);
     mountNewPasswordForm({document,login,token});
   }else{
     mountPasswordResetForm({document,login,redirectTo:window.location.origin + window.location.pathname});
+    document.querySelector("#show-register").addEventListener("click",()=>{
+      document.querySelector("#login").hidden=true;
+      document.querySelector("#show-reset").hidden=true;
+      document.querySelector("#show-register").hidden=true;
+      document.querySelector("#register-form").hidden=false;
+    });
+    document.querySelector("#register-form").addEventListener("submit",async event=>{
+      event.preventDefault();
+      const button=document.querySelector("#register-submit");
+      const message=document.querySelector("#register-status");
+      button.disabled=true;
+      message.textContent="Oppretter TEST-bruker …";
+      try {
+        const result=await login.register(document.querySelector("#register-email").value,document.querySelector("#register-password").value,document.querySelector("#register-name").value);
+        document.querySelector("#register-password").value="";
+        if(result.ok){
+          message.textContent="Bruker opprettet. Logg inn med e-post og passord. Tilgang til SKV138 må godkjennes separat.";
+          document.querySelector("#login").hidden=false;
+        }else message.textContent=result.message||"Registrering mislyktes.";
+      }catch{message.textContent="Registrering kunne ikke fullføres."}
+      finally{button.disabled=false;}
+    });
     document.querySelector("#show-reset").addEventListener("click",()=>{
       document.querySelector("#login").hidden=true;
       document.querySelector("#show-reset").hidden=true;
