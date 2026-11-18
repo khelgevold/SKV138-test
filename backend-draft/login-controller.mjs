@@ -38,7 +38,7 @@ export function createLoginController(authClient) {
         return { ok: false, message: "Kunne ikke kontakte registreringstjenesten." };
       }
     },
-    async requestPasswordReset(email) {
+    async requestPasswordReset(email, redirectTo) {
       const normalizedEmail = String(email || "").trim().toLowerCase();
       if (!normalizedEmail) return { ok: false, message: "Oppgi e-postadresse." };
       if (typeof authClient.requestPasswordReset !== "function") {
@@ -46,7 +46,7 @@ export function createLoginController(authClient) {
       }
       try {
         // Only useful when the managed auth service is configured to deliver reset emails.
-        await authClient.requestPasswordReset({ email: normalizedEmail });
+        await authClient.requestPasswordReset({ email: normalizedEmail, ...(redirectTo ? { redirectTo } : {}) });
       } catch {
         // Avoid disclosing whether an email account exists.
       }
