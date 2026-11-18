@@ -1,0 +1,19 @@
+name: SKV138 backend draft tests
+on:
+  push:
+    branches: [feature/neon-test-integration]
+    paths:
+      - "backend-draft/**"
+      - ".github/workflows/skv138-backend-tests.yml"
+  workflow_dispatch:
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node --test backend-draft/integration.test.mjs
