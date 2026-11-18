@@ -24,3 +24,6 @@ Official Neon Functions documentation: https://neon.com/docs/compute/functions/a
 
 ## Client adapter – inactive
 `client-adapter.mjs` accepts an injected Neon Better Auth client with `token()`, an injected fetch and a localStorage reader. It acquires a short-lived token per request, uses Bearer authorization, checks returned state, tracks version, and refuses saves before load or after 409. It never stores tokens or modifies the V16.23 prototype. The real auth client configuration, session UX, Netlify wiring and tests remain open.
+
+## Isolated TEST integration branch
+Work-in-progress branch: `feature/neon-test-integration`. `login-controller.mjs` wraps Better Auth email/password sign-in, session retrieval and sign-out. Successful sign-in does **not** grant SKV138 access: the backend must still check `skv138_access`. A dashboard-created user with NULL credential password cannot sign in until a supported password setup/reset flow is completed. No passwords are entered into SQL or source code. This is not connected to V16.23 and has not been functionally tested.
