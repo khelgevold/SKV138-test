@@ -46,6 +46,9 @@ export function mountLoginForm({ document, login, onSignedIn = () => {} }) {
       } else {
         status.textContent = "SKV138-backend kunne ikke fullføre kontrollen (klient- eller nettverksfeil).";
       }
+      if (status.dataset.testJwtAlg) {
+        status.textContent += " TEST JWT alg: " + status.dataset.testJwtAlg + ".";
+      }
       if (status.dataset.testIssuer) {
         status.textContent += " TEST JWT issuer: " + status.dataset.testIssuer;
       }
