@@ -14,3 +14,10 @@ This is a **non-deployed implementation draft**, deliberately outside the active
 ## 18 Nov – documented authentication contract
 
 Official Neon Functions documentation: https://neon.com/docs/compute/functions/authentication (Managed Auth verifies JWT using JWKS and issuer = origin of NEON_AUTH_BASE_URL, EdDSA). Better Auth JWT client: https://better-auth.com/docs/plugins/jwt (authClient.token()). This draft now matches that documented contract. Audience verification is conditional on confirmed token claims; don't invent an audience. Do not deploy until the actual TEST token, permitted-user allowlist, and frontend authentication flow have been verified.
+
+## V16.23 storage contract and import preview
+- `state-contract.mjs` is an inactive pure helper based on actual V16.23 `index.html`.
+- Main state key: `hytteokonomi-v3-test`; separate location key: `skv138_private_locations`. Location values are included in the proposed shared payload as `privateLocations`. Theme remains device-local.
+- `createMigrationPreview(storage)` only reads, validates and summarizes data. No writes, database calls or automatic import.
+- Backend PUT validation now checks the V16.23 shape and `privateLocations`.
+- Initial import, explicit confirmation, backup, authorization and TEST deployment remain unimplemented.
