@@ -207,3 +207,14 @@ test("reset link cleanup removes token without changing other query parameters",
   clearResetTokenFromUrl({ replaceState: (_a, _b, url) => { target = url; } }, "https://test.example/reset?token=abc&view=compact#top");
   assert.equal(target, "/reset?view=compact#top");
 });
+
+test("password reset forwards isolated TEST callback URL to auth provider", async () => {
+  let request;
+  const controller = createLoginController({
+    ...authClient,
+    requestPasswordReset: async args => { request = args; return { data: {} }; },
+  });
+  const result = await controller.requestPasswordReset(" TEST@EXAMPLE.COM ", "https://test.example.invalid/");
+  assert.equal(result.ok, true);
+  assert.deepEqual(request, { email: "test@example.com", redirectTo: "https://test.example.invalid/" });
+});
