@@ -38,3 +38,6 @@ Neste konkrete steg: Be brukeren åpne `Better Auth → Configure Auth` i Neon T
 
 ## Sikkerhetsretting 18.11.2026
 - `backend-draft/skv138-state.mjs` krever nå eksplisitt `NEON_AUTH_ISSUER` (ikke antatt hostname-origin). Bekreft eksakt verdi fra Neon Auth før TEST-deploy, sammen med JWKS og tokenmetode. Ikke svekk JWT-verifiseringen. Ingen live-test eller deploy utført.
+
+## 18.11 – neste handling
+- `redirectTo` for passordreset er koblet til isolert TEST-side; tilhørende test lagt til, ikke deployet. Neon TEST har Shared email provider. Avklar eksisterende/separat Netlify TEST-site og URL før deploy, og bekreft Auth trusted domain, eksakt JWT issuer/JWKS, runtime DB role, allowlist. Ingen PROD/V16.23-endringer. Ikke be om nye skjermbilder av tidligere viste Neon Auth-innstillinger.
