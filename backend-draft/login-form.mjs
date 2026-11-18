@@ -36,7 +36,10 @@ export function mountLoginForm({ document, login, onSignedIn = () => {} }) {
       } else if (String(error?.message || "").includes("not_initialized")) {
         status.textContent = "SKV138 TEST er ikke klargjort med data ennå.";
       } else {
-        status.textContent = "Innloggingen ble ikke fullført. Kontroller at TEST-tjenesten er tilgjengelig.";
+        status.textContent = "Neon-innlogging kan være OK, men SKV138-backenden er ikke klar.";
+      }
+      if (status.dataset.testIssuer) {
+        status.textContent += " TEST JWT issuer: " + status.dataset.testIssuer;
       }
     } finally {
       busy = false;
