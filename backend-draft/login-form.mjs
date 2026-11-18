@@ -31,12 +31,17 @@ export function mountLoginForm({ document, login, onSignedIn = () => {} }) {
       await onSignedIn();
     } catch (error) {
       status.dataset.error = "true";
-      if (String(error?.message || "").includes("not_authorized")) {
+      const reason = String(error?.message || "");
+      if (reason.includes("not_authorized")) {
         status.textContent = "Kontoen har ikke tilgang til SKV138.";
-      } else if (String(error?.message || "").includes("not_initialized")) {
+      } else if (reason.includes("not_initialized")) {
         status.textContent = "SKV138 TEST er ikke klargjort med data ennå.";
+      } else if (reason.includes("login_required")) {
+        status.textContent = "Neon-innlogging OK, men backend avviste tokenet (HTTP 401).";
+      } else if (Number.isInteger(error?.status) && error.status >= 400 && error.status <= 599) {
+        status.textContent = "SKV138-backenden svarte med HTTP " + error.status + ".";
       } else {
-        status.textContent = "Neon-innlogging kan være OK, men SKV138-backenden er ikke klar.";
+        status.textContent = "SKV138-backend kunne ikke fullføre kontrollen (klient- eller nettverksfeil).";
       }
       if (status.dataset.testIssuer) {
         status.textContent += " TEST JWT issuer: " + status.dataset.testIssuer;
