@@ -1,3 +1,7 @@
+## 18.11.2026 – Live bekreftelse av initialisert TEST
+- Brukeren kjørte `database/seed-neon-test.sql` med `Statement executed successfully` og viste deretter skjermbilde av TEST-siden med «Tilgang bekreftet». Dette verifiserer fungerende Neon Auth, backend-allowlist, lesing av gyldig `shared`-payload fra Neon TEST og fullført første initialisering. Ikke test denne kjeden på nytt uten relevant endring.
+- Neste milepæl: koble V16.23-grensesnittet til felles GET/PUT. Nåværende TEST-side er bare et innloggingsskall. `index.html` i main skal forbli urørt. V16.23 har synkrone `save()`-kall til localStorage; integrasjonen må sørge for at servertilstand lastes **før** UI starter, og at feil/409 ikke gir falsk «lagret»-tilstand. Bevar enhetsspesifikt tema og separat plassering-kontrakt. Ikke publiser utestet kode.
+
 # SKV138 – project.md
 Oppdatert: 2026-11-18
 
