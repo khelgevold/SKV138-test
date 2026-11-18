@@ -72,3 +72,6 @@ Root `package.json` provides a first-pass TEST dependency manifest, unit-test co
 
 ## Draft Netlify backend function
 `backend-draft/netlify-functions/skv138-state.mjs` re-exports the existing `handler` as a Netlify function. Database connection failures now return a generic 503 rather than escaping the handler. Both remain inactive because the Netlify configuration is a template. Critical blockers: verify actual JWT token API/issuer/JWKS and reset flow; provision least-privilege runtime role; configure TEST secrets; initialize state with explicit user approval; run real end-to-end access checks. A green bundle build alone is not evidence of live Neon authentication.
+
+## Password reset UI assembled (18 Nov)
+The isolated TEST shell now contains password-reset request and new-password forms. Their handlers are exported from the same browser bundle entrypoint, so no extra unbundled browser modules are required. The reset token is removed from the visible URL before the form is used. **Not verified against live Neon Auth**: actual reset callback URL, SDK method support, email delivery, and existing dashboard-created account with null password are still blockers. Do not treat a green build as a completed password reset test or deploy this without checking the real flow.
