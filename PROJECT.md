@@ -191,3 +191,5 @@ Commit `9065dce26408c917a5719ef94087d58e56fad256`: eldre V11-kode setter dynamis
 
 ## V16.22 – Privatlagerskjema (18.11.2026)
 Commit `a8815f530bef4351408beef47f1fbe99f3fa3e31`: For Lager → Privat skjules minimumsbeholdning og Fast vare; feltet «Ny plassering» (fritekst) fjernes; nedtrekkslisten for plassering bruker kun administrerte steder fra Innstillinger. Opprettelse av privat vare bruker navn, antall og valgt plassering, lagrer med `min:0`, `fixed:false`, lukker skjemaet etter lagring. Utleie uendret. Test på iPhone gjenstår. Bookinger og Plattformgebyrer allerede godkjent.
+
+V16.23 (18.11.2026): CSS-spesifisitet rettet for Privatlager: Minimumsbeholdning og Fast vare skjules med eksplisitt prioritet i Privat, fortsatt synlige i Utleie. Commit `2d4bd65189eb6e4d5a9e44675d83cb2412a8b24c`. iPhone-test gjenstår.
