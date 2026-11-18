@@ -60,3 +60,6 @@ The owner supplied the public managed Neon Auth endpoint for SKV138-TEST. It is 
 
 ## Reset-link completion draft
 `login-controller.mjs` now provides `completePasswordReset(token,newPassword)` using the Better Auth `resetPassword` client method. `new-password-form.mjs` handles confirmation, clears entered password fields and blocks duplicate submission. The token must come from a verified reset-link URL; no URL parser or active reset landing page has been implemented yet. Two mocked tests were added; no live reset request or completion has occurred. Before enabling: verify actual managed Neon reset URL/redirect behavior, configured allowed origin and delivery, and bundle the auth SDK.
+
+## Combined TEST entrypoint
+`neon-test-entry.mjs` now exports `startConfiguredSkv138TestLogin({document,fetchImpl,storage,onAuthorized})`, connecting Neon TEST Auth, the login form and backend GET authorization through `createTestAccessVerifier`. The app is exposed to the callback only after `status: ready`; 401/403/404 and other errors do not unlock it. This is still not a deployable browser bundle: SDK dependency installation, actual Auth token API, Netlify function routing, and reset flow require verification. No live credentials or secrets have been committed.
