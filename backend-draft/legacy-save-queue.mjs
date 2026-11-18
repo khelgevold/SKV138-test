@@ -8,6 +8,7 @@ export function createLegacySaveQueue({ client, onStatus = () => {} }) {
   let pending = null;
   let idleWaiters = [];
   let failedSnapshot = null;
+  let latestSnapshot = null;
   const settle = () => {
     if (!active && pending === null) {
       const waiters = idleWaiters; idleWaiters = [];
@@ -43,6 +44,7 @@ export function createLegacySaveQueue({ client, onStatus = () => {} }) {
       // Snapshot at time of edit; avoid later mutations changing an in-flight payload.
       const snapshot = JSON.parse(JSON.stringify(payload));
       pending = snapshot;
+      latestSnapshot = snapshot;
       onStatus({ type: "pending" });
       void flush();
       return true;
@@ -50,6 +52,7 @@ export function createLegacySaveQueue({ client, onStatus = () => {} }) {
     isBlocked: () => blocked,
     // The UI can offer a local export when a write fails; never silently discard edits.
     getFailedSnapshot: () => failedSnapshot === null ? null : JSON.parse(JSON.stringify(failedSnapshot)),
+    getLatestSnapshot: () => latestSnapshot === null ? null : JSON.parse(JSON.stringify(latestSnapshot)),
     whenIdle: () => (!active && pending === null) ? Promise.resolve() : new Promise(resolve => idleWaiters.push(resolve)),
   };
 }
