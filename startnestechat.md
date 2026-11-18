@@ -28,3 +28,10 @@ Neste konkrete steg: Be brukeren åpne `Better Auth → Configure Auth` i Neon T
 
 ## Siste kodearbeid
 - `backend-draft/client-adapter.mjs` opprettet som inaktiv klientmodul. Neste: verifiser faktisk Neon Auth-token, fullfør innloggings-UI, opprett begrenset DB-login og trygg initialisering/import før TEST-deploy.
+
+## 18.11.2026 – Gjeldende overlevering (overstyrer eldre «neste steg»)
+- Arbeid i `feature/neon-test-integration`, ikke `main`. V16.23 i `main/index.html` er godkjent og skal ikke endres uten eksplisitt avtale. Ingen Netlify/PROD-deploy.
+- Neon TEST SQL-tabeller er opprettet; én bruker opprettet i Neon-dashboard har credential uten passord. Ikke be om Configure Auth-skjermbilder igjen. Ingen allowlist-rader, runtime DB-rolle eller importert appdata.
+- Les `backend-draft/README.md`, `backend-draft/test-site/index.html`, `backend-draft/neon-test-entry.mjs`, `backend-draft/skv138-state.mjs`, `backend-draft/netlify.template.toml` og `package.json`. En isolert TEST-side har innlogging, passordresettskjema og backend-tilgangskontroll. En draft Netlify-funksjon finnes, men ingen deploy.
+- GitHub Actions var grønn etter rettet Neon Auth-pakke/import. Nyere endringer må kontrolleres. Verifiser live Neon Auth-metoder (inkl. token, reset og issuer/JWKS), sett opp minsteprivilegert DB-rolle, og klargjør samlet TEST-deploy med eksplisitt godkjenning. Ikke kall løsningen ferdig før faktisk autentisering og autorisasjon er testet.
+- Gjør mest mulig samlet i GitHub, minimer manuelle steg, og oppdater dokumentasjon. Ingen hemmelige nøkler i kode eller chat.
