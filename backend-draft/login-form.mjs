@@ -38,7 +38,9 @@ export function mountLoginForm({ document, login, onSignedIn = () => {} }) {
         status.textContent = "SKV138 TEST er ikke klargjort med data ennå.";
       } else if (reason.includes("login_required")) {
         const diagnostic = reason.match(/TEST_JWT_(ERR_[A-Z_]+|OTHER)/);
-        status.textContent = "Neon-innlogging OK, men backend avviste tokenet (HTTP 401)." + (diagnostic ? " Årsak: " + diagnostic[1] + "." : "");
+        const claim = reason.match(/TEST_CLAIM_(iss|aud|sub|exp|nbf|iat|jti|unknown)/);
+        const detail = reason.match(/TEST_REASON_(check_failed|missing|invalid|unknown)/);
+        status.textContent = "Neon-innlogging OK, men backend avviste tokenet (HTTP 401)." + (diagnostic ? " Årsak: " + diagnostic[1] + "." : "") + (claim ? " Claim: " + claim[1] + "." : "") + (detail ? " Kontroll: " + detail[1] + "." : "");
       } else if (reason.includes("TEST_DIAG_")) {
         const match = reason.match(/TEST_DIAG_[A-Z_]+/);
         status.textContent = "TEST-diagnose: " + (match ? match[0] : "ukjent") + ".";
