@@ -285,6 +285,23 @@ html{-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{font-size:15px;l
 #innstillinger #priceFeeEditor[hidden]{display:block!important}
 #innstillinger #messageTemplates .primary{margin-top:14px}
 #innstillinger .price-platform p.hint:last-child{display:none}
+</style><style id="v1620-css">
+#lager #v1619StockAdd.v1620-stock-add:not(.v1618-add-open){border:0!important;background:transparent!important;box-shadow:none!important;padding:0!important;margin:12px 0!important;border-radius:0!important;min-height:0!important}
+#lager #v1619StockAdd.v1620-stock-add:not(.v1618-add-open)>:not(#v1618NewStockButton){display:none!important}
+#lager #v1619StockAdd.v1620-stock-add #v1618NewStockButton{display:inline-flex!important;visibility:visible!important;opacity:1!important}
+#lager #v1619StockAdd.v1620-stock-add.v1618-add-open{padding:12px!important}
+#bookingOpen .v1620-payment{border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:6px 0!important;margin:10px 0!important}
+#bookingOpen .v1620-payment .v1617-payment-row{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;min-height:38px!important}
+#bookingOpen .v1620-payment .v1617-payment-row>div{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:6px!important;min-width:0}
+#bookingOpen .v1620-payment .v1617-payment-row .sub{margin:0!important;font-size:13px}
+#bookingOpen .v1620-payment .v1617-payment-row button{flex:0 0 auto!important;width:auto!important;min-height:34px!important;padding:6px 11px!important;border-radius:9px!important;background:var(--soft)!important;box-shadow:none!important}
+#innstillinger .v1620-fee-group{padding:12px 0;border-bottom:1px solid var(--line)}
+#innstillinger .v1620-fee-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+#innstillinger .v1620-fee-head button{flex:0 0 auto;min-width:32px;padding:5px 9px}
+#innstillinger .v1620-fee-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+#innstillinger .v1620-fee-grid label{display:block!important;min-width:0!important;width:100%!important;margin:0!important}
+#innstillinger .v1620-fee-grid input,#innstillinger .v1620-fee-grid select{width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+#innstillinger .v1620-fee-group+.v1620-fee-group{margin-top:6px}
 </style></head><body><header><div><h1>⌂ SKV138</h1><div style="opacity:.8;font-size:13px">V16 · Lokal testprototype</div></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
 <section id="oversikt" class="active"><div class="row"><button onclick="changeYear(-1)">‹</button><span class="year" id="yearTitle"></span><button onclick="changeYear(1)">›</button></div><div class="grid" id="metrics"></div><div class="card"><h2>Utbetalinger og skatt hittil i år</h2><div class="grid" id="v15YtdMetrics"></div></div><div class="card"><div class="row"><h2>Neste oppgaver</h2><button onclick="show('oppgaver')">Se alle</button></div><div id="nextTasks"></div></div></section>
 <section id="bookinger"><div class="row"><h2>Bookinger</h2><div class="booking-create"><button class="primary" onclick="newBooking()">+ Ny booking</button><button onclick="newPrivateStay()">+ Privat booking</button></div></div><div class="segmented triple" id="bookingTypeFilters"><button onclick="setBookingTypeFilter('all')">Alle</button><button onclick="setBookingTypeFilter('rental')">Utleie</button><button onclick="setBookingTypeFilter('private')">Privat</button></div><div id="bookingList"></div><div id="bookingDetail"></div></section>
@@ -1532,6 +1549,64 @@ renderPriceResults=function(){
  root.querySelectorAll('.price-platform p.hint').forEach(p=>p.remove());
  const discounts=$('priceDiscounts');if(discounts)discounts.querySelectorAll('p.hint').forEach(p=>p.remove());
 };
+
+
+/* V16.20 – final compact mobile layouts. */
+const v1620StockBase=renderStock;
+renderStock=function(){
+ v1620StockBase();
+ const add=$('v1619StockAdd');
+ if(add){
+  add.classList.add('v1620-stock-add');
+  const button=add.querySelector('#v1618NewStockButton');
+  if(button){
+   button.textContent=add.classList.contains('v1618-add-open')?'Avbryt':'+ Ny vare';
+   button.onclick=()=>{add.classList.toggle('v1618-add-open');button.textContent=add.classList.contains('v1618-add-open')?'Avbryt':'+ Ny vare'};
+  }
+ }
+ if(stockKind!=='Privat')return;
+ const items=state.stock.filter(x=>x.kind==='Privat'&&x.qty>0);
+ $('stockList')?.querySelectorAll(':scope > .stock-item').forEach((row,i)=>{
+  const item=items[i],first=row.firstElementChild;if(!item||!first)return;
+  first.querySelectorAll('.sub,.v16-location-label').forEach(n=>n.remove());
+  if(item.location){const small=document.createElement('small');small.className='sub';small.textContent=item.location;first.appendChild(small)}
+ });
+};
+const v1620BookingBase=renderBookings;
+renderBookings=function(){
+ v1620BookingBase();
+ const payment=$('bookingOpen')?.querySelector('.v1617-payment');
+ if(payment)payment.classList.add('v1620-payment');
+};
+const v1620PricePanelsBase=renderPricePanels;
+renderPricePanels=function(){
+ v1620PricePanelsBase();
+ const host=$('priceFeePanels');if(!host)return;
+ host.querySelectorAll('.price-platform').forEach(platform=>{
+  const rows=[...platform.querySelectorAll('.fee-row')];
+  rows.forEach(row=>{
+   const name=row.querySelector('input[id$="-name"]');if(!name)return;
+   const id=name.id.slice(0,-5);
+   const value=$((id+'-value'));
+   if(!value)return;
+   const valueLabel=value.closest('label');
+   const nameLabel=name.closest('label');
+   const typeLabel=$(id+'-kind')?.closest('label');
+   const baseLabel=$(id+'-base')?.closest('label');
+   const remove=row.querySelector('button');
+   if(!valueLabel||!nameLabel||!typeLabel||!baseLabel||!remove)return;
+   const group=document.createElement('div');group.className='v1620-fee-group';
+   const head=document.createElement('div');head.className='v1620-fee-head';
+   const title=document.createElement('strong');title.textContent=name.value||'Gebyr';
+   head.append(title,remove);
+   const grid=document.createElement('div');grid.className='v1620-fee-grid';
+   grid.append(nameLabel,valueLabel,typeLabel,baseLabel);
+   group.append(head,grid);row.replaceWith(group);
+   name.addEventListener('input',()=>{title.textContent=name.value||'Gebyr'});
+  });
+ });
+};
+renderPricePanels();
 
 render();
 if(!hytteStoragePersistent)hytteShowStorageWarning();
