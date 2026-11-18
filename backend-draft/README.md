@@ -4,7 +4,7 @@ This is a **non-deployed implementation draft**, deliberately outside the active
 
 - Requires Node dependencies `jose` and `pg`, Netlify Function wiring, same-origin frontend hosting and explicit secret environment variables.
 - `DATABASE_URL` must use a **dedicated least-privilege DB role**, not the Neon owner/admin. Table grants and identity-sequence privileges are not yet configured.
-- `NEON_AUTH_JWKS_URL`, `NEON_AUTH_BASE_URL` and `SKV138_APP_ORIGIN` must be set server-side. Verify actual issuer and algorithm from managed Neon Auth; optional audience if supported. The code currently uses JWKS-verified JWTs, not opaque Better Auth cookies.
+- `NEON_AUTH_JWKS_URL`, `NEON_AUTH_ISSUER` and `SKV138_APP_ORIGIN` must be set server-side. Set issuer to the exact verified JWT iss claim (not merely Auth URL origin); verify algorithm from managed Neon Auth; optional audience if supported. The code currently uses JWKS-verified JWTs, not opaque Better Auth cookies.
 - Browser must use Neon's documented `authClient.token()` flow to obtain JWT. Confirm compatibility before deployment.
 - API draft supports GET and PUT of singleton `shared`; PUT uses transaction + row lock + history + optimistic version check, returning 409 on conflict.
 - The singleton row must be initialized by a separate approved migration/import flow; draft intentionally does not seed example bookings or user access.
