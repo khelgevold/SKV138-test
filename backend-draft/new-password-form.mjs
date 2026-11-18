@@ -26,7 +26,7 @@ export function mountNewPasswordForm({ document, login, token }) {
     status.textContent = "Oppdaterer passord …";
     try {
       const result = await login.completePasswordReset(token, newPassword);
-      status.textContent = result.message || "Kunne ikke bekrefte passordendringen.";
+      status.textContent = result?.message || (result?.ok ? "Passordet er oppdatert." : "Kunne ikke oppdatere passordet.");
     } catch {
       status.textContent = "Kunne ikke oppdatere passordet. Prøv igjen.";
     } finally {
