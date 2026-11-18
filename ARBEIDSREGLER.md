@@ -82,3 +82,6 @@ Kodecommit `b3f01f11af9c6db7fa6683a1271aeac6ca13eff9`. Implementert: to kompakte
 
 ### V16.11 – Oversikt (2026-11-18)
 Kodecommit `15cbd68bdc7c463aa5bbb5107ea940416a913b6a`: beløpskortene på Oversikt er gjort lavere med større beløp og mer lesbare etiketter. Under «Neste oppgaver» fjernes den ekstra bookinglinjen over oppgavene når oppgaver finnes. Kun oppgaver for neste aktive/kommende booking vises, med eksisterende «Se alle»-knapp. Må bekreftes på iPhone; ingen data er nullstilt.
+
+### V16.12 – Kalender og bookingdetaljer
+Kodecommit `eb46cf6`: kalenderdato-knapper får ny klikkhåndtering etter at gammel inline-handler er fjernet (retting av regresjon ved datovalg). Doble tilbakeknapper i bookingdetaljer fjernes; årsfordeling skjules for booking innen samme kalenderår; utbetalingsseksjonen komprimeres og presiserer mottatt beløp etter plattformgebyr, før skatt; meldingsrader får venstre/høyre-justering. Oversikt godkjent av bruker. Bookinger visuelt godkjent, men «Aktuelle» skal endres til «Kommende» i samlet tekstjustering. V16.12 må testes på iPhone før godkjenning.
