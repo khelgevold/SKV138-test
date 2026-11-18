@@ -4,6 +4,7 @@ on:
     branches: [feature/neon-test-integration]
     paths:
       - "backend-draft/**"
+      - "package.json"
       - ".github/workflows/skv138-backend-tests.yml"
   workflow_dispatch:
 jobs:
@@ -17,3 +18,7 @@ jobs:
         with:
           node-version: "22"
       - run: node --test backend-draft/integration.test.mjs
+      - name: Install draft dependencies
+        run: npm install --no-audit --no-fund
+      - name: Validate browser bundle
+        run: npm run build:auth
