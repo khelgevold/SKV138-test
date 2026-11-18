@@ -9,7 +9,7 @@ export function createTestAccessVerifier({ fetchImpl, storage }) {
       const payload = await client.load();
       return { status: "ready", payload, client };
     } catch (error) {
-      if (error.status === 401) return { status: "login_required" };
+      if (error.status === 401) return { status: "login_required", testDiagnostic: error.testDiagnostic };
       if (error.status === 403) return { status: "not_authorized" };
       if (error.status === 404) return { status: "not_initialized" };
       throw error;
