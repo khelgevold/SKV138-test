@@ -2,7 +2,7 @@
 // Runtime secrets: DATABASE_URL, NEON_AUTH_JWKS_URL, NEON_AUTH_ISSUER.
 // Required: SKV138_APP_ORIGIN. Optional: NEON_AUTH_AUDIENCE if issued token has aud. Never commit values.
 import { createRemoteJWKSet, jwtVerify } from "jose";
-import pg from "pg";
+import pg from "pg";\nimport { validateSharedState, validateLocations } from "./state-contract.mjs";
 
 let jwks;
 let pool;
