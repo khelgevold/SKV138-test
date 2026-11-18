@@ -25,3 +25,6 @@ Neste konkrete steg: Be brukeren åpne `Better Auth → Configure Auth` i Neon T
 ## 18.11.2026 – Siste milepæl
 - Les `backend-draft/state-contract.mjs`: V16.23 datakontrakt og skrivefri importforhåndsvisning er kodet, men ikke testet/aktivert.
 - Neste: TEST-verifisering av Neon Auth, begrenset DB-login, trygg initialisering/import med godkjenning og frontend-integrasjon. Ingen deploy; V16.23 urørt.
+
+## Siste kodearbeid
+- `backend-draft/client-adapter.mjs` opprettet som inaktiv klientmodul. Neste: verifiser faktisk Neon Auth-token, fullfør innloggings-UI, opprett begrenset DB-login og trygg initialisering/import før TEST-deploy.
