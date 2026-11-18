@@ -1,6 +1,20 @@
 # Start neste chat – SKV138
 Oppdatert: 2026-11-18
 
+
+## GJELDENDE OVERLEVERING 18.11.2026 – LES DENNE FØRST
+**Denne seksjonen overstyrer alle eldre «neste steg» og opplysninger om manglende TEST-deploy nedenfor.** Hent oppdatert `project.md`, `utviklingsregler.md`, `neon-backend-plan.md` og relevante backend-filer fra GitHub før nye endringer.
+
+Vi jobber i `khelgevold/SKV138-test`, **kun** `feature/neon-test-integration`. Godkjent V16.23 i `main` er urørt; ingen SKV138 PROD finnes. Separat TEST-side: https://skv138-neon-test.netlify.app. Neon TEST ID `lively-block-14962279`; Neons interne `production`-gren er ikke app-PROD.
+
+Ferdig: Neon Auth registrering og innlogging med e-post/passord; TEST-bruker allowlistet i `public.skv138_access`; SQL-tabeller `skv138_access`, `skv138_data`, `skv138_data_history`; runtime DB-rolle `skv138_runtime` med avgrensede grants og tilordnet `skv138_app_test`; hemmelig passord tilbakestilt; fire TEST Netlify env-vars (`DATABASE_URL`, `NEON_AUTH_JWKS_URL`, `NEON_AUTH_ISSUER`, `SKV138_APP_ORIGIN`); TEST Netlify-funksjon publisert. Ingen appdata er importert. TEST-nettstedet måtte settes til **Public** i Netlify Project visibility for at Netlify skulle slutte å svare med sin egen 401 `text/plain`; appens egen innlogging/autorisasjon er fortsatt påkrevd.
+
+**Nåværende blokker:** Etter vellykket Neon-innlogging får klienten backend HTTP 401 JSON (JWT avvises). Backend i `backend-draft/skv138-state.mjs` verifiserer signatur via JWKS, eksakt issuer og **kun EdDSA**. Uverifisert JWT-issuer diagnostisert som `https://ep-twilight-sea-b979zblt.neonauth.c-7.eu-central-1.aws.neon.tech`. Siste kodeendring viser JWT-headerens ufarlige `alg` som `TEST JWT alg:` på innloggingsskjermen. **Vent på Netlify TEST-deploy og be brukeren oppgi kun algoritmen etter én innlogging.** Hvis algoritmen avviker, undersøk korrekt Neon-støttet signaturverifisering; hvis lik, kontroller JWKS/issuer/token-type uten å svekke sikkerhet. Ikke be om token, Authorization-header, passord eller connection string.
+
+Når JWT er løst: verifiser allowlist/database; forvent `404 Not initialized` fordi `skv138_data` er tom; planlegg trygg initialisering/import og TEST-verifikasjon. Fjern midlertidig TEST-diagnostikk etterpå. Ikke anta at databaseforbindelsen er testet – 401 oppstår før DB-tilkobling.
+
+Arbeidsregler: gjør alle mulige GitHub-endringer selv, unngå gjentatt manuell testing og Netlify-deploys, én brukerhandling av gangen, kort milepælplan/prosent, kopierbar SQL ved behov, dokumenter ved milepæler. Ingen PROD/main-endringer uten godkjenning. Oppdatert anslag: ca. 85 % for delmålet TEST-innlogging/backend-tilgang, ikke hele SKV138.
+
 Kopier teksten under inn i ny ChatGPT-chat:
 
 Vi fortsetter SKV138 i GitHub-repo `khelgevold/SKV138-test`. Hent og les `utviklingsregler.md`, `project.md`, `parkeringsplassen.md` og denne `startnestechat.md` direkte fra GitHub. Ved behov les også historiske `PROJECT.md`, `ARBEIDSREGLER.md` og `NY_CHAT_PROMPT.md`. Bruk nyeste status fremfor eldre loggnotater.
