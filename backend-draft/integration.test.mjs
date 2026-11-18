@@ -4,6 +4,7 @@ import { createMigrationPreview, validateSharedState } from "./state-contract.mj
 import { createSkv138Client } from "./client-adapter.mjs";
 import { createLoginController } from "./login-controller.mjs";
 import { mountLoginForm } from "./login-form.mjs";
+import { createTestAccessVerifier } from "./access-verifier.mjs";
 
 const state = () => ({
   settings: { checkin: "16:00" },
@@ -165,4 +166,19 @@ test("login form handles rejected sign-in without checking app access", async ()
   assert.equal(nodes["#status"].dataset.error, "true");
   assert.equal(nodes["#password"].value, "");
   assert.equal(accessChecks, 0);
+});
+
+test("backend 403 prevents opening cabin data after successful sign-in", async () => {
+  const verify = createTestAccessVerifier({
+    storage: storage({}),
+    fetchImpl: async () => ({ ok: false, status: 403, json: async () => ({ error: "Access denied" }) }),
+  });
+  assert.deepEqual(await verify(authClient), { status: "not_authorized" });
+});
+test("backend 404 is distinguished from missing authorization", async () => {
+  const verify = createTestAccessVerifier({
+    storage: storage({}),
+    fetchImpl: async () => ({ ok: false, status: 404, json: async () => ({ error: "Not initialized" }) }),
+  });
+  assert.deepEqual(await verify(authClient), { status: "not_initialized" });
 });
