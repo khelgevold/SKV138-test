@@ -7,6 +7,7 @@ export function createSkv138Client({ authClient, fetchImpl, storage, endpoint = 
   if (typeof fetchImpl !== "function") throw new Error("fetch implementation required");
   if (!storage || typeof storage.getItem !== "function") throw new Error("local storage reader required");
   let version = null;
+  let saving = false;
 
   async function request(method, body) {
     // Always acquire a fresh short-lived JWT. Never persist JWT to localStorage.
@@ -43,13 +44,23 @@ export function createSkv138Client({ authClient, fetchImpl, storage, endpoint = 
       return data.payload;
     },
     async save(payload) {
+      if (saving) throw new Error("Save already in progress");
       if (version === null) throw new Error("Load server state before saving");
       if (!validateSharedState(payload) || !validateLocations(payload.privateLocations)) {
         throw new Error("Invalid state");
       }
-      const data = await request("PUT", { payload, expectedVersion: version });
-      version = Number(data.version);
-      return data;
+      saving = true;
+      try {
+        const data = await request("PUT", { payload, expectedVersion: version });
+        const nextVersion = Number(data.version);
+        if (!Number.isSafeInteger(nextVersion) || nextVersion !== version + 1) {
+          throw new Error("Invalid server version after save");
+        }
+        version = nextVersion;
+        return data;
+      } finally {
+        saving = false;
+      }
     },
     // The adapter intentionally does not initialize the DB, write localStorage,
     // auto-import sample data, or overwrite local edits after a conflict.
