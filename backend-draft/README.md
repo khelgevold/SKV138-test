@@ -42,3 +42,6 @@ GitHub Actions screenshot supplied by project owner shows `SKV138 backend draft 
 
 ## Credential onboarding draft (2026-11-18)
 `login-controller.mjs` includes `register(email,password,name)` via Better Auth `signUp.email` and a neutral `requestPasswordReset(email)` via Better Auth `requestPasswordReset`. Existing passwordless dashboard-created users must **not** be registered again with the same email; password-reset delivery and supported account enrollment must be confirmed with Neon before enabling. Open signup alone never grants app access: only allowlisted user IDs in `public.skv138_access` may access backend data. Added two mocked tests; execution not confirmed yet. No UI activation or email delivery configured.
+
+## Form event adapter
+`login-form.mjs` provides `mountLoginForm({document,login,onSignedIn})` for the TEST login form. It disables repeat submissions while pending, clears the password field after an attempted sign-in, and delegates successful sign-in to a separate backend-access check. It is intentionally not activated in `login-preview.html`: real managed Auth configuration and a verified backend access check are still prerequisites. The module is not yet covered by automated tests.
