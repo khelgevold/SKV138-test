@@ -182,3 +182,16 @@ test("backend 404 is distinguished from missing authorization", async () => {
   });
   assert.deepEqual(await verify(authClient), { status: "not_initialized" });
 });
+
+test("password reset completion sends token and new password to auth client", async () => {
+  let submitted;
+  const client = { ...authClient, resetPassword: async args => { submitted = args; return { data: { status: true } }; } };
+  const result = await createLoginController(client).completePasswordReset("reset-token", "new-password-123");
+  assert.equal(result.ok, true);
+  assert.deepEqual(submitted, { token: "reset-token", newPassword: "new-password-123" });
+});
+test("password reset completion rejects short passwords and invalid links", async () => {
+  const login = createLoginController({ ...authClient, resetPassword: async () => { throw Error("must not call"); } });
+  assert.equal((await login.completePasswordReset("", "new-password-123")).ok, false);
+  assert.equal((await login.completePasswordReset("token", "short")).ok, false);
+});
