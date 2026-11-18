@@ -22,3 +22,5 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Validate browser bundle
         run: npm run build:auth
+      - name: Check browser bundle exports and published TEST files
+        run: node backend-draft/verify-build.mjs
