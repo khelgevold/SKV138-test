@@ -29,9 +29,15 @@ export function mountLoginForm({ document, login, onSignedIn = () => {} }) {
       status.textContent = "Innlogget. Kontrollerer tilgang …";
       // App access must still be verified by an authenticated backend request.
       await onSignedIn();
-    } catch {
+    } catch (error) {
       status.dataset.error = "true";
-      status.textContent = "Kunne ikke fullføre innloggingen.";
+      if (String(error?.message || "").includes("not_authorized")) {
+        status.textContent = "Kontoen har ikke tilgang til SKV138.";
+      } else if (String(error?.message || "").includes("not_initialized")) {
+        status.textContent = "SKV138 TEST er ikke klargjort med data ennå.";
+      } else {
+        status.textContent = "Innloggingen ble ikke fullført. Kontroller at TEST-tjenesten er tilgjengelig.";
+      }
     } finally {
       busy = false;
       button.disabled = false;
