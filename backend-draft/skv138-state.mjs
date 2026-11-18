@@ -1,6 +1,6 @@
 // SKV138 backend draft — NOT deployed. Requires jose + pg dependencies and Netlify configuration.
 // Runtime secrets: DATABASE_URL, NEON_AUTH_JWKS_URL, NEON_AUTH_ISSUER.
-// Optional: NEON_AUTH_AUDIENCE. Never put these values in source control.
+// Required: NEON_AUTH_AUDIENCE, SKV138_APP_ORIGIN. Never put values in source control.
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import pg from "pg";
 
@@ -12,7 +12,7 @@ const json = (statusCode, data) => ({
   body: JSON.stringify(data),
 });
 function configuration() {
-  for (const key of ["DATABASE_URL", "NEON_AUTH_JWKS_URL", "NEON_AUTH_ISSUER"]) {
+  for (const key of ["DATABASE_URL", "NEON_AUTH_JWKS_URL", "NEON_AUTH_ISSUER", "NEON_AUTH_AUDIENCE", "SKV138_APP_ORIGIN"]) {
     if (!process.env[key]) throw new Error("Missing backend configuration: " + key);
   }
   const jwksUrl = new URL(process.env.NEON_AUTH_JWKS_URL);
