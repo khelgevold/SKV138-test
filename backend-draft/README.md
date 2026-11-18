@@ -63,3 +63,6 @@ The owner supplied the public managed Neon Auth endpoint for SKV138-TEST. It is 
 
 ## Combined TEST entrypoint
 `neon-test-entry.mjs` now exports `startConfiguredSkv138TestLogin({document,fetchImpl,storage,onAuthorized})`, connecting Neon TEST Auth, the login form and backend GET authorization through `createTestAccessVerifier`. The app is exposed to the callback only after `status: ready`; 401/403/404 and other errors do not unlock it. This is still not a deployable browser bundle: SDK dependency installation, actual Auth token API, Netlify function routing, and reset flow require verification. No live credentials or secrets have been committed.
+
+## Build manifest and inactive Netlify template
+Root `package.json` provides a first-pass TEST dependency manifest, unit-test command and browser bundling command. Dependency versions are provisional until installation/build validation; no lockfile exists yet. `backend-draft/netlify.template.toml` is **inactive** and deliberately not a root `netlify.toml`. Its functions directory has not been populated and the browser bundle is not a complete website; do not deploy it as-is. This avoids accidental Netlify builds or replacing the approved prototype. Next validate the exact Neon SDK package version/export and create a working TEST entry HTML + function wiring, then seek deployment approval.
