@@ -38,6 +38,9 @@ export function mountLoginForm({ document, login, onSignedIn = () => {} }) {
         status.textContent = "SKV138 TEST er ikke klargjort med data ennå.";
       } else if (reason.includes("login_required")) {
         status.textContent = "Neon-innlogging OK, men backend avviste tokenet (HTTP 401).";
+      } else if (reason.includes("TEST_DIAG_")) {
+        const match = reason.match(/TEST_DIAG_[A-Z_]+/);
+        status.textContent = "TEST-diagnose: " + (match ? match[0] : "ukjent") + ".";
       } else if (Number.isInteger(error?.status) && error.status >= 400 && error.status <= 599) {
         status.textContent = "SKV138-backenden svarte med HTTP " + error.status + ".";
       } else {
