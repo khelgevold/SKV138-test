@@ -17,10 +17,10 @@ export function createV1623StateBridge({ client, onStatus = () => {} }) {
   }
 
   return {
-    async initialize() {
+    async initialize(preloadedState) {
       if (ready) throw new Error("State bridge already initialized");
       // No app rendering or editing until the authorized backend GET succeeds.
-      const server = await client.load();
+      const server = preloadedState === undefined ? await client.load() : preloadedState;
       if (!valid(server)) throw new Error("Invalid Neon TEST state");
       current = copy(server);
       queue = createLegacySaveQueue({ client, onStatus });
