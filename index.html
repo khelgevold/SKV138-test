@@ -198,6 +198,12 @@ html{-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{font-size:15px;l
 #bookingDetail .v1612-message-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 #bookingDetail .v1612-message-row span{flex:1 1 170px;min-width:0}
 #bookingDetail .v1612-message-row button{flex:0 0 auto;margin-left:auto}
+</style><style id="v1613-form-mobile">
+#bookinger .field-grid,#privateEditor .field-grid,#bookingForm .field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;min-width:0}
+#bookinger .field-grid>label,#privateEditor .field-grid>label,#bookingForm .field-grid>label{min-width:0;max-width:100%;overflow:hidden}
+#bookinger input[type="date"],#bookinger input[type="time"],#privateEditor input[type="date"],#privateEditor input[type="time"]{display:block;box-sizing:border-box;width:100%;min-width:0;max-width:100%;font-size:clamp(13px,3.4vw,16px);padding:10px 4px;text-align:center}
+#privateEditor .v16-private-back{margin-bottom:16px}
+@media(max-width:390px){#bookinger .field-grid,#privateEditor .field-grid,#bookingForm .field-grid{gap:8px}}
 </style></head><body><header><div><h1>⌂ SKV138</h1><div style="opacity:.8;font-size:13px">V16 · Lokal testprototype</div></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
 <section id="oversikt" class="active"><div class="row"><button onclick="changeYear(-1)">‹</button><span class="year" id="yearTitle"></span><button onclick="changeYear(1)">›</button></div><div class="grid" id="metrics"></div><div class="card"><h2>Utbetalinger og skatt hittil i år</h2><div class="grid" id="v15YtdMetrics"></div></div><div class="card"><div class="row"><h2>Neste oppgaver</h2><button onclick="show('oppgaver')">Se alle</button></div><div id="nextTasks"></div></div></section>
 <section id="bookinger"><div class="row"><h2>Bookinger</h2><div class="booking-create"><button class="primary" onclick="newBooking()">+ Ny booking</button><button onclick="newPrivateStay()">+ Privat booking</button></div></div><div class="segmented triple" id="bookingTypeFilters"><button onclick="setBookingTypeFilter('all')">Alle</button><button onclick="setBookingTypeFilter('rental')">Utleie</button><button onclick="setBookingTypeFilter('private')">Privat</button></div><div id="bookingList"></div><div id="bookingDetail"></div></section>
@@ -1141,6 +1147,36 @@ renderBookings=function(){
   }
   open.querySelectorAll('.message-row').forEach(row=>row.classList.add('v1612-message-row'));
  }
+};
+
+/* V16.13 – isolated booking editors, top scroll, safe date/time widths. */
+const v1613PrivateBase=privateStayForm;
+privateStayForm=function(stay){
+ v1613PrivateBase(stay);
+ const section=$('bookinger'),editor=$('privateEditor');
+ if(section&&editor){
+  section.querySelectorAll('#bookingList,#bookingDetail,#bookingForm,#v16BookingPeriod,.v1610-booking-filters').forEach(el=>el.style.display='none');
+  editor.style.display='block';
+ }
+ requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'instant'}));
+};
+const v1613ClosePrivateBase=v16ClosePrivateEditor;
+v16ClosePrivateEditor=function(){
+ const section=$('bookinger');
+ if(section)section.querySelectorAll('#bookingList,#bookingDetail,#bookingForm,#v16BookingPeriod,.v1610-booking-filters').forEach(el=>el.style.removeProperty('display'));
+ v1613ClosePrivateBase();
+ requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'instant'}));
+};
+const v1613NewBookingBase=newBooking;
+newBooking=function(){
+ const privateEditor=$('privateEditor');if(privateEditor)privateEditor.innerHTML='';
+ v1613NewBookingBase();
+ requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'instant'}));
+};
+const v1613EditBookingBase=editBooking;
+editBooking=function(id){
+ v1613EditBookingBase(id);
+ requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'instant'}));
 };
 
 render();
