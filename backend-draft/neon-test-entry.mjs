@@ -14,6 +14,20 @@ export function startSkv138TestLogin({ document, verifyAccess, onAuthorized, neo
     document,
     login,
     onSignedIn: async () => {
+      // TEST-only diagnostics: read the unverified issuer claim to assist
+      // configuration. Never use decoded claims for authorization.
+      try {
+        const tokenResult = await authClient.token();
+        const jwt = tokenResult?.data?.token;
+        if (typeof jwt === "string" && jwt.split(".").length === 3) {
+          const encoded = jwt.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+          const claims = JSON.parse(atob(encoded));
+          if (typeof claims.iss === "string" && /^https:\/\/[^\\s]{1,500}$/.test(claims.iss)) {
+            const statusElement = document.querySelector("#status");
+            if (statusElement) statusElement.textContent = "Neon-innlogging OK. JWT issuer: " + claims.iss + " — kontrollerer SKV138-tilgang …";
+          }
+        }
+      } catch { /* Diagnostics must never affect login or access decisions. */ }
       // Must make an authenticated GET to the SKV138 backend before showing app data.
       const result = await verifyAccess(authClient);
       if (result?.status !== "ready") {
