@@ -23,7 +23,7 @@ export function createLegacySaveQueue({ client, onStatus = () => {} }) {
         pending = null;
         try {
           await client.save(payload);
-          onStatus({ type: "saved", version: client.getVersion?.() });
+          if (pending === null) onStatus({ type: "saved", version: client.getVersion?.() });
         } catch (error) {
           // Stop all further writes until a user explicitly resolves the conflict/error.
           blocked = true;
