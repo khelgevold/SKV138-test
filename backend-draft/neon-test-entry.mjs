@@ -21,6 +21,11 @@ export function startSkv138TestLogin({ document, verifyAccess, onAuthorized, neo
         const jwt = tokenResult?.data?.token;
         if (typeof jwt === "string" && jwt.split(".").length === 3) {
           const encoded = jwt.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+          const headerEncoded = jwt.split(".")[0].replace(/-/g, "+").replace(/_/g, "/");
+          const header = JSON.parse(atob(headerEncoded));
+          const algorithm = typeof header.alg === "string" && /^[A-Za-z0-9_-]{1,20}$/.test(header.alg) ? header.alg : "unknown";
+          const statusElementForAlg = document.querySelector("#status");
+          if (statusElementForAlg) statusElementForAlg.dataset.testJwtAlg = algorithm;
           const claims = JSON.parse(atob(encoded));
           if (typeof claims.iss === "string" && claims.iss.startsWith("https://") && claims.iss.length <= 500) {
             const statusElement = document.querySelector("#status");
