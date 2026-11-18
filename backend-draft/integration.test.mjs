@@ -68,3 +68,32 @@ test("login does not equate successful authentication with app access", async ()
   assert.deepEqual(await login.signIn(" TEST@EXAMPLE.COM ", "pass"), { ok: true });
   assert.ok((await login.session()).session);
 });
+
+test("parallel saves are rejected before issuing a second PUT", async () => {
+  let resolveSave;
+  let putCount = 0;
+  const fetchImpl = async (_url, opts) => {
+    if (opts.method === "GET") return { ok: true, json: async () => ({ payload: state(), version: 3 }) };
+    putCount++;
+    await new Promise(resolve => { resolveSave = resolve; });
+    return { ok: true, json: async () => ({ version: 4 }) };
+  };
+  const client = createSkv138Client({ authClient, fetchImpl, storage: storage({}) });
+  await client.load();
+  const first = client.save(state());
+  await assert.rejects(client.save(state()), /already in progress/);
+  for (let i = 0; i < 10 && !resolveSave; i++) await Promise.resolve();
+  assert.equal(typeof resolveSave, "function");
+  resolveSave();
+  await first;
+  assert.equal(putCount, 1);
+});
+test("unexpected server version never advances local version", async () => {
+  const fetchImpl = async (_url, opts) => opts.method === "GET"
+    ? { ok: true, json: async () => ({ payload: state(), version: 3 }) }
+    : { ok: true, json: async () => ({ version: 99 }) };
+  const client = createSkv138Client({ authClient, fetchImpl, storage: storage({}) });
+  await client.load();
+  await assert.rejects(client.save(state()), /Invalid server version/);
+  assert.equal(client.getVersion(), 3);
+});
