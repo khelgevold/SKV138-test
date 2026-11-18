@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { createMigrationPreview, validateSharedState } from "./state-contract.mjs";
 import { createSkv138Client } from "./client-adapter.mjs";
 import { createLoginController } from "./login-controller.mjs";
+import { mountLoginForm } from "./login-form.mjs";
 
 const state = () => ({
   settings: { checkin: "16:00" },
@@ -112,4 +113,56 @@ test("password reset request never reveals account existence", async () => {
   const result = await createLoginController(client).requestPasswordReset("missing@example.com");
   assert.equal(result.ok, true);
   assert.match(result.message, /Hvis tilbakestilling/);
+});
+
+test("login form blocks double submission and clears password", async () => {
+  let listener;
+  let resolveLogin;
+  let attempts = 0;
+  const nodes = {
+    "#login": { addEventListener: (_name, fn) => { listener = fn; }, removeEventListener: () => {} },
+    "#email": { value: "user@example.com" },
+    "#password": { value: "secret-password" },
+    "#submit": { disabled: false },
+    "#status": { dataset: {}, textContent: "" },
+  };
+  let accessChecks = 0;
+  mountLoginForm({
+    document: { querySelector: selector => nodes[selector] },
+    login: { signIn: async () => {
+      attempts++;
+      return new Promise(resolve => { resolveLogin = resolve; });
+    } },
+    onSignedIn: async () => { accessChecks++; },
+  });
+  const event = { preventDefault() {} };
+  const first = listener(event);
+  await listener(event);
+  assert.equal(attempts, 1);
+  assert.equal(nodes["#submit"].disabled, true);
+  resolveLogin({ ok: true });
+  await first;
+  assert.equal(nodes["#password"].value, "");
+  assert.equal(nodes["#submit"].disabled, false);
+  assert.equal(accessChecks, 1);
+});
+test("login form handles rejected sign-in without checking app access", async () => {
+  let listener;
+  const nodes = {
+    "#login": { addEventListener: (_name, fn) => { listener = fn; }, removeEventListener: () => {} },
+    "#email": { value: "user@example.com" },
+    "#password": { value: "wrong-password" },
+    "#submit": { disabled: false },
+    "#status": { dataset: {}, textContent: "" },
+  };
+  let accessChecks = 0;
+  mountLoginForm({
+    document: { querySelector: selector => nodes[selector] },
+    login: { signIn: async () => ({ ok: false, message: "Feil innlogging" }) },
+    onSignedIn: async () => { accessChecks++; },
+  });
+  await listener({ preventDefault() {} });
+  assert.equal(nodes["#status"].dataset.error, "true");
+  assert.equal(nodes["#password"].value, "");
+  assert.equal(accessChecks, 0);
 });
