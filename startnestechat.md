@@ -41,3 +41,8 @@ Neste konkrete steg: Be brukeren åpne `Better Auth → Configure Auth` i Neon T
 
 ## 18.11 – neste handling
 - `redirectTo` for passordreset er koblet til isolert TEST-side; tilhørende test lagt til, ikke deployet. Neon TEST har Shared email provider. Avklar eksisterende/separat Netlify TEST-site og URL før deploy, og bekreft Auth trusted domain, eksakt JWT issuer/JWKS, runtime DB role, allowlist. Ingen PROD/V16.23-endringer. Ikke be om nye skjermbilder av tidligere viste Neon Auth-innstillinger.
+
+## 18.11 – TEST Auth: registrering uten å slette eksisterende bruker
+- Undersøkt Better Auth: serverbasert `setPassword` krever autentisert sesjon; passordreset-e-post er ikke mottatt. Vi sletter ikke eksisterende Neon-bruker eller endrer `neon_auth` direkte.
+- Egen `Opprett TEST-bruker`-visning er nå lagt til i `backend-draft/test-site/index.html` på utviklingsgrenen. Bruker kan registrere med en annen e-postadresse som vedkommende kontrollerer og eget passord. Registrering gir ikke automatisk tilgang til SKV138-data; `skv138_access` håndheves i backend.
+- Endringen er ikke bekreftet i CI eller publisert. TEST Netlify-site er separat; neste trinn: kontrollere GitHub Actions og foreta én bevisst TEST-deploy, så registrere bruker og verifisere autentisering.
