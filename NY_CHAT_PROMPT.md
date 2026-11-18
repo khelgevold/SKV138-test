@@ -1,5 +1,8 @@
 # SKV138 – NY_CHAT_PROMPT.md
 
+> **NY DOKUMENTSTRUKTUR (18.11.2026):** Gjeldende status og regler ligger nå i `project.md`, `startnestechat.md`, `utviklingsregler.md` og `parkeringsplassen.md`. Dette dokumentet beholdes for historikk/kompatibilitet. Eldre statuslinjer under kan være utdaterte. Les de nye dokumentene først.
+
+
 **Oppdatert:** 2026-11-16  
 **Gjeldende appversjon:** V15.1  
 **Prosjekt:** https://github.com/khelgevold/SKV138-test  
