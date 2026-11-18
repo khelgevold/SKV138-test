@@ -1,6 +1,21 @@
 # SKV138 – project.md
 Oppdatert: 2026-11-18
 
+
+## GJELDENDE STATUS 18.11.2026 – Neon TEST i drift, JWT-validering gjenstår
+**Denne seksjonen overstyrer eldre tidsstemplede «neste steg» og «ikke deployet»-opplysninger nedenfor.** V16.23 i `main` er fortsatt godkjent og urørt. Ingen SKV138 PROD er etablert.
+
+- Aktiv gren: `feature/neon-test-integration`. Separat Netlify TEST: https://skv138-neon-test.netlify.app. Neon TEST: `SKV138-TEST`, ID `lively-block-14962279`, Frankfurt. Neon-databasegren `production` er IKKE SKV138 PROD.
+- TEST-nettside, Auth-klient og Netlify-funksjon `/.netlify/functions/skv138-state` er publisert. Neon e-post/passord-registrering og innlogging er bekreftet fungerende. Trusted Domains er korrigert til eksakt TEST-origin uten avsluttende skråstrek. En ny TEST-bruker er opprettet og allowlist-registrert; eldre bruker uten passord er beholdt.
+- PostgreSQL-tabeller `public.skv138_access`, `public.skv138_data` og `public.skv138_data_history` finnes. `skv138_data` og historikk er ennå tomme; ingen V16.23-data importert. Runtime-rollen `skv138_runtime` er opprettet med avgrensede rettigheter, og `skv138_app_test` har fått medlemskap. Eksponert opprinnelig passord for `skv138_app_test` ble tilbakestilt.
+- Fire Netlify TEST-miljøvariabler er lagret: `DATABASE_URL` (hemmelig), `NEON_AUTH_JWKS_URL`, `NEON_AUTH_ISSUER`, `SKV138_APP_ORIGIN`. Ikke skriv ut verdier for hemmeligheter. JWT `iss` fra TEST-token er observert som `https://ep-twilight-sea-b979zblt.neonauth.c-7.eu-central-1.aws.neon.tech`; dette er en uverifisert dekoding for diagnostikk, ikke en autorisasjonsbeslutning.
+- Netlify TEST var satt til **Private** under Project visibility. Dette ga HTTP 401 `text/plain` fra Netlify før funksjonen. Brukeren endret til **Public** for TEST; nå returnerer backend sin egen JSON-401 for innlogget forespørsel. Direkte GET uten token returnerer `{"error":"Authentication required"}`, som bekrefter funksjon og nødvendig konfigurasjon.
+- **Aktiv blokker:** Neon Auth-innlogging lykkes, men backend avviser JWT med HTTP 401. `backend-draft/skv138-state.mjs` bruker `jose.jwtVerify`, eksplisitt issuer, fjern-JWKS og tillater bare `algorithms: ["EdDSA"]`. Faktisk JWT-signaturalgoritme er ennå ikke bekreftet; JWKS/issuer/signeringsnøkkel kan også være årsak. IKKE svekk signaturverifisering eller fjern tilgangskontroll.
+- TEST-diagnostikk i `backend-draft/neon-test-entry.mjs` og `backend-draft/login-form.mjs` viser nå `TEST JWT alg:` etter innlogging. **Neste handling:** vent på eksisterende Netlify TEST-publisering, logg inn én gang og noter algoritmen. Sammenlign med backendens EdDSA-begrensning. Hvis lik, undersøk JWKS/issuer/token-type kontrollert. Ikke endre SQL eller Netlify-variabler på spekulasjon.
+- Etter vellykket JWT-validering forventes tilgangssjekk mot `skv138_access`; dersom `skv138_data` fortsatt er tom, forventes HTTP 404 `Not initialized` / «SKV138 TEST er ikke klargjort med data ennå». Deretter planlegg sikker førstegangsinitialisering og import med uttrykkelig godkjenning, test datalagring/versjonering og sikkerhet før eventuell PROD.
+- TEST-diagnostikk skal fjernes når feilen er løst. Ingen hemmelige JWT, Authorization-headere, databasepassord eller connection strings i chat eller GitHub.
+- Arbeidsform: ChatGPT gjør GitHub-arbeid, brukeren bare nødvendige UI-handlinger; samle endringer og minimer Netlify-credits og unødvendige tester. Oppdater `project.md` og `startnestechat.md` ved milepæler. Omtrentlig fremdrift for **TEST innlogging/backend-tilgang**, ikke hele appen: 85 % (anslag, ikke verifisert fullføring).
+
 ## Gjeldende status (les først)
 **V16.23 er ferdig og uttrykkelig godkjent av brukeren etter iPhone-testing.** Oversikt, Bookinger, Kalender, Oppgaver, Lager (Utleie/Privat), Statistikk og Innstillinger er godkjent. Ingen kjente avtalte V16-UI-endringer gjenstår. Kodeversjonens siste V16.23-fiks: `2d4bd65189eb6e4d5a9e44675d83cb2412a8b24c`.
 
