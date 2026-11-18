@@ -63,3 +63,6 @@ Kodecommit `eb46cf6`: kalenderdato-knapper får ny klikkhåndtering etter at gam
 
 ### V16.13 – bookingformularer (2026-11-18)
 Kodecommit `d080867`: Ved åpning av privatopphold skjules bookinglisten og eksisterende bookingdetaljer slik at skjemaet står alene. Ved lukking gjenopprettes visningene. Nye og redigerte utleiebookinger og private opphold rulles til toppen. Dato-/klokkeslettfelter gis begrenset bredde, mindre mobilskrift og korrekt min-width i to kolonner. To-datovalg i kalender bekreftet fungerende av bruker. Ikke ennå iPhone-verifisert for skjemarettelsene.
+
+### V16.14 (2026-11-18)
+Kodecommit `318bcfc`: Ny utleiebooking åpnet fra kalender får «Tilbake til kalender» og går faktisk tilbake dit. Fra Bookinger returnerer tilbakeknappen til Bookinger. For å unngå iOS/Safari-overlapp er ankomst, avreise, innsjekk og utsjekk i én kolonne på mobil (full bredde). Dette må bekreftes på iPhone. Brukeren bekreftet at V16.13 åpner private/utleieskjema uten støy, men at feltbredde og retur fra utleieskjema fortsatt var feil.
