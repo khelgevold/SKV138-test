@@ -10,6 +10,7 @@ export function createV1623StateBridge({ client, onStatus = () => {} }) {
   let ready = false;
   let current = null;
   let queue = null;
+  let dirty = false;
   const copy = value => JSON.parse(JSON.stringify(value));
 
   function valid(payload) {
@@ -23,7 +24,11 @@ export function createV1623StateBridge({ client, onStatus = () => {} }) {
       const server = preloadedState === undefined ? await client.load() : preloadedState;
       if (!valid(server)) throw new Error("Invalid Neon TEST state");
       current = copy(server);
-      queue = createLegacySaveQueue({ client, onStatus });
+      queue = createLegacySaveQueue({ client, onStatus: event => {
+        if (event.type === 'pending') dirty = true;
+        if (event.type === 'saved') dirty = false;
+        onStatus(event);
+      } });
       ready = true;
       return copy(current);
     },
@@ -41,7 +46,7 @@ export function createV1623StateBridge({ client, onStatus = () => {} }) {
       return copy(current);
     },
     getStatus() {
-      return { ready, blocked: queue?.isBlocked() ?? false, version: client.getVersion?.() ?? null };
+      return { ready, dirty, blocked: queue?.isBlocked() ?? false, version: client.getVersion?.() ?? null };
     },
     getRecoveryData() {
       if (!queue?.isBlocked()) return null;
