@@ -27,3 +27,6 @@ Official Neon Functions documentation: https://neon.com/docs/compute/functions/a
 
 ## Isolated TEST integration branch
 Work-in-progress branch: `feature/neon-test-integration`. `login-controller.mjs` wraps Better Auth email/password sign-in, session retrieval and sign-out. Successful sign-in does **not** grant SKV138 access: the backend must still check `skv138_access`. A dashboard-created user with NULL credential password cannot sign in until a supported password setup/reset flow is completed. No passwords are entered into SQL or source code. This is not connected to V16.23 and has not been functionally tested.
+
+## Login screen preview
+`login-preview.html` is a standalone responsive Norwegian login form with email/password fields and accessible status messages. Submission is intentionally disabled until a real Neon TEST auth client is configured. It is not linked from `index.html` and does not send or store credentials. Next: verify password setup for the existing dashboard-created user, configure the managed Neon auth client in TEST, then connect the controller and test unauthorized/authorized sessions.
