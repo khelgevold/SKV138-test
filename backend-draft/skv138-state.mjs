@@ -58,8 +58,13 @@ export async function handler(event) {
       "ERR_JOSE_ALG_NOT_ALLOWED", "ERR_JWKS_INVALID", "ERR_JWKS_TIMEOUT"
     ]);
     const code = allowed.has(error?.code) ? error.code : "OTHER";
-    console.error("SKV138 TEST JWT validation category:", code);
-    return json(401, { error: "Invalid authentication", testDiagnostic: code });
+    // jose JWTClaimValidationFailed identifies the claim and reason without exposing its value.
+    const allowedClaims = new Set(["iss", "aud", "sub", "exp", "nbf", "iat", "jti"]);
+    const claim = code === "ERR_JWT_CLAIM_VALIDATION_FAILED" && allowedClaims.has(error?.claim) ? error.claim : "unknown";
+    const allowedReasons = new Set(["check_failed", "missing", "invalid"]);
+    const reason = code === "ERR_JWT_CLAIM_VALIDATION_FAILED" && allowedReasons.has(error?.reason) ? error.reason : "unknown";
+    console.error("SKV138 TEST JWT validation category:", code, "claim:", claim, "reason:", reason);
+    return json(401, { error: "Invalid authentication", testDiagnostic: code, testClaim: claim, testReason: reason });
   }
   if (!userId) return json(401, { error: "Authentication required" });
 
