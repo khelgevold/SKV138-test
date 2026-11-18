@@ -4,6 +4,7 @@
 import { createNeonTestLogin } from "./neon-auth-bootstrap.mjs";
 import { SKV138_TEST_AUTH_URL } from "./neon-test-config.mjs";
 import { mountLoginForm } from "./login-form.mjs";
+import { createTestAccessVerifier } from "./access-verifier.mjs";
 
 export function startSkv138TestLogin({ document, verifyAccess, onAuthorized }) {
   if (typeof verifyAccess !== "function") throw new Error("Backend access verifier required");
@@ -22,4 +23,11 @@ export function startSkv138TestLogin({ document, verifyAccess, onAuthorized }) {
     },
   });
   return { unmount, authClient, login };
+}
+
+// Use this entrypoint once a bundler and TEST backend have been configured.
+// The backend GET checks the allowlist; only then is onAuthorized invoked.
+export function startConfiguredSkv138TestLogin({ document, fetchImpl, storage, onAuthorized }) {
+  const verifyAccess = createTestAccessVerifier({ fetchImpl, storage });
+  return startSkv138TestLogin({ document, verifyAccess, onAuthorized });
 }
