@@ -36,7 +36,7 @@ try {
     clearResetTokenFromUrl(window.history,window.location.href);
     mountNewPasswordForm({document,login,token});
   }else{
-    mountPasswordResetForm({document,login});
+    mountPasswordResetForm({document,login,redirectTo:window.location.origin + window.location.pathname});
     document.querySelector("#show-reset").addEventListener("click",()=>{
       document.querySelector("#login").hidden=true;
       document.querySelector("#show-reset").hidden=true;
