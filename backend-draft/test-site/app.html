@@ -385,7 +385,7 @@ function skv138TestSaveBooking(id=null){
  try { saveBooking(id); }
  catch(error) {
   const message=String(error?.message||error||'Ukjent feil').slice(0,240);
-  alert('TEST: Booking kunne ikke lagres. '+message);
+  alert('TEST: Booking kunne ikke lagres. '+message+'\n\nSpor: '+String(error?.stack||'Ikke tilgjengelig').slice(0,750));
   console.error('SKV138 TEST booking save failed',error);
  }
 }
