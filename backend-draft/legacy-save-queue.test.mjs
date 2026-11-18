@@ -66,3 +66,16 @@ test("other save errors also block further writes", async () => {
   assert.equal(queue.isBlocked(), true);
   assert.equal(statuses.at(-1), "error");
 });
+
+test("recovery keeps latest queued change when an earlier write fails", async () => {
+  let rejectFirst;
+  const queue = createLegacySaveQueue({
+    client: { save: async () => new Promise((resolve,reject) => { rejectFirst = reject; }) },
+  });
+  queue.enqueue({ value: 1 });
+  queue.enqueue({ value: 2 });
+  rejectFirst(Object.assign(new Error("conflict"), { status: 409 }));
+  await queue.whenIdle();
+  assert.deepEqual(queue.getFailedSnapshot(), { value: 1 });
+  assert.deepEqual(queue.getLatestSnapshot(), { value: 2 });
+});
