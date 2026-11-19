@@ -1690,6 +1690,32 @@ addStock=function(){
 };
 
 
+/* TEST: resilient fee editor. V16.20 moves fields out of .fee-row. */
+priceFeesChanged=function(){
+ for(const p of PRICE_PLATFORMS){
+  for(const fee of state.priceConfig.fees[p]||[]){
+   const id='fee-'+fee.id;
+   const name=$(id+'-name'),kind=$(id+'-kind'),base=$(id+'-base'),value=$(id+'-value');
+   if(name)fee.name=name.value;
+   if(kind)fee.kind=kind.value;
+   if(base)fee.base=base.value;
+   if(value)fee.value=Math.max(0,Number(value.value)||0);
+  }
+ }
+ save();renderPriceResults();
+};
+addPriceFee=function(platform){
+ if(!PRICE_PLATFORMS.includes(platform))return;
+ priceFeesChanged();
+ state.priceConfig.fees[platform].push({id:'fee'+Date.now()+Math.floor(Math.random()*100000),name:'Nytt gebyr',kind:'percent',base:'total',value:0});
+ save();renderPricePanels();
+};
+removePriceFee=function(platform,id){
+ if(!PRICE_PLATFORMS.includes(platform))return;
+ priceFeesChanged();
+ state.priceConfig.fees[platform]=state.priceConfig.fees[platform].filter(f=>f.id!==id);
+ save();renderPricePanels();
+};
 /* Next TEST release: isolated visual corrections, no state/schema changes. */
 const skvNextBookingBase=renderBookings;
 renderBookings=function(){
