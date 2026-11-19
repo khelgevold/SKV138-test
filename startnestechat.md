@@ -1,3 +1,9 @@
+# PROD-releasekandidat – 19.11.2026
+
+Kandidaten ligger i `release/skv138-prod` fra godkjent TEST-gren. `netlify.toml` velger PROD-bygget. Sett `SKV138_APP_ORIGIN` til eksakt PROD-origin for både bygg og funksjoner, og `SKV138_NEON_AUTH_UPSTREAM` til den offentlige Neon PROD Auth-URL-en for bygget. Bygget genererer same-origin Auth-URL og full /neondb/auth/*-rewrite. Database- og JWT-variabler settes for funksjoner. Ingen PROD-ressurser er opprettet. Neste godkjenningspunkt er separat Neon PROD med tomme appdata og egen Auth. Publisering krever egen godkjenning.
+
+---
+
 # START NESTE CHAT – SKV138 PROD-FORBEREDELSE – 19.11.2026
 
 Vi fortsetter SKV138. GitHub: `khelgevold/SKV138-test`; arbeidsgren: `feature/neon-test-integration`. TEST: https://skv138-neon-test.netlify.app. `main` inneholder godkjent V16.23 og skal ikke endres uten eksplisitt godkjenning. Eget PROD-miljø finnes ennå ikke.
