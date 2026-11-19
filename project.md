@@ -1,3 +1,11 @@
+# BESLUTNING OG OVERLEVERING – 19.11.2026 – PROD STARTER TOMT
+
+Brukeren har besluttet: **Ingen TEST-data skal flyttes til PROD**. Opprett eget tomt PROD-datamiljø med nødvendig skjema og tilgangskonfigurasjon; ikke kopier bookinger, oppgaver, lager eller andre TEST-data. Dette er en planbeslutning, **ikke** autorisasjon til å opprette eller publisere PROD. Neste chat skal starte PROD-planlegging, ikke nye TEST-funksjonstester.
+
+**Kritisk teknisk referanse:** Les `innlogging-og-pwa.md` før PROD-arbeid. Dokumentet beskriver hele historikken rundt PC-token 404, F5/sesjonsgjenoppretting, installert iPhone-PWA 401, same-origin Neon Auth-proxy, iOS-statuslinje, fungerende commits og PROD-fallgruver. TEST Auth URL er hardkodet og skal ikke gjenbrukes uendret i PROD. TEST QA F01–F06 og sluttkontroller 3/3 godkjent; `main` V16.23 urørt.
+
+---
+
 # AKTIV STATUS – 19.11.2026 – FUNKSJONELL TEST GODKJENT, PROD IKKE KLARERT
 
 **Nyeste status overstyrer eldre historikk under.** GitHub: `khelgevold/SKV138-test`, gren `feature/neon-test-integration`. TEST: https://skv138-neon-test.netlify.app. `main` med godkjent V16.23 er urørt. **Det finnes ennå ikke eget PROD-miljø.**
