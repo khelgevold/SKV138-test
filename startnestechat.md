@@ -1,3 +1,8 @@
+# STATUS – 19.11.2026 – private oppgaver og Neon-kodegjennomgang
+
+Commit `505ddda` beholder fullførte historiske private oppgaver, men ikke ufullførte oppgaver fra avsluttede privatopphold. `v1623-state-bridge.mjs` er gjennomgått statisk: server-state valideres før visning, endringer kølegges. Persistens ved refresh og iPhone PWA-auth er **ikke** funksjonstestet. Netlify TEST er satt til Stopped builds på grunn av 30–40 jobber/time; IKKE be bruker aktivere før samlet kandidat er klar. Neste: gjennomgå lagringskø og iframe-kobling, deretter kontrollert TEST-publisering med brukerens godkjenning. Se `project.md` og `utviklingsregler.md`.
+
+---
 # STATUS – 19.11.2026 – neste milepæl
 
 Kodegjennomgang viser at `TEST_DIAG_TOKEN_EXCEPTION` kommer fra `authClient.token()` før backend-GET. Underliggende årsak på installert iPhone-webapp må undersøkes i faktisk PWA-miljø; ingen auth-omgåelse. Commit `29e5858` sikrer kanselleringsskjema ved manglende handlingsrad. Øvrig samlepakke ligger i `feature/neon-test-integration`, ikke funksjonstestet eller publisert. Se øverste `project.md` for komplett omfang og siste commits. Neste milepæl er samlet TEST-publisering etter avklaring, så én målrettet brukerhandling om gangen for iPhone/refresh og sentrale dataflyter. Ikke rør main/PROD. Push og iCal er utsatt.
