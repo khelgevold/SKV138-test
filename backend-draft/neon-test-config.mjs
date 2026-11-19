@@ -1,5 +1,5 @@
-// Public endpoint for SKV138-TEST managed Neon Auth.
-// This is NOT a database connection string or a secret.
-// Keep TEST separate from future PROD configuration.
+// Public same-origin Neon TEST Auth proxy. Netlify _redirects forwards this path
+// to the managed Neon Auth endpoint. Browser session cookies remain first-party.
+// Keep the backend JWT issuer/JWKS configuration pointed at Neon itself.
 export const SKV138_TEST_AUTH_URL =
-  "https://ep-twilight-sea-b979zblt.neonauth.c-7.eu-central-1.aws.neon.tech/neondb/auth";
+  "https://skv138-neon-test.netlify.app/neondb/auth";
