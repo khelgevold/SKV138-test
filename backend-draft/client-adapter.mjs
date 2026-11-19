@@ -24,7 +24,7 @@ export function createSkv138Client({ authClient, fetchImpl, storage, endpoint = 
     if (!token) {
       let tokenResponse;
       try {
-        tokenResponse = await fetchImpl(SKV138_TEST_AUTH_URL.replace(/\\/$/, "") + "/token", {
+        tokenResponse = await fetchImpl(SKV138_TEST_AUTH_URL.replace(/\/$/, "") + "/token", {
           method: "GET",
           credentials: "include",
         });
