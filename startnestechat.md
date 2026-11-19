@@ -1,3 +1,13 @@
+# AKTIV OVERLEVERING – 19.11.2026 – SKV138 QA og feilretting
+
+Les `project.md`, `utviklingsregler.md`, `parkeringsplassen.md` og denne filen direkte fra GitHub. Aktiv gren `feature/neon-test-integration` i `khelgevold/SKV138-test`. TEST: https://skv138-neon-test.netlify.app. Netlify TEST Stopped builds bekreftet. Eget PROD-miljø finnes ikke; `main` V16.23 urørt.
+
+Første QA-runde: 25 godkjente tester/kontroller, fem feil F01–F05. Se øverste `project.md` for presise feil, kodeendringer og utestede forhold. F01 visning/fane delvis rettet, F04/F05 kodeendret i `2724130`; F02 PWA-tokenfeil og F03 409 ved kansellering har ukjent rotårsak. GitHub Actions var grønn etter `1592b48`, men status etter `2724130` er ikke bekreftet. Ingen ny TEST-publisering av disse rettingene. Ikke påstå at feilene er godkjent.
+
+Neste: verifiser siste GitHub Actions, avtal én kontrollert TEST-deploy, test F01/F04/F05 og samle nødvendig diagnostikk for F02/F03. Én brukerhandling om gangen, ikke omgå serverauth eller versjonskontroll. Behold Netlify stoppet mellom kontroller. Ingen unødvendig retesting. Ingen manuell ICS-eksport. Ikke rør main.
+
+---
+
 # START NESTE CHAT – 19.11.2026 – systematisk TEST av SKV138
 
 Vi fortsetter utviklingen av **SKV138**.
