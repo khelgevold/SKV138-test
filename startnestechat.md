@@ -1,3 +1,9 @@
+# AKTIV STATUS – 19.11.2026 – samlet TEST-pakke under arbeid
+
+Brukeren har godkjent begge listene i `project.md`. Arbeid på `feature/neon-test-integration` i `khelgevold/SKV138-test`. Nyeste kodearbeid: `de69d47` serialiserer gjenopprettet sesjon/manuell innlogging for å unngå dobbel state-bridge; `104bae4` beholder historiske private oppgaver og krever utfylte oppgjørsbeløp. Tidligere commits for bookingkort, innstillinger, skatt, gebyrer, kansellering og private oppgaveregler er dokumentert i `project.md`. **Ikke funksjonstestet eller godkjent**, og iOS PWA-tokenfeilen er fortsatt uavklart. Før PROD: målrettet verifikasjon av iPhone installert app, refresh, lagring, kansellering, økonomi og private oppgaver. Ikke utelat diagnostikk-opprydding. Push og iCal først etter godkjent TEST. Ikke endre main/PROD eller publiser uten særskilt godkjenning. Les også `utviklingsregler.md` og `parkeringsplassen.md`.
+
+---
+
 # START HER – 19.11.2026 – samlet versjonspakke påbegynt
 
 Brukeren godkjente **samtlige punkter i begge listene** og ba ChatGPT starte utviklingen. Les øverste seksjon i `project.md` for komplett omfang (11 punkter) før arbeid, samt `utviklingsregler.md`, `parkeringsplassen.md` og faktisk kode. Jobb i `khelgevold/SKV138-test`, `feature/neon-test-integration`; `main` V16.23 og PROD urørt. Ikke utelat noen av de tidligere avtalte oversikt-/booking-/oppgaveforbedringene. iPhone PWA-innlogging og refresh-sesjon er to åpne blokkere. Brukeren vil ha samlet TEST-kandidat med minst mulig deploys, og én nødvendig handling om gangen. Push/iCal utsettes til godkjent øvrig TEST. Dokumenter konkret fremdrift, ikke påstå at en samlet pakke er ferdig før alle punktene er gjennomført og verifisert.
