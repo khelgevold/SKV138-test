@@ -41,7 +41,26 @@ export function startSkv138TestLogin({ document, verifyAccess, onAuthorized, neo
       await onAuthorized(result.payload, result.client);
     },
   });
-  return { unmount, authClient, login };
+  // Recover an existing Neon session on refresh without storing JWTs locally.
+  // Access to the app is still gated by the authenticated backend GET.
+  let active = true;
+  const restoreSession = async () => {
+    const button = document.querySelector("#submit");
+    try {
+      const session = await login.session();
+      if (!active || !session) return false;
+      const result = await verifyAccess(authClient);
+      if (!active || result?.status !== "ready") return false;
+      await onAuthorized(result.payload, result.client);
+      return true;
+    } catch {
+      // An expired session or offline backend must leave the normal login available.
+      return false;
+    }
+  };
+  // Avoid running session restoration while the password-reset form is displayed.
+  const restoring = document.querySelector("#login")?.hidden ? Promise.resolve(false) : restoreSession();
+  return { unmount: () => { active = false; unmount(); }, authClient, login, restoring };
 }
 
 // Use this entrypoint once a bundler and TEST backend have been configured.
