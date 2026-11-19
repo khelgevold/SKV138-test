@@ -1,3 +1,9 @@
+## Kodegjennomgang punkt 1 – 19.11.2026 (Netlify builds stoppet)
+- Brukeren har satt Netlify TEST til **Stopped builds** etter 30–40 automatiske jobber. Ikke be om å aktivere igjen før samlet TEST-kandidat er klar; GitHub-commits skal ikke trigge nye automatiske bygg mens denne innstillingen står.
+- **Bekreftet økonomifeil rettet** i commit `bfc9a10`: `v10YearStats` summerte allerede kansellerte bookinger i `platforms`, mens V16.7-wrapperen la de samme beløpene til én gang til. Den overflødige wrapperen er fjernet. Dette hindrer dobbelttelling av brutto/gebyr per plattform for kanselleringer; samlet årssum var ikke påvirket av akkurat denne wrapperen.
+- Kontrollert at V16-bookingkort har `v16OpenBooking(id)` og at siste wrapper leser samme onclick-format; kontrollert at kanselleringsskjemaets `booking-actions` finnes i opprinnelig detaljvisning. Ingen nettleser-/iPhone-verifikasjon ennå.
+- Neste: fortsette statisk gjennomgang av gebyrredigering, innstillingsrekkefølge, private oppgaver og tilstandslagring. Hold TEST og PROD urørt i Netlify inntil eksplisitt beskjed.
+
 ## Fremdrift – videre kodekontroll 19.11.2026
 - Gjennomgått `client-adapter.mjs`, `login-controller.mjs`, `login-form.mjs`, `neon-test-entry.mjs` og relevante deler av `app.html`. `TEST_DIAG_TOKEN_EXCEPTION` oppstår ved unntak i `authClient.token()` **før** backend-kallet; derfor kan den ikke løses ved å endre SQL/autorisasjon. Den konkrete underliggende iOS-årsaken er ennå ikke observert. Ingen endring i token-sikkerhet eller lagring av JWT.
 - Commit `29e5858`: sikret at kanselleringsskjemaet bare monteres når bookingens handlingsrad faktisk finnes; unngår et skjult skjema ved avvikende visning.
