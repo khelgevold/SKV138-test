@@ -1,3 +1,8 @@
+## TEST Neon Auth – målrettet feildiagnostikk 19.11.2026
+- Siste publiserte innloggingsfeil: `TEST_DIAG_JWT_HELPER_EXCEPTION`; Netlify TEST `Stopped builds` bekreftet. `token()` ga ikke brukbart token og `getJWTToken()` kastet feil; rotårsak ukjent.
+- Commit `f214e09` klassifiserer feil fra JWT-helper med begrenset HTTP-status (400–599 hvis tilgjengelig) og fast feiltype (TYPE/ABORT/NETWORK/OTHER). Commit `e1662b6` viser sifre i den begrensede diagnostikkoden. Rå feilmeldinger, token og legitimasjon eksponeres ikke. Ingen endring i backend-autorisasjon.
+- **Ikke publisert eller testet.** Neste kontroll: én manuell TEST-deploy etter aktivering og én innlogging; noter hele `TEST_DIAG_...`-koden, stopp builds igjen. PROD/main urørt.
+
 ## TEST Neon token diagnostikk – 19.11.2026
 - Netlify TEST `Stopped builds` bekreftet av bruker etter at siste deploy viste `TEST_DIAG_TOKEN_EXCEPTION`.
 - Commit `f7130ff`: avgrenset diagnostikk i `backend-draft/client-adapter.mjs` skiller feil i `token()`, `getJWTToken()` og begge metodene. Viser kun forhåndsdefinerte feilkoder, aldri token eller rå SDK-feilmeldinger. Ingen endring i backend-autorisasjon.
