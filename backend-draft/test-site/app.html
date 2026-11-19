@@ -1690,6 +1690,30 @@ addStock=function(){
 };
 
 
+/* TEST: dedicated private-stay task rules, isolated from rental rules. */
+const skvPrivateRuleRenderBase=renderRules;
+renderRules=function(){
+ skvPrivateRuleRenderBase();
+ const select=$('rulePlatform');
+ if(select&&!Array.from(select.options).some(o=>o.value==='Privat booking')){
+  const option=document.createElement('option');option.value='Privat booking';option.textContent='Privat booking';select.appendChild(option);
+  const rule=state.taskRules.find(r=>r.id===editingRule);
+  if(rule?.platform==='Privat booking')select.value='Privat booking';
+ }
+};
+const skvPrivateTasksBase=tasks;
+tasks=function(){
+ const rental=skvPrivateTasksBase().filter(t=>state.bookings.some(b=>String(b.id)===String(t.bookingId)));
+ const privateTasks=state.privateStays.flatMap(stay=>{
+  if(stamp(stay.end,stay.checkout)<new Date())return [];
+  return state.taskRules.filter(rule=>rule.active&&rule.platform==='Privat booking').map(rule=>({
+   id:String(stay.id)+'-'+rule.id,bookingId:stay.id,title:rule.title,
+   due:shiftHours(rule.anchor==='checkin'?stay.start:stay.end,rule.anchor==='checkin'?stay.checkin:stay.checkout,Number(rule.offset)),
+   type:rule.type,guest:stay.name||'Privat',platform:'Privat booking',ruleId:rule.id,task:rule.task||'none'
+  }));
+ });
+ return rental.concat(privateTasks).sort((a,b)=>a.due.localeCompare(b.due)||a.title.localeCompare(b.title));
+};
 /* TEST: cancellation settlement and deliberate deletion of cancelled bookings. */
 function skvSettlementForm(id){
  const b=state.bookings.find(x=>String(x.id)===String(id));
