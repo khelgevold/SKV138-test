@@ -14,18 +14,18 @@ button{width:100%;margin-top:22px;padding:13px;border:0;border-radius:9px;backgr
 button:disabled{opacity:.6}.secondary{background:transparent;color:#245c43;border:1px solid #9bb8a5;margin-top:8px}[hidden]{display:none!important}#status[data-error=true]{color:#a12a2a}#status{min-height:1.5em}
 small{color:#526b5c}#authorized{display:none}body.app-ready{display:block;padding:0;background:#101f1a}body.app-ready>main{display:none}#app-frame{display:none;width:100%;height:100dvh;border:0}body.app-ready #app-frame{display:block}#save-alert{display:none;position:fixed;top:0;left:0;right:0;z-index:1000;background:#fff1dc;color:#633c00;padding:12px 16px;text-align:center}body.save-blocked #save-alert{display:block}body.save-blocked #app-frame{pointer-events:none;filter:grayscale(.55)}body.restoring-session>main{visibility:hidden}body.restoring-session:not(.app-ready)::before{content:'Gjenoppretter innlogging …';position:fixed;inset:0;display:grid;place-items:center;color:#245c43;font-weight:600}
 </style></head><body><main>
-<h1>SKV138</h1><p>Innlogging – isolert TEST-miljø.</p>
+<h1>SKV138</h1><p>Logg inn for å åpne hytteappen.</p>
 <form id="login"><label for="email">E-post</label><input id="email" type="email" autocomplete="username" required>
 <label for="password">Passord</label><input id="password" type="password" autocomplete="current-password" required>
 <button id="submit" type="submit">Logg inn</button></form>
 <p id="status" role="status" aria-live="polite"></p>
-<button id="show-register" type="button" class="secondary">Opprett TEST-bruker</button>
+<button id="show-register" type="button" class="secondary">Opprett bruker</button>
 <button id="show-reset" type="button" class="secondary">Glemt passord?</button>
 <form id="register-form" hidden><label for="register-name">Navn</label><input id="register-name" autocomplete="name" required><label for="register-email">E-post</label><input id="register-email" type="email" autocomplete="email" required><label for="register-password">Passord (minst 8 tegn)</label><input id="register-password" type="password" autocomplete="new-password" minlength="8" required><button id="register-submit" type="submit">Opprett bruker</button><p id="register-status" role="status" aria-live="polite"></p></form>
 <form id="reset-form" hidden><label for="reset-email">E-post for tilbakestilling</label><input id="reset-email" type="email" autocomplete="email" required><button id="reset-submit" type="submit">Be om ny lenke</button><p id="reset-status" role="status" aria-live="polite"></p></form>
 <form id="new-password-form" hidden><label for="new-password">Nytt passord</label><input id="new-password" type="password" autocomplete="new-password" minlength="8" required><label for="confirm-password">Gjenta passord</label><input id="confirm-password" type="password" autocomplete="new-password" minlength="8" required><button id="new-password-submit" type="submit">Oppdater passord</button><p id="new-password-status" role="status" aria-live="polite"></p></form>
 <section id="authorized"><h2>Tilgang bekreftet</h2><p>Backend har bekreftet at kontoen har tilgang. Hytteappen er ikke koblet til dette TEST-skallet ennå.</p></section>
-<small>Ingen passord lagres i denne siden. Ikke bruk PROD-data i TEST.</small>
+<small>Tilgang til SKV138 må godkjennes separat.</small>
 </main><div id="save-alert" role="alert"><span id="save-message">Lagring er stoppet.</span> <button id="download-recovery" type="button">Last ned ulagrede data</button></div><iframe id="app-frame" title="SKV138 hytteapp" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-downloads"></iframe>
 <script type="module">
 import { startConfiguredSkv138TestLogin, createNeonTestSession, mountPasswordResetForm, mountNewPasswordForm, readResetToken, clearResetTokenFromUrl, createV1623StateBridge } from "./neon-test-entry.js";
