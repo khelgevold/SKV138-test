@@ -1,3 +1,9 @@
+## Punkt 1 – booking/kansellering, statisk kontroll 19.11.2026
+- Gjennomgått faktiske funksjoner `v10Stays()`, `v10Conflict()`, `v16SetBookingPeriod()`, `v16OpenBooking()`, `skvConfirmSettlement()`, `skvDeleteCancelled()`, `bookingAmounts()`, `v10YearStats()`, `v15TaxYtd()`, `v15CalendarData()`.
+- Bekreftet i kode: kansellerte bookinger utelates fra oppholdslisten som brukes til kalender og overlappskontroll; beholdes i bookinghistorikken «Kansellerte»; inntekts- og gebyrbeløp bygger på registrert oppgjør; sletting krever kansellert status og eksplisitt bekreftelse. Tidligere dobbelttelling i plattformstatistikk ble fjernet i `bfc9a10`.
+- Åpne funksjonelle verifikasjoner: kansellering/oppgjør, permanent sletting, bookingpersistens etter refresh, auth i iPhone PWA, og PC/mobil-layout. Dette er ikke godkjent uten TEST-publisering.
+- **Netlify TEST fortsatt Stopped builds**. Ingen ny kodeendring eller deploy i denne kontrollen; PROD/main urørt.
+
 ## Statisk kontroll – Neon innlogging og lagringskø 19.11.2026
 - Kontrollert `neon-test-entry.mjs`, `login-controller.mjs`, `access-verifier.mjs`, `client-adapter.mjs`, `legacy-save-queue.mjs`, `v1623-state-bridge.mjs`, `test-site/index.html` og appens `save()`-kobling. Autorisert backend GET kreves før appens iframe lastes. `save()` sender snapshot via bridge til serialisert PUT-kø. 409/andre skrivefeil stopper videre lagring og muliggjør eksport av ulagrede data.
 - Ved refresh forsøker `restoreSession()` `login.session()` og backend-verifisering; feil fanges og brukeren blir på innlogging. Derfor kan koden **ikke** alene bevise vedvarende innlogging. iPhone PWA `TEST_DIAG_TOKEN_EXCEPTION` gjenstår og kan oppstå før backend-kallet.
