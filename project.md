@@ -1,3 +1,8 @@
+## BEKREFTET TEST-RESULTAT – innlogging fungerer 19.11.2026
+- Bruker har bekreftet med skjermbilde at ny TEST-deploy med `/token`-fallback (commits `d173b9e`/`75fe6c4`) åpner hytteappen på PC etter innlogging. Dette løser den tidligere PC-blokkeren `TEST_DIAG_JWT_HELPER_EXCEPTION_OTHER_HTTP_404` i den testede flyten. Ikke påstå at iPhone PWA eller refresh er verifisert.
+- Skjermbildet viser oversikten med Prognose år, utbetaling/skatt, neste oppgaver og bunnmeny. PC-layout og øvrige funksjoner er ennå ikke godkjent.
+- **Neste prioritet:** opprett en TEST-booking, vent til lagring er ferdig, oppdater siden og kontroller at bookingen fortsatt finnes i Neon. Deretter kontroll av sesjonsbevaring, PC-layout og iPhone PWA. Behold PROD/main urørt og begrens Netlify-builds; stopp TEST-builds etter publisering.
+
 ## Neon JWT konkret retting – 19.11.2026 (IKKE publisert)
 - Edge Network viste faktisk GET `/neondb/auth/get-j-w-t-token` → 404. Neon Better Auth/JWKS er tilgjengelig og Auth URL/trusted domain stemmer.
 - Dokumentert Neon-flyt for standard Better Auth-klient er `authClient.token()` med `data.token`; direkte REST GET `{AUTH_URL}/token` med `credentials: include` kan brukes dersom SDK ikke leverer token. `getJWTToken()`-fallback er fjernet; `session.access_token`-fallback er fjernet siden den tilhører en annen klientvariant. Commit `d173b9e`, korrigert URL-regex `75fe6c4`. Ingen tokenlagring, backend-JWT-verifikasjon og allowlist uendret.
