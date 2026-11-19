@@ -30,3 +30,10 @@ test("approved prototype is not referenced by isolated TEST shell", () => {
   const html = read("test-site/index.html");
   assert.doesNotMatch(html, /hytteokonomi-v3-test|\.\.\/\.\.\/index\.html/);
 });
+
+test("TEST Neon Auth stays same-origin and Netlify proxies the full Auth path", () => {
+  const config = read("neon-test-config.mjs");
+  const redirects = read("test-site/_redirects");
+  assert.match(config, /https:\/\/skv138-neon-test\.netlify\.app\/neondb\/auth/);
+  assert.match(redirects, /^\/neondb\/auth\/\*\s+https:\/\/[^\s]+\/neondb\/auth\/:splat\s+200\s*$/m);
+});
