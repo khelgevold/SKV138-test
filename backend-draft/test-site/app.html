@@ -1690,6 +1690,64 @@ addStock=function(){
 };
 
 
+/* TEST: cancellation settlement and deliberate deletion of cancelled bookings. */
+function skvSettlementForm(id){
+ const b=state.bookings.find(x=>String(x.id)===String(id));
+ if(!b)return;
+ const panel=$('bookingOpen');
+ if(!panel)return;
+ panel.querySelector('#skvSettlement')?.remove();
+ const amounts=bookingAmounts(b);
+ const section=document.createElement('div');
+ section.id='skvSettlement';section.className='card skv-settlement';
+ section.innerHTML='<h3>'+(b.cancelled?'Rediger kanselleringsoppgjør':'Kanseller booking')+'</h3><p class="sub">Brutto og gebyr er det du faktisk beholder etter refusjon. Netto beregnes automatisk. Kanseller bare når bookingen faktisk er avbestilt hos plattformen.</p>'+
+ '<label>Brutto beholdt (kr)<input id="skvSettlementGross" type="number" min="0" step="0.01"></label>'+
+ '<label>Endelig plattformgebyr (kr)<input id="skvSettlementFee" type="number" min="0" step="0.01"></label>'+
+ '<p id="skvSettlementNet"></p><div class="row"><button class="primary" onclick="skvConfirmSettlement('+Number(b.id)+')">'+(b.cancelled?'Lagre oppgjør':'Bekreft kansellering')+'</button><button onclick="$(\'skvSettlement\').remove()">Avbryt</button></div>';
+ panel.querySelector('.booking-actions')?.insertAdjacentElement('afterend',section);
+ const gross=$('skvSettlementGross'),fee=$('skvSettlementFee');
+ gross.value=b.cancelled?amounts.gross:0;
+ fee.value=b.cancelled?amounts.fee:0;
+ const refresh=()=>{$('skvSettlementNet').textContent='Netto: '+money((Number(gross.value)||0)-(Number(fee.value)||0))};
+ gross.addEventListener('input',refresh);fee.addEventListener('input',refresh);refresh();
+}
+function skvConfirmSettlement(id){
+ const b=state.bookings.find(x=>String(x.id)===String(id));
+ if(!b)return;
+ const gross=Number($('skvSettlementGross')?.value),fee=Number($('skvSettlementFee')?.value);
+ if(!Number.isFinite(gross)||!Number.isFinite(fee)||gross<0||gross>Number(b.gross)||fee<0){alert('Kontroller beløpene. Brutto beholdt kan ikke overstige opprinnelig brutto.');return}
+ if(!b.cancelled&&!confirm('Kansellere bookingen og frigjøre datoene?'))return;
+ const old=JSON.stringify(b);
+ const first=!b.cancelled;
+ b.cancelled=true;b.refundAmount=Math.round((Number(b.gross)-gross)*100)/100;b.cancelFee=fee;
+ if(first)b.cancelDate=new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Oslo'});
+ b.history=b.history||[];
+ b.history.push({at:new Date().toLocaleString('nb-NO'),text:first?'Kansellert, oppgjør registrert':'Kanselleringsoppgjør endret',before:old});
+ save();render();
+}
+function skvDeleteCancelled(id){
+ const b=state.bookings.find(x=>String(x.id)===String(id));
+ if(!b||!b.cancelled)return;
+ if(!confirm('Slette kansellert booking permanent? Den fjernes fra historikk, kalender, oppgaver og alle økonomiske beregninger. Dette kan ikke angres.'))return;
+ state.bookings=state.bookings.filter(x=>String(x.id)!==String(id));
+ if(state.completed&&typeof state.completed==='object'){
+  for(const key of Object.keys(state.completed))if(key.startsWith(String(id)+'-'))delete state.completed[key];
+ }
+ selected=null;save();render();
+}
+cancelBooking=function(id){skvSettlementForm(id)};
+const skvSettlementBookingBase=renderBookings;
+renderBookings=function(){
+ skvSettlementBookingBase();
+ const b=state.bookings.find(x=>String(x.id)===String(selected));
+ const actions=$('bookingOpen')?.querySelector('.booking-actions');
+ if(!b||!actions)return;
+ if(b.cancelled){
+  const edit=document.createElement('button');edit.textContent='Rediger oppgjør';edit.onclick=()=>skvSettlementForm(b.id);
+  const remove=document.createElement('button');remove.textContent='Slett booking permanent';remove.className='danger-button';remove.onclick=()=>skvDeleteCancelled(b.id);
+  actions.append(edit,remove);
+ }
+};
 /* TEST: resilient fee editor. V16.20 moves fields out of .fee-row. */
 priceFeesChanged=function(){
  for(const p of PRICE_PLATFORMS){
