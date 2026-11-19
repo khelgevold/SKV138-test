@@ -1,3 +1,8 @@
+## TEST JWT – sesjonstoken som sikker fallback 19.11.2026
+- Neon Better Auth er aktiv; Auth URL/trusted domain samsvarer med GitHub; JWKS GET fungerer (EdDSA/Ed25519). Sist observerte feil ved JWT-helper: HTTP 404.
+- Neons dokumenterte innloggingsflyt oppgir JWT i `session.access_token`. Commit `1244039` prøver derfor `authClient.getSession().data.session.access_token` ved manglende `token()`-resultat, **før** eksisterende `getJWTToken()`-fallback. Ingen token lagres i localStorage, og backend må fortsatt validere JWT/allowlist. Endringen er en målrettet hypotese, **ikke testet**; tokenfeltets tilgjengelighet i låst SDK 0.4.0-beta må bekreftes ved neste TEST-innlogging.
+- Netlify TEST Stopped builds. Ikke publisert, ingen PROD/main-endringer. Neste: én kontrollert TEST-deploy og innloggingstest, deretter bookingpersistens.
+
 ## TEST Neon Auth – målrettet feildiagnostikk 19.11.2026
 - Siste publiserte innloggingsfeil: `TEST_DIAG_JWT_HELPER_EXCEPTION`; Netlify TEST `Stopped builds` bekreftet. `token()` ga ikke brukbart token og `getJWTToken()` kastet feil; rotårsak ukjent.
 - Commit `f214e09` klassifiserer feil fra JWT-helper med begrenset HTTP-status (400–599 hvis tilgjengelig) og fast feiltype (TYPE/ABORT/NETWORK/OTHER). Commit `e1662b6` viser sifre i den begrensede diagnostikkoden. Rå feilmeldinger, token og legitimasjon eksponeres ikke. Ingen endring i backend-autorisasjon.
