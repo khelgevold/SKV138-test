@@ -1,3 +1,8 @@
+## Fremdrift – kansellering/sletting 19.11.2026
+- Commit `583520d`: lagt inn skjema for kansellering med faktisk beholdt brutto, endelig gebyr og automatisk netto; mulighet til å redigere oppgjøret etter kansellering; sletting kun for kansellerte med bekreftelse. Eksisterende filtrering viser kansellerte i historikk og utelater dem fra kalenderen; eksisterende statistikk bruker `bookingAmounts`. Sletting fjerner booking fra `state.bookings` og relaterte `state.completed`-nøkler.
+- **Implementert, men ikke manuelt verifisert.** Sjekk særlig endringshistorikk, oppgavefullføringer, statistikk, årsfordeling og lagring ved samlet TEST-godkjenning. Ikke slett ekte data før godkjent.
+- Gjenstår fortsatt PWA/refresh-auth, private oppgavemaler, endelig UI-/økonomiverifisering, testdiagnostikk og samlet QA. Ikke erklær versjon ferdig.
+
 ## Fremdrift – videre arbeid 19.11.2026
 - Commit `3e75713`: rettet gebyr-editorens lagrings-/legg til-/slett-funksjoner med feltlesing som tåler at V16.20 flytter feltene i DOM. **Ikke manuelt testet**, må verifiseres i samlet TEST-kandidat.
 - Autentisering undersøkt: `index.html` starter innloggingskontroller ved lasting, `login-controller.mjs` har allerede `session()`-metode, men den er ikke koblet til automatisk gjenoppretting. iOS PWA-tokenfeilen er ennå ikke diagnostisert til konkret årsak. Ikke omgå tokenkontroll eller svekk autorisasjon.
