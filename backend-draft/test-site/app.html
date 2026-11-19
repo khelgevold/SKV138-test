@@ -1701,6 +1701,18 @@ renderRules=function(){
   if(rule?.platform==='Privat booking')select.value='Privat booking';
  }
 };
+const skvPrivateTaskHtmlBase=taskHtml;
+taskHtml=function(task){
+ if(task.platform!=='Privat booking')return skvPrivateTaskHtmlBase(task);
+ const isDone=done(task);
+ return '<div class="task"><div style="flex:1"><strong>'+esc(task.title)+'</strong><div class="sub">'+fmtDue(task.due)+' · '+esc(task.guest)+' · Privat booking</div>'+(isDone?'<span class="tag">Fullført</span>':'')+'</div><div class="task-buttons"><button class="'+(isDone?'':'primary')+'" onclick="skvTogglePrivateTask('+JSON.stringify(task.id)+')">'+(isDone?'Angre':'Merk som ferdig')+'</button></div></div>';
+};
+function skvTogglePrivateTask(id){
+ const task=tasks().find(t=>t.id===id&&t.platform==='Privat booking');
+ if(!task)return;
+ state.completed[id]=done(task)?false:new Date().toISOString();
+ save();render();
+}
 const skvPrivateTasksBase=tasks;
 tasks=function(){
  const rental=skvPrivateTasksBase().filter(t=>state.bookings.some(b=>String(b.id)===String(t.bookingId)));
