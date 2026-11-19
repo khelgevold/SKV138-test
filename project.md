@@ -1,3 +1,8 @@
+## Statisk UI-kontroll – bookingfelt og PC-layout 19.11.2026
+- Verifisert i faktisk `backend-draft/test-site/app.html`: V15-bookingskjemaet legger til `bdog` (hund), øvrige felter omfatter gjester, stamp, elbillading og sengetøy. Siste bookingkort-wrapper bruker de samme bookingegenskapene. Grønn privat-badge og separat prognosekort har CSS/DOM-koblinger.
+- PC-layout har eksplisitt `@media (min-width:651px)` for bunnnavigasjon; mobilvisningen er separat. Dette er **kun kildekodekontroll**, ikke visuell test. Ingen kodeendring uten påvist feil.
+- Gjenstår før godkjenning: kontrollert én-gangs TEST-publisering, PC/mobil-layout, opprette booking og bekrefte persistens etter refresh, kansellering og privatoppgaver, samt iPhone PWA-tokenfeil. Netlify TEST fortsatt Stopped builds; PROD/main urørt.
+
 ## Punkt 1 – booking/kansellering, statisk kontroll 19.11.2026
 - Gjennomgått faktiske funksjoner `v10Stays()`, `v10Conflict()`, `v16SetBookingPeriod()`, `v16OpenBooking()`, `skvConfirmSettlement()`, `skvDeleteCancelled()`, `bookingAmounts()`, `v10YearStats()`, `v15TaxYtd()`, `v15CalendarData()`.
 - Bekreftet i kode: kansellerte bookinger utelates fra oppholdslisten som brukes til kalender og overlappskontroll; beholdes i bookinghistorikken «Kansellerte»; inntekts- og gebyrbeløp bygger på registrert oppgjør; sletting krever kansellert status og eksplisitt bekreftelse. Tidligere dobbelttelling i plattformstatistikk ble fjernet i `bfc9a10`.
