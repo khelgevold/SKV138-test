@@ -1,3 +1,9 @@
+# Gjeldende overlevering – 19.11.2026
+
+SKV138 PROD er publisert og brukeren har avsluttet produksjonsrunden. Brukeren følger opp i vanlig bruk. Les prosjektets dokumenter på release/skv138-prod for PROD-status og innloggingserfaringer. Siste deploy med oppryddede tekster viste Published, innloggingsteksten ble ikke visuelt kontrollert på grunn av automatisk innlogging. Når brukeren ønsker en Logg ut-knapp, start i TEST på feature/neon-test-integration og verifiser før eventuell godkjent PROD-publisering.
+
+---
+
 # PROD-status – 19.11.2026
 
 PROD er publisert på https://skv138-prod.netlify.app fra `release/skv138-prod`. Separat Neon-prosjekt i Frankfurt, tom oppstart med standardoppsett, ingen TEST-data. Netlify bruker den begrensede databaserollen `skv138_app`. Neon localhost er av og PROD-origin er registrert som trusted domain. Netlify Visitor access står på Private / Previews only. Med Private / Production and previews fikk det autentiserte funksjonskallet 401 i ren tekst. Etter endringen svarte appens backend med JSON.
