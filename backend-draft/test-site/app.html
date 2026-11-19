@@ -1737,6 +1737,8 @@ function skvSettlementForm(id){
  if(!b)return;
  const panel=$('bookingOpen');
  if(!panel)return;
+ const actions=panel.querySelector('.booking-actions');
+ if(!actions)return;
  panel.querySelector('#skvSettlement')?.remove();
  const amounts=bookingAmounts(b);
  const section=document.createElement('div');
@@ -1745,7 +1747,7 @@ function skvSettlementForm(id){
  '<label>Brutto beholdt (kr)<input id="skvSettlementGross" type="number" min="0" step="0.01"></label>'+
  '<label>Endelig plattformgebyr (kr)<input id="skvSettlementFee" type="number" min="0" step="0.01"></label>'+
  '<p id="skvSettlementNet"></p><div class="row"><button class="primary" onclick="skvConfirmSettlement('+Number(b.id)+')">'+(b.cancelled?'Lagre oppgjør':'Bekreft kansellering')+'</button><button onclick="$(\'skvSettlement\').remove()">Avbryt</button></div>';
- panel.querySelector('.booking-actions')?.insertAdjacentElement('afterend',section);
+ actions.insertAdjacentElement('afterend',section);
  const gross=$('skvSettlementGross'),fee=$('skvSettlementFee');
  gross.value=b.cancelled?amounts.gross:0;
  fee.value=b.cancelled?amounts.fee:0;
