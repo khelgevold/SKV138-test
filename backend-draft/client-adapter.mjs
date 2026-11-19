@@ -9,6 +9,19 @@ export function createSkv138Client({ authClient, fetchImpl, storage, endpoint = 
   let version = null;
   let saving = false;
 
+  // TEST diagnostics: only bounded HTTP status and a fixed error category.
+  // Never display SDK error messages, request URLs, JWTs or credentials.
+  function tokenFailure(method, error) {
+    const status = Number(error?.status ?? error?.statusCode ?? error?.response?.status);
+    const http = Number.isInteger(status) && status >= 400 && status <= 599
+      ? "_HTTP_" + status : "";
+    const kind = error?.name === "TypeError" ? "TYPE"
+      : error?.name === "AbortError" ? "ABORT"
+      : error?.name === "NetworkError" ? "NETWORK"
+      : "OTHER";
+    return new Error("TEST_DIAG_" + method + "_EXCEPTION_" + kind + http);
+  }
+
   async function request(method, body) {
     // Always acquire a fresh short-lived JWT. Never persist JWT to localStorage.
     let token = null;
@@ -23,9 +36,8 @@ export function createSkv138Client({ authClient, fetchImpl, storage, endpoint = 
     }
     if (!token && typeof authClient.getJWTToken === "function") {
       try { token = await authClient.getJWTToken(); }
-      catch {
-        // TEST-only: identify the failing SDK path without exposing JWTs or SDK errors.
-        throw new Error(tokenCallFailed ? "TEST_DIAG_BOTH_TOKEN_METHODS_EXCEPTION" : "TEST_DIAG_JWT_HELPER_EXCEPTION");
+      catch (error) {
+        throw tokenFailure(tokenCallFailed ? "BOTH_TOKEN_METHODS" : "JWT_HELPER", error);
       }
     }
     if (typeof token !== "string" || !token) {
