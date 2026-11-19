@@ -32,6 +32,10 @@ Brukeren vil **samle alle forbedringsønsker og diskutere dem samlet før arbeid
 Brukeren har avklart formelen for nytt nøkkeltall i Oversikt: **reell skatt (%) = faktisk beregnet skatt / (samlet brutto leieinntekt − samlede plattformgebyrer) × 100**. Telleren skal være eksisterende beregnet skattebeløp ut fra **samlet brutto** etter appens gjeldende skatteregler; plattformgebyrer skal IKKE behandles som skatt eller trekkes fra skattegrunnlaget i denne KPI-en. Nevneren er beløpet som står igjen etter plattformgebyrer, før skatt. Ulike plattformers praksis for gebyrutbetaling påvirker ikke denne definisjonen. Eksempel: brutto 100 000, gebyr 15 000, beregnet skatt 20 000 -> 23,5 %. Ved nevner 0/negativ: vis ikke prosent; avklar evt. visning ved samlet gjennomgang. Dette **erstatter** tidligere merknad om at formelen var uavklart. Ingen kodeendring eller deploy før samlet forbedringsdiskusjon.
 
 
+## Presisering 19.11.2026 – prognoseramme på Oversikt
+Når de øverste nøkkeltallene samles i rammen med overskrift «Prognose år», skal feltetiketten **«Bruttoinntekt / prognose» endres til «Bruttoinntekt»**. Dette er kun en tekstendring; eksisterende prognoseberegning og tallverdi beholdes uendret. Ta med i samlet forbedringsliste for neste versjon. Ingen kodeendring eller publisering nå.
+
+
 ---
 
 # GJELDENDE STATUS – 18.11.2026 kl. 20:15 (les først)
