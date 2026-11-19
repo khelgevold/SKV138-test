@@ -1,3 +1,8 @@
+## Fremdrift – videre kodekontroll 19.11.2026
+- Gjennomgått `client-adapter.mjs`, `login-controller.mjs`, `login-form.mjs`, `neon-test-entry.mjs` og relevante deler av `app.html`. `TEST_DIAG_TOKEN_EXCEPTION` oppstår ved unntak i `authClient.token()` **før** backend-kallet; derfor kan den ikke løses ved å endre SQL/autorisasjon. Den konkrete underliggende iOS-årsaken er ennå ikke observert. Ingen endring i token-sikkerhet eller lagring av JWT.
+- Commit `29e5858`: sikret at kanselleringsskjemaet bare monteres når bookingens handlingsrad faktisk finnes; unngår et skjult skjema ved avvikende visning.
+- Neste nødvendige milepæl: én samlet TEST-publisering og målrettet kontroll av installert iPhone-webapp kontra Safari, refresh og booking/økonomi. Ikke bruk ekte bookinger til permanent sletting i test. Publisering og brukerhandling avklares før utførelse. PROD/main urørt.
+
 ## Fremdrift – kvalitetssikring av oppgaver og auth 19.11.2026
 - Commit `80934c9`: funnet og rettet en reell feil: `done()` for private oppgaver av typen sjekkliste slo opp i `state.bookings` og kunne feile når privatoppholdet bare finnes i `state.privateStays`. Privatoppgaver bruker nå sin egen lagrede fullføringsstatus; utleiesjekklister beholdes uendret.
 - Commit `b0d5dc4`: fjernet overflødig avlesning/dekoding av uverifiserte JWT-claims fra login-UI. Backend-basert autorisasjon er beholdt. Midlertidige `TEST_DIAG_*`-feilmeldinger i klient/server er **ikke** fjernet ennå fordi iPhone PWA-tokenfeilen fortsatt ikke er diagnostisert.
