@@ -1,3 +1,8 @@
+## Fremdrift – innlogging og oppgavehistorikk 19.11.2026
+- Commit `de69d47`: innlogging etter refresh og manuell innlogging deler nå én autorisasjonsflyt, slik at samtidig respons ikke starter to separate Neon state bridges. Backend GET og tilgangskontroll kreves fremdeles. Dette er en **forebygging av konkret race condition i koden**, ikke bekreftet løsning av iOS PWA-tokenfeilen.
+- Commit `104bae4`: historiske private oppgaver forsvinner ikke lenger fra oppgavelisten bare fordi privatoppholdet er avsluttet. Kanselleringsoppgjør krever eksplisitt utfylte beløpsfelt.
+- Fortsatt uavklart: `TEST_DIAG_TOKEN_EXCEPTION` på installert iPhone-PWA. Må verifiseres på faktisk iPhone før PROD; ingen usikker auth-omgåelse. Samlet browser-/økonomitest og diagnostikk-opprydding gjenstår. Ingen Netlify/PROD-endringer i dette steget.
+
 ## Fremdrift – målrettet kodegjennomgang 19.11.2026
 - Gjennomgått faktisk V16-kode og nye overstyringer. Commit `5cd5027`: korrigert **reell skatt %** slik at nevneren bruker samme *hittil-i-år*-periode og årsgrense som eksisterende `v15TaxYtd`, med brutto minus gebyr, ikke hele årets prognose mot YTD-skatt. Eksisterende beregnet skatt beholdes uendret.
 - Commit `165e46d`: erstattet kombinert «Sum utbetalt + skatt»-kort med «Reell skatt i prosent». De to separate kortene for «Utbetalt hittil i år» og «Estimert skatt hittil i år» beholdes.
