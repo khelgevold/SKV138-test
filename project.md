@@ -1,3 +1,23 @@
+# AKTIV STATUS – 19.11.2026 – QA F01–F05, samlet TEST-kandidat under forberedelse
+
+**Nyeste status overstyrer eldre historikk nedenfor.** Brukeren har fullført første manuelle QA-runde: 25 godkjente tester/kontroller og fem registrerte feil. Netlify TEST **Stopped builds bekreftet av bruker**. Eget PROD-miljø er **ikke** opprettet; `main` inneholder godkjent V16.23 og skal ikke endres.
+
+**F01**: Ved F5 vises innloggingssiden (autofyll logger raskt inn igjen); forventet automatisk gjenoppretting og samme hovedfane. TEST-kode skjuler innlogging under sesjonskontroll og lagrer hovedfane i sessionStorage. **Ikke funksjonstestet.** Årsaken til eventuell mislykket Neon-sesjonsgjenoppretting er fortsatt ukjent.
+
+**F02**: Innlogging i installert iPhone-PWA feiler, Safari fungerer. Tidligere `TEST_DIAG_TOKEN_EXCEPTION`. Rotårsak ikke fastslått; ingen spekulativ JWT/auth-endring. Må undersøkes ved målrettet PWA-test. Diagnostikk fjernes først etter bekreftet løsning.
+
+**F03**: Kansellering med beholdt brutto/gebyr gir HTTP 409/lagringsstopp; booking forblir ukansellert etter F5. Serveren bruker `expectedVersion`, transaksjon og `FOR UPDATE`; køen serialiserer writes. Årsak til konflikt ikke påvist, og beskyttelsen skal ikke fjernes. Trenger målrettet reproduksjon/versjonskontroll ved neste TEST-deploy.
+
+**F04**: Opprett/slett plattformgebyr fungerte ikke. TEST-koden samler usparte skjemaverdier før én lagring ved add/delete, uten mellomliggende save. Commit `2724130`; **ikke funksjonstestet**.
+
+**F05**: Manglende fjerde KPI «Estimert netto hittil i år» i seksjonen «Utbetalinger og skatt hittil i år». TEST-koden legger til kortet og 2×2-oppsett, mens tre eksisterende KPI-er beholdes. Commit `2724130`; **ikke funksjonstestet**.
+
+**GitHub Actions:** En kontrakttest feilet etter F01-strukturendring, rettet i `1592b48`; bruker bekreftet grønn etter dette. Nyere commit `2724130` er **ikke bekreftet grønn** i samtalen. Ingen ny Netlify-publisering av F01/F04/F05 er gjort.
+
+**Neste milepæl:** Kontroller GitHub Actions etter siste endringer, publiser deretter én samlet TEST-kandidat etter avtale. Test én handling av gangen: F01, F04, F05, F02 og F03, deretter blokkert kanselleringsregresjon. Ikke test allerede godkjente deler unødvendig. Tester 5, 12–14, 20, 37–39 og 41 gjenstår; test 15 manuell ICS-eksport er fjernet (kun dynamisk iCal senere). Ikke opprett ekstra bruker kun for test. Pushvarsler/dynamisk iCal er utsatt.
+
+---
+
 # GJELDENDE STATUS – 19.11.2026 – Neon TEST innlogging og bookingpersistens bekreftet
 
 **Nyeste status overstyrer eldre tidsstemplede notater nedenfor.** Bruker bekrefter på PC at innlogging fungerer, appen åpnes med Neon TEST-data, en ny TEST-booking kan opprettes, og bookingen **fortsatt finnes etter F5/refresh**. Dermed er denne konkrete Neon GET/PUT-persistensflyten funksjonstestet og godkjent. Det er **ikke** bekreftet at brukeren forblir innlogget etter refresh (separat test), eller at installert iPhone PWA fungerer.
