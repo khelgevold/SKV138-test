@@ -1,3 +1,19 @@
+# START NESTE CHAT – SKV138 PROD-FORBEREDELSE – 19.11.2026
+
+Vi fortsetter SKV138. GitHub: `khelgevold/SKV138-test`; arbeidsgren: `feature/neon-test-integration`. TEST: https://skv138-neon-test.netlify.app. `main` inneholder godkjent V16.23 og skal ikke endres uten eksplisitt godkjenning. Eget PROD-miljø finnes ennå ikke.
+
+**Første handling:** Les direkte fra GitHub `project.md`, `startnestechat.md`, `utviklingsregler.md`, `parkeringsplassen.md` og **`innlogging-og-pwa.md`**. Nyeste status øverst i dokumentene gjelder. Særlig viktig: Les hele `innlogging-og-pwa.md` før du planlegger eller endrer auth/PWA.
+
+**Godkjent status:** Alle seks QA-funn F01–F06 og tre avsluttende funksjonstester er brukerbekreftet godkjent 19.11.2026. PC og installert iPhone PWA logger inn, sesjon overlever F5, booking og kansellering lagres og økonomitall stemmer; iPhone-statuslinjen er mørk. Ikke gjenta TEST-QA uten grunn. Same-origin Neon Auth-proxy var nøkkelen til å få installert iPhone PWA til å fungere. Behold JWT-verifisering og server-allowlist.
+
+**Ny beslutning:** **PROD skal starte med tom database. Ingen TEST-data migreres.** Eget PROD-miljø må planlegges og godkjennes. Opprettelse av PROD, database, Auth og deploy krever brukerens eksplisitte samtykke. `main` V16.23 er urørt.
+
+**Oppgave:** Presenter en kort, milepælsbasert plan for PROD med separat Neon database/Auth, korrekt app-origin og same-origin auth-proxy, miljøvariabler, bruker-/tilgangsoppsett, nødvendig skjema/seed uten TEST-data, backup/rollback, begrenset PROD-røykprøve på PC og installert iPhone PWA, samt rydding av TEST-diagnostikk. Les relevant kode og avklar reelle nødvendige valg før endringer. Vurder om TEST-branch skal være releasegrunnlag uten å overskrive `main` for tidlig. Ikke gjør unødvendige kontroller eller Netlify-builds. ChatGPT utfører GitHub-arbeid selv og ber om én nødvendig brukerhandling av gangen. Hold `project.md` og `startnestechat.md` oppdatert.
+
+Utsatt: pushvarsler og dynamisk iCal. Ingen manuell ICS-eksport er avtalt.
+
+---
+
 # AKTIV OVERLEVERING – 19.11.2026 – SKV138 TEST FUNKSJONELT GODKJENT
 
 Vi fortsetter SKV138. GitHub `khelgevold/SKV138-test`, aktiv gren `feature/neon-test-integration`; TEST https://skv138-neon-test.netlify.app. Les først `project.md`, `startnestechat.md`, `utviklingsregler.md` og `parkeringsplassen.md` direkte fra GitHub. **Nyeste status øverst gjelder; eldre tekst er historikk.**
