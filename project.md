@@ -1,3 +1,8 @@
+## Fremdrift – videre arbeid 19.11.2026
+- Commit `3e75713`: rettet gebyr-editorens lagrings-/legg til-/slett-funksjoner med feltlesing som tåler at V16.20 flytter feltene i DOM. **Ikke manuelt testet**, må verifiseres i samlet TEST-kandidat.
+- Autentisering undersøkt: `index.html` starter innloggingskontroller ved lasting, `login-controller.mjs` har allerede `session()`-metode, men den er ikke koblet til automatisk gjenoppretting. iOS PWA-tokenfeilen er ennå ikke diagnostisert til konkret årsak. Ikke omgå tokenkontroll eller svekk autorisasjon.
+- Gjenstår: fullstendig kansellering/sletting, private oppgavemaler, sikker sesjonsgjenoppretting og iOS PWA, kvalitetssikring av de nye UI-/økonomifeltene.
+
 ## Fremdrift – første kodearbeid 19.11.2026
 - Samlet versjonsomfang (begge listene) er dokumentert øverst og godkjent for utvikling.
 - Første avgrensede UI-kodeendring i TEST, commit `1b78311`: grønn Privat-indikator på bookingkort, antall gjester og relevante tilleggsikoner på utleiekort, ny sortering/format for Plasseringer under Innstillinger, ramme «Prognose år», endret bruttoetikett og ny prosent-KPI. **Ikke funksjonstestet eller godkjent ennå.** Ingen endring i main/PROD/DB.
