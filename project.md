@@ -1,5 +1,11 @@
 # GJELDENDE STATUS – 18.11.2026 kl. 21:20 (les først)
 
+## Prioritering og PROD-data – 19.11.2026
+Brukeren prioriterer **pushvarsler som første neste funksjonsområde** og **iCal som prioritet 2**, men **begge skal vente** til øvrige deler av Neon TEST er visuelt og funksjonelt ferdig/godkjent. Fortsett å samle funn og diskutere samlet før neste versjon. Ingen implementering/deploy nå.
+
+Brukeren spør om data fra Neon TEST kan tas til fremtidig PROD eller om PROD bør starte tom. **Mulig å migrere**, men endelig valg tas senere ut fra faktisk datakvalitet og ønsket om å bevare reelle data. Foretrekk planlagt, selektiv migrering av reelle bookinger, oppgaver/maler, lager, innstillinger mv. framfor ukritisk kopiering av testbookinger og testhistorikk. Kartlegg skjema, relasjoner, identiteter/tilganger, referanser og datamengde før konkret migreringsplan. Ikke utfør databaseoperasjoner nå. TEST og PROD må forbli isolert.
+
+
 **Neon TEST fungerer i Safari på iPhone og i PC-nettleser. Vanlig utleiebooking er nå opprettet med hell av brukeren etter rettelse av rekursiv `saveBooking` (commit `39709cc`).** Privat booking fungerte allerede. Brukeren fortsetter nå en samlet funksjonstest (bookinger, kansellering, utbetaling, oppgaver/sjekklister, lager, statistikk og innstillinger). Ikke påstå at hele appen er ferdig testet eller produksjonsklar.
 
 - GitHub: `khelgevold/SKV138-test`, aktiv gren `feature/neon-test-integration`. Godkjent V16.23 i `main` er urørt; ingen SKV138 PROD. TEST: https://skv138-neon-test.netlify.app.
