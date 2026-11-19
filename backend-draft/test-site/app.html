@@ -1717,7 +1717,7 @@ const skvPrivateTasksBase=tasks;
 tasks=function(){
  const rental=skvPrivateTasksBase().filter(t=>state.bookings.some(b=>String(b.id)===String(t.bookingId)));
  const privateTasks=state.privateStays.flatMap(stay=>{
-  if(stamp(stay.end,stay.checkout)<new Date())return [];
+  // Match rental tasks: retain historical private tasks for completion history.
   return state.taskRules.filter(rule=>rule.active&&rule.platform==='Privat booking').map(rule=>({
    id:String(stay.id)+'-'+rule.id,bookingId:stay.id,title:rule.title,
    due:shiftHours(rule.anchor==='checkin'?stay.start:stay.end,rule.anchor==='checkin'?stay.checkin:stay.checkout,Number(rule.offset)),
@@ -1750,7 +1750,9 @@ function skvSettlementForm(id){
 function skvConfirmSettlement(id){
  const b=state.bookings.find(x=>String(x.id)===String(id));
  if(!b)return;
- const gross=Number($('skvSettlementGross')?.value),fee=Number($('skvSettlementFee')?.value);
+ const grossField=$('skvSettlementGross'),feeField=$('skvSettlementFee');
+ if(!grossField||!feeField||grossField.value.trim()===''||feeField.value.trim()==='')return;
+ const gross=Number(grossField.value),fee=Number(feeField.value);
  if(!Number.isFinite(gross)||!Number.isFinite(fee)||gross<0||gross>Number(b.gross)||fee<0){alert('Kontroller beløpene. Brutto beholdt kan ikke overstige opprinnelig brutto.');return}
  if(!b.cancelled&&!confirm('Kansellere bookingen og frigjøre datoene?'))return;
  const old=JSON.stringify(b);
