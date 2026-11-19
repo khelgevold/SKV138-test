@@ -28,6 +28,10 @@ Brukeren vil **samle alle forbedringsønsker og diskutere dem samlet før arbeid
 **Tidligere avtalt forbedring:** «Privat booking» som eget valg i eksisterende oppgavemal-plattformvalg, uten å endre skjema ellers. «Alle plattformer» omfatter Finn.no, Airbnb, Booking.com og Direkte, **ikke** Privat booking. Private oppgaver skal genereres fra private opphold med hensyn til egen datastruktur.
 
 
+## Presisering 19.11.2026 – reell privat skatt i prosent
+Brukeren har avklart formelen for nytt nøkkeltall i Oversikt: **reell skatt (%) = faktisk beregnet skatt / (samlet brutto leieinntekt − samlede plattformgebyrer) × 100**. Telleren skal være eksisterende beregnet skattebeløp ut fra **samlet brutto** etter appens gjeldende skatteregler; plattformgebyrer skal IKKE behandles som skatt eller trekkes fra skattegrunnlaget i denne KPI-en. Nevneren er beløpet som står igjen etter plattformgebyrer, før skatt. Ulike plattformers praksis for gebyrutbetaling påvirker ikke denne definisjonen. Eksempel: brutto 100 000, gebyr 15 000, beregnet skatt 20 000 -> 23,5 %. Ved nevner 0/negativ: vis ikke prosent; avklar evt. visning ved samlet gjennomgang. Dette **erstatter** tidligere merknad om at formelen var uavklart. Ingen kodeendring eller deploy før samlet forbedringsdiskusjon.
+
+
 ---
 
 # GJELDENDE STATUS – 18.11.2026 kl. 20:15 (les først)
