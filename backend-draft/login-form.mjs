@@ -42,7 +42,7 @@ export function mountLoginForm({ document, login, onSignedIn = () => {} }) {
         const detail = reason.match(/TEST_REASON_(check_failed|missing|invalid|unknown)/);
         status.textContent = "Neon-innlogging OK, men backend avviste tokenet (HTTP 401)." + (diagnostic ? " Årsak: " + diagnostic[1] + "." : "") + (claim ? " Claim: " + claim[1] + "." : "") + (detail ? " Kontroll: " + detail[1] + "." : "");
       } else if (reason.includes("TEST_DIAG_")) {
-        const match = reason.match(/TEST_DIAG_[A-Z_]+/);
+        const match = reason.match(/TEST_DIAG_[A-Z0-9_]+/);
         status.textContent = "TEST-diagnose: " + (match ? match[0] : "ukjent") + ".";
       } else if (Number.isInteger(error?.status) && error.status >= 400 && error.status <= 599) {
         status.textContent = "SKV138-backenden svarte med HTTP " + error.status + ".";
