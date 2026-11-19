@@ -1,3 +1,9 @@
+# STATUS – 19.11.2026 – fortsatt TEST-utvikling
+
+Siste commits: `80934c9` retter fullføringskontroll for private sjekkliste-oppgaver; `b0d5dc4` fjerner uverifisert JWT-dekoding fra login-UI. iPhone PWA `TEST_DIAG_TOKEN_EXCEPTION` er **fortsatt åpen**; klientens øvrige TEST-diagnostikk må først fjernes når feilen er diagnostisert og verifisert løst. Les topp i `project.md` og `utviklingsregler.md`. Ikke publiser eller endre PROD uten godkjenning. Prioriter samlet TEST-verifisering av auth/refresh, lagring, private oppgaver, kansellering og skatt. Push/iCal fortsatt utsatt.
+
+---
+
 # AKTIV STATUS – 19.11.2026 – samlet TEST-pakke under arbeid
 
 Brukeren har godkjent begge listene i `project.md`. Arbeid på `feature/neon-test-integration` i `khelgevold/SKV138-test`. Nyeste kodearbeid: `de69d47` serialiserer gjenopprettet sesjon/manuell innlogging for å unngå dobbel state-bridge; `104bae4` beholder historiske private oppgaver og krever utfylte oppgjørsbeløp. Tidligere commits for bookingkort, innstillinger, skatt, gebyrer, kansellering og private oppgaveregler er dokumentert i `project.md`. **Ikke funksjonstestet eller godkjent**, og iOS PWA-tokenfeilen er fortsatt uavklart. Før PROD: målrettet verifikasjon av iPhone installert app, refresh, lagring, kansellering, økonomi og private oppgaver. Ikke utelat diagnostikk-opprydding. Push og iCal først etter godkjent TEST. Ikke endre main/PROD eller publiser uten særskilt godkjenning. Les også `utviklingsregler.md` og `parkeringsplassen.md`.
