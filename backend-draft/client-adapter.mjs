@@ -12,20 +12,25 @@ export function createSkv138Client({ authClient, fetchImpl, storage, endpoint = 
   async function request(method, body) {
     // Always acquire a fresh short-lived JWT. Never persist JWT to localStorage.
     let token = null;
+    let tokenCallFailed = false;
     try {
       const result = await authClient.token();
       if (!result?.error && typeof result?.data?.token === "string" && result.data.token) {
         token = result.data.token;
       }
     } catch {
-      // The Neon client may expose a direct JWT helper even if token() fails.
-      if (typeof authClient.getJWTToken !== "function") throw new Error("TEST_DIAG_TOKEN_EXCEPTION");
+      tokenCallFailed = true;
     }
     if (!token && typeof authClient.getJWTToken === "function") {
       try { token = await authClient.getJWTToken(); }
-      catch { throw new Error("TEST_DIAG_TOKEN_EXCEPTION"); }
+      catch {
+        // TEST-only: identify the failing SDK path without exposing JWTs or SDK errors.
+        throw new Error(tokenCallFailed ? "TEST_DIAG_BOTH_TOKEN_METHODS_EXCEPTION" : "TEST_DIAG_JWT_HELPER_EXCEPTION");
+      }
     }
-    if (typeof token !== "string" || !token) throw new Error("TEST_DIAG_TOKEN_MISSING");
+    if (typeof token !== "string" || !token) {
+      throw new Error(tokenCallFailed ? "TEST_DIAG_TOKEN_METHOD_EXCEPTION" : "TEST_DIAG_TOKEN_MISSING");
+    }
     let response;
     try {
       response = await fetchImpl(endpoint, {
