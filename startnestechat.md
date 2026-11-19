@@ -1,3 +1,24 @@
+# START NESTE CHAT – 19.11.2026 – systematisk TEST av SKV138
+
+Vi fortsetter utviklingen av **SKV138**.
+
+**GitHub:** `khelgevold/SKV138-test`
+**Gren:** `feature/neon-test-integration`
+**TEST:** https://skv138-neon-test.netlify.app
+**PROD:** Godkjent V16.23 i `main` – skal ikke endres.
+
+**Første handling:** Les `project.md`, `startnestechat.md`, `utviklingsregler.md` og `parkeringsplassen.md` direkte fra GitHub. Nyeste status øverst overstyrer eldre historikk. Les bare relevant faktisk kode hvis nødvendig for å lage en presis testplan.
+
+**Bekreftet status 19.11:** Neon TEST-innlogging på PC fungerer etter retting av JWT-tokenhenting (`/token`-fallback), og hytteappen åpnes. Jeg har opprettet en TEST-booking og bekreftet at den **fortsatt finnes etter F5/refresh**. Dette er en godkjent deltest av Neon-persistens. Vi har **ikke** bekreftet at sesjonen beholdes etter refresh, eller at innlogging fungerer i installert iPhone PWA. PC-/mobil-layout og resten av den samlede endringspakken er ikke ferdig funksjonstestet. Netlify TEST ble tidligere stoppet for å unngå credits; ikke anta at siste stopp er bekreftet etter siste deploy.
+
+**Oppgaven i denne chatten:** Start med å presentere en **komplett, prioritert og nummerert testliste i fornuftig rekkefølge** for hele den nåværende TEST-versjonen. Bruk de 11 avtalte endringspunktene i `project.md`, samt kritiske auth-/lagringsflyter, layout, booking/kansellering, privatopphold og oppgaver, økonomi/skatt, plattformgebyrer, innstillinger og relevante tilgangskontroller. Merk hva som allerede er godkjent og hva som gjenstår; ikke gjenta bekreftet bookingpersistenstest. Gi korte forventede resultater og hvilken enhet (PC, mobil Safari, installert PWA) hver test krever. Identifiser eventuelle blokkere og grupper testene slik at vi unngår unødvendig arbeid.
+
+**Etter at testlisten er presentert:** Gjennomfør testene **én nødvendig brukerhandling av gangen**. Noter resultatene i `project.md` ved naturlige milepæler, og samle feil til en rettingspakke. Ikke start med kodeendringer, nye deploys, databaseuttrekk eller unødvendige kontroller. Følg `utviklingsregler.md`: ChatGPT gjør alt mulig GitHub-arbeid selv; begrens Netlify-builds; gi kort fremdriftsplan og omtrentlig prosent ved milepæler. Ingen PROD-endring uten eksplisitt godkjenning.
+
+**Utsatt:** Pushvarsler (prioritet 1) og dynamisk iCal (prioritet 2) først etter at øvrig TEST er godkjent. PROD-migrering diskuteres separat.
+
+---
+
 # STATUS – 19.11.2026 – private oppgaver og Neon-kodegjennomgang
 
 Commit `505ddda` beholder fullførte historiske private oppgaver, men ikke ufullførte oppgaver fra avsluttede privatopphold. `v1623-state-bridge.mjs` er gjennomgått statisk: server-state valideres før visning, endringer kølegges. Persistens ved refresh og iPhone PWA-auth er **ikke** funksjonstestet. Netlify TEST er satt til Stopped builds på grunn av 30–40 jobber/time; IKKE be bruker aktivere før samlet kandidat er klar. Neste: gjennomgå lagringskø og iframe-kobling, deretter kontrollert TEST-publisering med brukerens godkjenning. Se `project.md` og `utviklingsregler.md`.
