@@ -1,0 +1,3 @@
+# Neon Auth TEST same-origin proxy for Safari installed web apps.
+# Proxy the entire managed Better Auth path, including sign-in, get-session and token.
+/neondb/auth/* https://ep-twilight-sea-b979zblt.neonauth.c-7.eu-central-1.aws.neon.tech/neondb/auth/:splat 200
