@@ -1,3 +1,18 @@
+# Neste utviklingsrunde – 19.11.2026
+
+PROD-runden er avsluttet. Brukeren tester videre med ekte data. Følgende punkter er meldt før videre live-erfaring og står åpne.
+
+1. Nye bookinger skal foreslå to netter. Brukeren skal kunne endre til én natt, og datoene skal lagres riktig.
+2. Sett opp egen PROD-konto for Melinda med e-post og passord hun selv velger. Bruk appens registrering og gi tilgang via `skv138_access`. Kontroller godkjent fremgangsmåte i innloggingsdokumentet.
+3. Legg inn headerbilder øverst i appen og på nettsiden. Avklar bilder og plassering før endringen.
+4. Legg inn et SKV138-ikon for den installerte iPhone-webappen, og kontroller ikonet på hjemskjermen.
+5. Legg til «Logg ut». Sjekk at F5 ikke gjenoppretter den avsluttede økten, og at ny innlogging fungerer.
+6. Endre Chrome-fanens tittel fra dagens TEST-tittel til «SKV138».
+
+Kodearbeid skjer først i TEST. Melindas PROD-tilgang avklares separat.
+
+---
+
 # Produksjonsrunden avsluttet – 19.11.2026
 
 PROD er publisert og i løpende bruk. Siste Netlify-deploy med tekstendringene viste Published ifølge brukeren. Automatisk innlogging gjør at innloggingsteksten ikke ble visuelt kontrollert etter siste deploy. Funksjonelle PROD-kontroller er godkjent på PC, i Chrome på iPhone og installert iPhone-PWA. Ekte booking og sesjon besto F5. Brukeren vil teste videre i vanlig bruk. Logg ut-knapp er utsatt til senere TEST-arbeid. Ingen videre deploy eller endring i main i denne runden.
