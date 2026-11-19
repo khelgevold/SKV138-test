@@ -1,3 +1,15 @@
+# PROD-status – 19.11.2026
+
+PROD er publisert på https://skv138-prod.netlify.app fra `release/skv138-prod`. Separat Neon-prosjekt i Frankfurt, tom oppstart med standardoppsett, ingen TEST-data. Netlify bruker den begrensede databaserollen `skv138_app`. Neon localhost er av og PROD-origin er registrert som trusted domain. Netlify Visitor access står på Private / Previews only. Med Private / Production and previews fikk det autentiserte funksjonskallet 401 i ren tekst. Etter endringen svarte appens backend med JSON.
+
+Den faktiske PROD-tokenutstederen er Neon Auth-origin uten /neondb/auth. `NEON_AUTH_ISSUER` bruker origin alene, mens `SKV138_NEON_AUTH_UPSTREAM` bruker hele Auth URL. Første bruker ble registrert fra appen med e-post og passord, fikk forventet avslag før innføring i `skv138_access` og fikk deretter tilgang.
+
+Brukeren bekreftet innlogging på PC, i Chrome på iPhone og i installert iPhone-PWA. Safari-kontroll utgår fordi brukeren benytter Chrome. Første ekte booking og sesjon overlevde F5. Neon viser seks timers gjenopprettingshistorikk, ingen snapshots eller planlagte sikkerhetskopier. Ved behov forhåndsvis data fra ønsket tidspunkt før eventuell godkjent gjenoppretting. Ved en kodefeil kan forrige fungerende Netlify-deploy republiseres etter godkjenning.
+
+Synlige TEST-tekster og «Lokal testprototype» er ryddet i releasegrenen. Endringen avventer én eksplisitt godkjent deploy og visuell kontroll. `main` og TEST-grenen er urørt.
+
+---
+
 # SKV138 – erfaringer med innlogging, Neon Auth og installert iPhone-webapp
 Oppdatert 19.11.2026. **Gjeldende TEST-løsning er brukerbekreftet fungerende.** Dette er teknisk overlevering for å unngå å gjenta feilene ved PROD-etablering.
 
