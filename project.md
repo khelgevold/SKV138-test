@@ -1,3 +1,8 @@
+## TEST Neon token diagnostikk – 19.11.2026
+- Netlify TEST `Stopped builds` bekreftet av bruker etter at siste deploy viste `TEST_DIAG_TOKEN_EXCEPTION`.
+- Commit `f7130ff`: avgrenset diagnostikk i `backend-draft/client-adapter.mjs` skiller feil i `token()`, `getJWTToken()` og begge metodene. Viser kun forhåndsdefinerte feilkoder, aldri token eller rå SDK-feilmeldinger. Ingen endring i backend-autorisasjon.
+- Ikke publisert/testet. Neste steg er én kontrollert TEST-deploy og én innloggingstest for å hente ny feilkode. Ikke bygg mer før resultatet er vurdert. PROD/main urørt.
+
 ## TEST tokenretting 19.11.2026 – ikke publisert
 - Etter manuell TEST-deploy viste innlogging `TEST_DIAG_TOKEN_MISSING` (tidligere iPhone PWA viste `TEST_DIAG_TOKEN_EXCEPTION`). Feilen oppstår før backend-GET.
 - GitHub commit `c507ed7`: `backend-draft/client-adapter.mjs` bruker fortsatt `authClient.token()` først, men forsøker dokumentert `authClient.getJWTToken()` når tokenresponsen mangler eller tokenkallet feiler. JWT sendes kun som Bearer-header; ingen lokal tokenlagring, ingen svekket backend-autorisasjon. Diagnostikken beholdes inntil funksjonstest.
