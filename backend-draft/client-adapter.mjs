@@ -1,6 +1,7 @@
 // SKV138 TEST integration adapter — NOT included in V16.23 or deployed.
 // Inject the real Neon Auth client; never put secrets in the browser.
 import { createMigrationPreview, validateSharedState, validateLocations } from "./state-contract.mjs";
+import { SKV138_TEST_AUTH_URL } from "./neon-test-config.mjs";
 
 export function createSkv138Client({ authClient, fetchImpl, storage, endpoint = "/.netlify/functions/skv138-state" }) {
   if (!authClient || typeof authClient.token !== "function") throw new Error("Neon authClient.token() required");
@@ -9,53 +10,36 @@ export function createSkv138Client({ authClient, fetchImpl, storage, endpoint = 
   let version = null;
   let saving = false;
 
-  // TEST diagnostics: only bounded HTTP status and a fixed error category.
-  // Never display SDK error messages, request URLs, JWTs or credentials.
-  function tokenFailure(method, error) {
-    const status = Number(error?.status ?? error?.statusCode ?? error?.response?.status);
-    const http = Number.isInteger(status) && status >= 400 && status <= 599
-      ? "_HTTP_" + status : "";
-    const kind = error?.name === "TypeError" ? "TYPE"
-      : error?.name === "AbortError" ? "ABORT"
-      : error?.name === "NetworkError" ? "NETWORK"
-      : "OTHER";
-    return new Error("TEST_DIAG_" + method + "_EXCEPTION_" + kind + http);
-  }
-
   async function request(method, body) {
     // Always acquire a fresh short-lived JWT. Never persist JWT to localStorage.
     let token = null;
-    let tokenCallFailed = false;
     try {
       const result = await authClient.token();
       if (!result?.error && typeof result?.data?.token === "string" && result.data.token) {
         token = result.data.token;
       }
     } catch {
-      tokenCallFailed = true;
+      // Fall through to the documented managed Auth REST endpoint.
     }
-    // Managed Better Auth can include the short-lived JWT in the current session.
-    // Read it afresh for each request; the backend still verifies every JWT.
-    if (!token && typeof authClient.getSession === "function") {
+    if (!token) {
+      let tokenResponse;
       try {
-        const sessionResult = await authClient.getSession();
-        const sessionToken = sessionResult?.data?.session?.access_token;
-        if (!sessionResult?.error && typeof sessionToken === "string" && sessionToken) {
-          token = sessionToken;
-        }
+        tokenResponse = await fetchImpl(SKV138_TEST_AUTH_URL.replace(/\\/$/, "") + "/token", {
+          method: "GET",
+          credentials: "include",
+        });
       } catch {
-        // Continue to the existing SDK JWT helper.
+        throw new Error("TEST_DIAG_TOKEN_ENDPOINT_FETCH_FAILED");
       }
-    }
-    if (!token && typeof authClient.getJWTToken === "function") {
-      try { token = await authClient.getJWTToken(); }
-      catch (error) {
-        throw tokenFailure(tokenCallFailed ? "BOTH_TOKEN_METHODS" : "JWT_HELPER", error);
+      if (!tokenResponse.ok) {
+        throw new Error("TEST_DIAG_TOKEN_ENDPOINT_HTTP_" + tokenResponse.status);
       }
+      let tokenData;
+      try { tokenData = await tokenResponse.json(); }
+      catch { throw new Error("TEST_DIAG_TOKEN_ENDPOINT_INVALID_JSON"); }
+      token = tokenData?.token;
     }
-    if (typeof token !== "string" || !token) {
-      throw new Error(tokenCallFailed ? "TEST_DIAG_TOKEN_METHOD_EXCEPTION" : "TEST_DIAG_TOKEN_MISSING");
-    }
+    if (typeof token !== "string" || !token) throw new Error("TEST_DIAG_TOKEN_MISSING");
     let response;
     try {
       response = await fetchImpl(endpoint, {
