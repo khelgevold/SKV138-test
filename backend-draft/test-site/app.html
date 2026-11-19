@@ -371,9 +371,6 @@ function removeTemplate(id){state.templates[editType]=state.templates[editType].
 function addTemplate(){let name=$('templateName').value.trim();if(!name)return;state.templates[editType].push({id:'x'+Date.now(),name,condition:$('templateCondition').value});save();$('templateName').value='';renderSettings()}
 function show(name){if(['oversikt','bookinger','oppgaver','lager','mer'].includes(name)){try{window.sessionStorage.setItem('skv138-test-active-tab',name)}catch{}}document.querySelectorAll('section').forEach(x=>x.classList.toggle('active',x.id===name));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));render();window.scrollTo(0,0)}function render(){renderOverview();renderBookings();renderTasks();renderStock();renderSettings()}const tabs=[['oversikt','Oversikt','▦'],['bookinger','Bookinger','▣'],['oppgaver','Oppgaver','☑'],['lager','Lager','▤'],['mer','Mer','⋯']];$('nav').innerHTML=tabs.map(([id,label,icon])=>`<button data-tab="${id}" class="${id==='oversikt'?'active':''}" onclick="show('${id}')">${icon}<br>${label}</button>`).join('');
 
-// Restore the last main tab after a refresh; sessionStorage contains UI state only.
-try { const previousTab=window.sessionStorage.getItem('skv138-test-active-tab'); if(['bookinger','oppgaver','lager','mer'].includes(previousTab)) show(previousTab); } catch {}
-
 // V7: status, cancellation, editing, recalc and history; existing V3-V6 local data is migrated.
 state.bookings.forEach(b=>{b.guests=Math.max(1,Number(b.guests)||1);b.cancelled=!!b.cancelled;b.refundAmount=Number(b.refundAmount)||0;b.cancelFee=Number.isFinite(Number(b.cancelFee))?Number(b.cancelFee):Number(b.fee)||0;b.cancelDate=b.cancelDate||'';b.checks=b.checks||{before:[],after:[]};b.checks.before=b.checks.before||[];b.checks.after=b.checks.after||[];b.history=b.history||[];if(b.historical===undefined)b.historical=stamp(b.end,b.checkout)<new Date()});
 function bookingStatus(b){if(b.cancelled)return 'Kansellert';const now=new Date();if(now<stamp(b.start,b.checkin))return 'Kommende';if(now<stamp(b.end,b.checkout))return 'Aktiv';return 'Utsjekket'}
@@ -1886,5 +1883,8 @@ renderOverview=function(){
 };
 
 render();
+// Restore the last main tab after a refresh; sessionStorage contains UI state only.
+try { const previousTab=window.sessionStorage.getItem('skv138-test-active-tab'); if(['bookinger','oppgaver','lager','mer'].includes(previousTab)) show(previousTab); } catch {}
+
 if(!hytteStoragePersistent)hytteShowStorageWarning();
 </script></body></html>
