@@ -1,3 +1,8 @@
+## Fremdrift – kvalitetssikring av oppgaver og auth 19.11.2026
+- Commit `80934c9`: funnet og rettet en reell feil: `done()` for private oppgaver av typen sjekkliste slo opp i `state.bookings` og kunne feile når privatoppholdet bare finnes i `state.privateStays`. Privatoppgaver bruker nå sin egen lagrede fullføringsstatus; utleiesjekklister beholdes uendret.
+- Commit `b0d5dc4`: fjernet overflødig avlesning/dekoding av uverifiserte JWT-claims fra login-UI. Backend-basert autorisasjon er beholdt. Midlertidige `TEST_DIAG_*`-feilmeldinger i klient/server er **ikke** fjernet ennå fordi iPhone PWA-tokenfeilen fortsatt ikke er diagnostisert.
+- Viktig gjenstående: bekreft faktisk årsak til iPhone PWA-tokenfeil, verifiser refresh og datalagring, og kjør samlet funksjonstest av økonomi, kansellering og oppgaver. Ingen TEST-publisering eller PROD-endring i dette steget.
+
 ## Fremdrift – innlogging og oppgavehistorikk 19.11.2026
 - Commit `de69d47`: innlogging etter refresh og manuell innlogging deler nå én autorisasjonsflyt, slik at samtidig respons ikke starter to separate Neon state bridges. Backend GET og tilgangskontroll kreves fremdeles. Dette er en **forebygging av konkret race condition i koden**, ikke bekreftet løsning av iOS PWA-tokenfeilen.
 - Commit `104bae4`: historiske private oppgaver forsvinner ikke lenger fra oppgavelisten bare fordi privatoppholdet er avsluttet. Kanselleringsoppgjør krever eksplisitt utfylte beløpsfelt.
