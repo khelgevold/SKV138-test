@@ -1,3 +1,26 @@
+# AKTIV UTVIKLINGSPAKKE – 19.11.2026 (overstyrer eldre status)
+
+Brukeren har godkjent at **begge forbedringslistene** samles i én versjon og har gitt klarsignal til implementering i `feature/neon-test-integration`. **Ingen PROD/main-endringer.** Status: omfang låst, implementering starter; ikke merk punktene som ferdige før faktisk kode/test.
+
+## Hele omfanget – ingen punkter skal falle ut
+1. Kritisk: installert iPhone-webapp/PWA feiler ved innlogging med `TEST_DIAG_TOKEN_EXCEPTION`, Safari fungerer. Finn faktisk årsak og rett uten å svekke auth.
+2. Kritisk: nettleser logger ut ved refresh; gjenopprett gyldig sesjon sikkert.
+3. Plattformgebyrer under Innstillinger: opprettelse og sletting virker ikke; kontroller redigering, lagring og beregninger.
+4. Privat booking: grønn plattform-/typeindikator på bookingkort, lik kalender.
+5. Innstillinger: «Plasseringer» samme accordion-design som øvrige, og godkjent rekkefølge: Plattformgebyrer, Priskalkulator, Utleievarer, Plasseringer, Sjekklistemaler, Tidspunkter og oppgaver, Oppgaveregler, Meldingsmaler, Kalenderintegrasjon (iCal), Testdata.
+6. Kansellering: kansellert booking frigjør datoer og skjules i kalender; beholdes i historikk under Kansellerte-filter. Kanselleringsforespørsel som ikke godtas skal IKKE kansellere aktiv booking. Mulighet til å korrigere brutto, gebyr og netto ved kansellering etter faktisk oppgjør. Årsfordeling/statistikk følger oppgjøret. Kun kansellerte bookinger kan slettes permanent, etter bekreftelse; fjern alle relevante koblinger/visninger/beregninger. Ingen automatisk sletting.
+7. Oversikt: ramme «Prognose år» rundt øverste prognosetall; etikett «Bruttoinntekt / prognose» -> «Bruttoinntekt» uten å endre tall.
+8. Oversikt: del feltet «sum utbetalt + skatt» i to; nytt nøkkeltall reell skatt % = eksisterende beregnet skatt / (samlet brutto - samlede plattformgebyrer) * 100; ikke endre skatteberegning eller likestill gebyr med skatt. Null/negativ nevner skal ikke gi meningsløs prosent.
+9. Bookingkort: ikoner for stamp, hund, elbillading, sengetøy/håndklær når relevante, og antall gjester.
+10. Oppgavemaler: legg til «Privat booking» i eksisterende plattformvalg. «Alle plattformer» gjelder bare utleie; privat opphold får kun egne relevante maler med eksisterende frist-/oppgaveregler.
+11. Fjern midlertidige TEST-diagnosemeldinger ved ferdigstilling, uten å miste nyttig intern feilhåndtering.
+
+**Utenfor pakken:** pushvarsler (neste prioritet 1) og automatisk iCal (prioritet 2) først etter øvrig TEST-godkjenning. Vurder migrering av reelle TEST-data til fremtidig PROD separat; ingen ukritisk kopiering.
+
+**Arbeidsform:** minst mulig unødvendige GitHub/Netlify-commits, ingen ekstra DB-operasjoner; målrettet kvalitetssikring av sikkerhet, lagring, beregninger og bookingflyt. Brukeren tester én samlet kandidat når klar. Oppdater fremdrift med faktisk implementert/testet/godkjent.
+
+---
+
 # GJELDENDE STATUS – 18.11.2026 kl. 21:20 (les først)
 
 ## Kritiske innloggingsfeil – 19.11.2026 (må løses før PROD)
