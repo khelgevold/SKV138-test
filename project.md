@@ -1,3 +1,8 @@
+## Fremdrift – oppgavemaler og sesjon 19.11.2026
+- Commit `bb9a12d`: «Privat booking» som eget plattformvalg for oppgaveregler. Private opphold får kun regler valgt for privat; «Alle plattformer» genererer ikke privatoppgaver. Commit `eff8869`: private oppgaver kan fullføres/angres uten å åpne en utleiebookings sjekkliste. Merk: private sjekkliste-oppgaver er foreløpig en enkel fullføringshandling, ikke detaljert klargjøring/etterkontroll-sjekkliste; vurder i QA.
+- Commit `8d56086`: forsøk på sikker gjenoppretting av Neon-sesjon ved refresh i `backend-draft/neon-test-entry.mjs`; backend-tilgang kontrolleres før app vises. **Ikke bekreftet i browser eller iPhone.** iPhone `TEST_DIAG_TOKEN_EXCEPTION` er fremdeles åpen, og det er ikke dokumentert at refresh-rettelsen løser den.
+- Ingen Netlify-publisering eller PROD-endringer. Gjenstår kontroll av app-funksjoner og økonomi, PWA-auth, opprydding av diagnostikk og samlet TEST-verifisering.
+
 ## Fremdrift – kansellering/sletting 19.11.2026
 - Commit `583520d`: lagt inn skjema for kansellering med faktisk beholdt brutto, endelig gebyr og automatisk netto; mulighet til å redigere oppgjøret etter kansellering; sletting kun for kansellerte med bekreftelse. Eksisterende filtrering viser kansellerte i historikk og utelater dem fra kalenderen; eksisterende statistikk bruker `bookingAmounts`. Sletting fjerner booking fra `state.bookings` og relaterte `state.completed`-nøkler.
 - **Implementert, men ikke manuelt verifisert.** Sjekk særlig endringshistorikk, oppgavefullføringer, statistikk, årsfordeling og lagring ved samlet TEST-godkjenning. Ikke slett ekte data før godkjent.
