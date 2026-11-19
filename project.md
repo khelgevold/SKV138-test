@@ -1,3 +1,8 @@
+## Neon JWT konkret retting – 19.11.2026 (IKKE publisert)
+- Edge Network viste faktisk GET `/neondb/auth/get-j-w-t-token` → 404. Neon Better Auth/JWKS er tilgjengelig og Auth URL/trusted domain stemmer.
+- Dokumentert Neon-flyt for standard Better Auth-klient er `authClient.token()` med `data.token`; direkte REST GET `{AUTH_URL}/token` med `credentials: include` kan brukes dersom SDK ikke leverer token. `getJWTToken()`-fallback er fjernet; `session.access_token`-fallback er fjernet siden den tilhører en annen klientvariant. Commit `d173b9e`, korrigert URL-regex `75fe6c4`. Ingen tokenlagring, backend-JWT-verifikasjon og allowlist uendret.
+- **Ikke testet/publisert.** Netlify TEST Stopped builds. Ved neste avtalte ene TEST-deploy: logg inn og kontroller Network `/token` og resultatet. Ingen PROD/main-endring.
+
 ## TEST JWT – sesjonstoken som sikker fallback 19.11.2026
 - Neon Better Auth er aktiv; Auth URL/trusted domain samsvarer med GitHub; JWKS GET fungerer (EdDSA/Ed25519). Sist observerte feil ved JWT-helper: HTTP 404.
 - Neons dokumenterte innloggingsflyt oppgir JWT i `session.access_token`. Commit `1244039` prøver derfor `authClient.getSession().data.session.access_token` ved manglende `token()`-resultat, **før** eksisterende `getJWTToken()`-fallback. Ingen token lagres i localStorage, og backend må fortsatt validere JWT/allowlist. Endringen er en målrettet hypotese, **ikke testet**; tokenfeltets tilgjengelighet i låst SDK 0.4.0-beta må bekreftes ved neste TEST-innlogging.
