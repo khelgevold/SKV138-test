@@ -1,3 +1,8 @@
+## Fremdrift – første kodearbeid 19.11.2026
+- Samlet versjonsomfang (begge listene) er dokumentert øverst og godkjent for utvikling.
+- Første avgrensede UI-kodeendring i TEST, commit `1b78311`: grønn Privat-indikator på bookingkort, antall gjester og relevante tilleggsikoner på utleiekort, ny sortering/format for Plasseringer under Innstillinger, ramme «Prognose år», endret bruttoetikett og ny prosent-KPI. **Ikke funksjonstestet eller godkjent ennå.** Ingen endring i main/PROD/DB.
+- Åpent: verifiser prosent-KPI mot eksisterende YTD-regler og vurder datamodell for hund. De alvorlige punktene PWA-auth, refresh-sesjon, gebyrer og kansellering/sletting er ennå IKKE implementert. Private oppgavemaler gjenstår også. Ikke be brukeren teste en ufullstendig kandidat.
+
 # AKTIV UTVIKLINGSPAKKE – 19.11.2026 (overstyrer eldre status)
 
 Brukeren har godkjent at **begge forbedringslistene** samles i én versjon og har gitt klarsignal til implementering i `feature/neon-test-integration`. **Ingen PROD/main-endringer.** Status: omfang låst, implementering starter; ikke merk punktene som ferdige før faktisk kode/test.
