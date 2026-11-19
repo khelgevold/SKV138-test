@@ -32,25 +32,6 @@ export function startSkv138TestLogin({ document, verifyAccess, onAuthorized, neo
     document,
     login,
     onSignedIn: async () => {
-      // TEST-only diagnostics: read the unverified issuer claim to assist
-      // configuration. Never use decoded claims for authorization.
-      try {
-        const tokenResult = await authClient.token();
-        const jwt = tokenResult?.data?.token;
-        if (typeof jwt === "string" && jwt.split(".").length === 3) {
-          const encoded = jwt.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
-          const headerEncoded = jwt.split(".")[0].replace(/-/g, "+").replace(/_/g, "/");
-          const header = JSON.parse(atob(headerEncoded));
-          const algorithm = typeof header.alg === "string" && /^[A-Za-z0-9_-]{1,20}$/.test(header.alg) ? header.alg : "unknown";
-          const statusElementForAlg = document.querySelector("#status");
-          if (statusElementForAlg) statusElementForAlg.dataset.testJwtAlg = algorithm;
-          const claims = JSON.parse(atob(encoded));
-          if (typeof claims.iss === "string" && claims.iss.startsWith("https://") && claims.iss.length <= 500) {
-            const statusElement = document.querySelector("#status");
-            if (statusElement) statusElement.dataset.testIssuer = claims.iss;
-          }
-        }
-      } catch { /* Diagnostics must never affect login or access decisions. */ }
       // Must make an authenticated GET to the SKV138 backend before showing app data.
       await authorize();
     },
@@ -59,10 +40,9 @@ export function startSkv138TestLogin({ document, verifyAccess, onAuthorized, neo
   // Access to the app is still gated by the authenticated backend GET.
   let active = true;
   const restoreSession = async () => {
-     try {
+    try {
       const session = await login.session();
       if (!active || !session) return false;
-      if (!active) return false;
       return await authorize();
     } catch {
       // An expired session or offline backend must leave the normal login available.
