@@ -1,3 +1,15 @@
+# AKTIV OVERLEVERING – 19.11.2026 – SKV138 TEST FUNKSJONELT GODKJENT
+
+Vi fortsetter SKV138. GitHub `khelgevold/SKV138-test`, aktiv gren `feature/neon-test-integration`; TEST https://skv138-neon-test.netlify.app. Les først `project.md`, `startnestechat.md`, `utviklingsregler.md` og `parkeringsplassen.md` direkte fra GitHub. **Nyeste status øverst gjelder; eldre tekst er historikk.**
+
+Brukeren har godkjent **alle F01–F06** og **alle 3 avsluttende funksjonstester**: booking overlever F5, utlogging/innlogging beholder data, kansellering overlever F5 og gir korrekte økonomitall. Installert iPhone PWA og mørk statuslinje er godkjent. Neon Auth same-origin proxy er publisert. Godkjent V16.23 i `main` er urørt; eget PROD-miljø finnes ikke. Funksjonell TEST er godkjent, men ikke PROD.
+
+En foreløpig statisk sikkerhetsgjennomgang av `backend-draft/skv138-state.mjs`, `client-adapter.mjs` og `test-site/_redirects` viser JWT-verifisering, server-allowlist, payload-validering, origin-kontroll og versjonskonfliktvern. Dette er **ikke** full sikkerhetsrevisjon. TEST-diagnostikk og gamle kodekommentarer må vurderes før PROD.
+
+**Neste oppgave:** Presenter kort PROD-forberedelsesplan, undersøk bare nødvendig faktisk kode og konfigurasjon, avklar om testdata skal migreres eller PROD starte tomt, og avtal separat PROD-miljø, secrets, tilgang, backup og reverseringsplan. Ingen PROD-opprettelse eller deploy uten eksplisitt godkjenning. Ikke repeter godkjente funksjonstester. Utfør alt mulig GitHub-arbeid selv og be om én nødvendig brukerhandling om gangen. Pushvarsler og dynamisk iCal er utsatt. Ingen manuell ICS-eksport i planen.
+
+---
+
 # AKTIV OVERLEVERING – 19.11.2026 – SKV138 QA og feilretting
 
 Les `project.md`, `utviklingsregler.md`, `parkeringsplassen.md` og denne filen direkte fra GitHub. Aktiv gren `feature/neon-test-integration` i `khelgevold/SKV138-test`. TEST: https://skv138-neon-test.netlify.app. Netlify TEST Stopped builds bekreftet. Eget PROD-miljø finnes ikke; `main` V16.23 urørt.
