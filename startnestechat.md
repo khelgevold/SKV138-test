@@ -1,5 +1,9 @@
 # START HER – SKV138, oppdatert 18.11.2026 kl. 21:20
 
+## Ny prioritering – 19.11.2026
+Brukeren vil først ferdigstille alle andre visuelle og funksjonelle forhold i Neon TEST og samle forbedringslisten for felles diskusjon. **Pushvarsler prioritet 1, iCal prioritet 2**, men ingen av dem skal påbegynnes før øvrig TEST er godkjent. Brukeren vurderer migrering av data til fremtidig PROD; dette er teknisk mulig, men migreringsomfang og valg mot ren oppstart avklares senere. Ikke kopier testdata ukritisk. Se øverste status i project.md. Ingen kode, DB-endring eller deploy nå.
+
+
 Vi fortsetter SKV138 i GitHub `khelgevold/SKV138-test`, aktiv gren `feature/neon-test-integration`. Les først **øverste status i `project.md`**, deretter `utviklingsregler.md`, `parkeringsplassen.md` og relevant kode. Nyeste status overstyrer eldre historikk i dokumentene. ChatGPT gjør GitHub-arbeid selv, minimerer unødvendige Netlify-deploys og ber om kun én nødvendig brukerhandling av gangen.
 
 **Nåværende status:** Neon TEST på https://skv138-neon-test.netlify.app fungerer i Safari på iPhone og PC. Innlogging, Neon GET/PUT og privat booking fungerer. Utleiebooking fungerte ikke pga. rekursiv `saveBooking`/hoisting, rettet i `backend-draft/test-site/app.html` commit `39709cc`; brukeren bekreftet at vanlig utleiebooking nå kan lagres. Netlify `SKV138_APP_ORIGIN` er korrigert (fjernet avsluttende skråstrek). PC-bunnmeny er gjort fast i TEST-koden. Godkjent V16.23 i `main` er urørt; ingen PROD.
