@@ -1,3 +1,17 @@
+# AKTIV STATUS – 19.11.2026 – FUNKSJONELL TEST GODKJENT, PROD IKKE KLARERT
+
+**Nyeste status overstyrer eldre historikk under.** GitHub: `khelgevold/SKV138-test`, gren `feature/neon-test-integration`. TEST: https://skv138-neon-test.netlify.app. `main` med godkjent V16.23 er urørt. **Det finnes ennå ikke eget PROD-miljø.**
+
+**Brukergodkjent QA:** Første runde 25 godkjente kontroller. Alle seks registrerte feil/forbedringer **F01–F06 godkjent**: F01 sesjon/fane etter F5; F02 installert iPhone-PWA innlogging via same-origin Neon Auth-proxy; F03 kansellering og korrekte økonomitall; F04 opprette/slette plattformgebyrer; F05 fire økonomikort; F06 mørk iPhone-statuslinje. F06 kodecommit `64d630a` er publisert og brukerbekreftet. F04 HTML-handlerretting `8eed144` og same-origin auth proxy er også brukerbekreftet. F03 fungerte ved ny test uten ytterligere kodeendring; tidligere 409-årsak er ikke sikkert fastslått.
+
+**Avsluttende manuelle kontroller 3/3 godkjent:** (1) ny booking vedvarer etter F5; (2) utlogging/innlogging gir tilgang til samme booking; (3) kansellering vedvarer etter F5 med riktige økonomitall. Dette er funksjonell TEST-godkjenning, **ikke sikkerhetsrevisjon eller godkjenning av PROD**.
+
+**Foreløpig teknisk kildekodegjennomgang:** `backend-draft/skv138-state.mjs` krever konfigurasjon fra miljøvariabler, verifiserer JWT med JWKS, eksakt issuer og EdDSA, sjekker bruker mot `skv138_access`, begrenser API til GET/PUT, avviser feil origin på PUT, validerer payload og krever `expectedVersion` ved lagring. `backend-draft/client-adapter.mjs` sender Bearer-token uten å lagre det i localStorage. Same-origin proxy ligger i `backend-draft/test-site/_redirects`. **Kun statisk inspeksjon:** ingen live penetrasjonstest, kontroll av faktiske Netlify-hemmeligheter eller full verifikasjon av alle tilgangstilfeller. TEST-spesifikke diagnostikkmeldinger og foreldede «NOT deployed»-kommentarer finnes fortsatt i kode og bør vurderes før PROD. Ikke fjern versjonskontroll eller JWT-autorisasjon.
+
+**Neste milepæl:** Avklare produksjonsarkitektur og dataoverføring/ren oppstart, kontrollere PROD-spesifikke tilgangsregler, secrets, miljøskille, logging/diagnostikk og backup-/rollback-plan. PROD krever eksplisitt godkjenning. Ingen nye deploys, migreringer eller unødvendige tester nå. Utsatt: pushvarsler (prioritet 1), dynamisk iCal (prioritet 2); ingen manuell ICS-eksport i avtalt plan.
+
+---
+
 # F02 – teknisk undersøkelse 19.11.2026 (nyeste status)
 
 Bruker testet iPhone installert PWA: `TEST_DIAG_TOKEN_ENDPOINT_HTTP_401` etter innlogging. Samme feil etter full lukking og etter sletting/ny installasjon. Safari på iPhone og PC fungerer. Dette avkrefter ikke alle PWA-cacheproblemer, men gjør gammel installasjon lite sannsynlig som hovedårsak.
