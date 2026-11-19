@@ -1,3 +1,8 @@
+## Kodegjennomgang punkt 1 – private oppgaver og Neon 19.11.2026
+- Commit `505ddda`: tidligere endring beholdt **alle** private oppgaver fra avsluttede opphold, også ufullførte; disse ville ligget som forfalte oppgaver permanent. Nå beholdes fullførte private oppgaver for historikk, mens ufullførte oppgaver fra avsluttede privatopphold ikke genereres. Aktivt/fremtidig privatopphold beholder alle aktive regler. Dette følger eksisterende utleieoppgaveprinsipp så langt som mulig.
+- Statisk kontrollert `backend-draft/v1623-state-bridge.mjs`: `initialize()` krever validert state fra autorisert backend, `commit()` validerer og kølegger endringer, og `whenIdle()` er tilgjengelig. **Dette dokumenterer kodeflyten, ikke verifisert persistens etter refresh**; den testen krever TEST-publisering.
+- Netlify TEST fortsatt **Stopped builds**; ingen publisering, PROD/main urørt. Neste kontroll: køens feil-/konflikthåndtering og kobling fra iframe til lagringsbroen før samlet TEST-test.
+
 ## Kodegjennomgang punkt 1 – plattformgebyrer 19.11.2026
 - Commit `5bae1a1`: bekreftet at gebyrverdi-feltet i `renderPricePanels()` brukte `oninput="priceFeesChanged()"`, og at `priceFeesChanged()` kaller `save()`. Det kunne starte en Neon-lagring for hvert tastetrykk. Endret gebyrverdi til `onchange` slik at redigering lagres ved feltendring/avsluttet redigering; øvrige felt hadde allerede `onchange`. Brukeren må fortsatt verifisere faktisk persistens i TEST.
 - Statisk kontroll: V16.20 flytter gebyrfeltene til nye DOM-grupper, men beholder input-ID-ene som siste gebyrfunksjoner leser. V16.8 gjør Innstillinger-kort til `details` med `summary` inni eksisterende kort; siste sortering finner disse titlene. Dette er kodekontroll, **ikke** visuelt godkjent.
