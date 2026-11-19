@@ -1,3 +1,17 @@
+# GJELDENDE STATUS – 19.11.2026 – Neon TEST innlogging og bookingpersistens bekreftet
+
+**Nyeste status overstyrer eldre tidsstemplede notater nedenfor.** Bruker bekrefter på PC at innlogging fungerer, appen åpnes med Neon TEST-data, en ny TEST-booking kan opprettes, og bookingen **fortsatt finnes etter F5/refresh**. Dermed er denne konkrete Neon GET/PUT-persistensflyten funksjonstestet og godkjent. Det er **ikke** bekreftet at brukeren forblir innlogget etter refresh (separat test), eller at installert iPhone PWA fungerer.
+
+**Løsning på PC-innloggingsblokker:** Edge Network viste at `GET /neondb/auth/get-j-w-t-token` returnerte HTTP 404. Neon Better Auth, riktig Auth URL, trusted domain og offentlig JWKS (EdDSA/Ed25519) var bekreftet. TEST-koden i `backend-draft/client-adapter.mjs` forsøker `authClient.token()`, og ved manglende token direkte `GET {SKV138_TEST_AUTH_URL}/token` med `credentials: include`. Endringene i `d173b9e` og `75fe6c4` er **publisert og brukerbekreftet fungerende på PC**. Ingen omgåelse av backend-JWT-verifisering eller tilgangsliste. Diagnostikk skal ryddes opp først etter at innlogging er verifisert på relevante klienter.
+
+**Publisert TEST:** `https://skv138-neon-test.netlify.app` fra `feature/neon-test-integration`. **PROD/main V16.23 urørt.** Netlify TEST var gjentatte ganger satt til Stopped builds for å spare credits; siste instruks til bruker var å stoppe builds etter vellykket publisering. **Ikke anta at bruker faktisk har stoppet dem etter siste deploy uten bekreftelse.** Unngå nye deploys før konkrete feilrettinger krever det.
+
+**Neste oppgave er IKKE ny kode eller deploy:** Start ny chat med å lage en prioritert, fullstendig og praktisk TEST-sjekkliste ut fra de 11 avtalte endringene i denne filen, øvrige prosjektfiler og gjeldende kode. Skill mellom godkjent, utestet og blokkert; prioriter sesjonsbevaring ved refresh, installert iPhone PWA, PC-/mobil-layout, booking/kansellering, økonomi/skatt, private oppgaver, plattformgebyrer og innstillinger. Bruker skal få én nødvendig testhandling av gangen, og funn samles for samlet rettingspakke. Ingen unødvendige kontroller. Pushvarsler og dynamisk iCal er utsatt til etter øvrig TEST-godkjenning. Vurder PROD-migrering separat.
+
+**Dokumentasjonsstatus:** `project.md` og `startnestechat.md` oppdatert ved overlevering. `utviklingsregler.md` er gjennomgått og uendret; `parkeringsplassen.md` gjennomgås for utsatte ønsker. Historiske seksjoner nedenfor beskriver tidligere feil og ikke nødvendigvis nåværende status.
+
+---
+
 ## BEKREFTET TEST-RESULTAT – innlogging fungerer 19.11.2026
 - Bruker har bekreftet med skjermbilde at ny TEST-deploy med `/token`-fallback (commits `d173b9e`/`75fe6c4`) åpner hytteappen på PC etter innlogging. Dette løser den tidligere PC-blokkeren `TEST_DIAG_JWT_HELPER_EXCEPTION_OTHER_HTTP_404` i den testede flyten. Ikke påstå at iPhone PWA eller refresh er verifisert.
 - Skjermbildet viser oversikten med Prognose år, utbetaling/skatt, neste oppgaver og bunnmeny. PC-layout og øvrige funksjoner er ennå ikke godkjent.
