@@ -10,6 +10,24 @@ export function startSkv138TestLogin({ document, verifyAccess, onAuthorized, neo
   if (typeof verifyAccess !== "function") throw new Error("Backend access verifier required");
   if (typeof onAuthorized !== "function") throw new Error("Authorized state handler required");
   const { login, authClient } = neonLogin || createNeonTestLogin(SKV138_TEST_AUTH_URL);
+  // Prevent a refresh restore and manual sign-in from initializing two state bridges.
+  let authorized = false;
+  let authorizationPending = null;
+  const authorize = async () => {
+    if (authorized) return true;
+    if (authorizationPending) return authorizationPending;
+    authorizationPending = (async () => {
+      const result = await verifyAccess(authClient);
+      if (result?.status !== "ready") {
+        throw new Error("SKV138 backend access not granted: " + (result?.status || "unknown") + (result?.testDiagnostic ? " TEST_JWT_" + result.testDiagnostic : "") + (result?.testClaim ? " TEST_CLAIM_" + result.testClaim : "") + (result?.testReason ? " TEST_REASON_" + result.testReason : ""));
+      }
+      await onAuthorized(result.payload, result.client);
+      authorized = true;
+      return true;
+    })();
+    try { return await authorizationPending; }
+    finally { authorizationPending = null; }
+  };
   const unmount = mountLoginForm({
     document,
     login,
@@ -34,25 +52,18 @@ export function startSkv138TestLogin({ document, verifyAccess, onAuthorized, neo
         }
       } catch { /* Diagnostics must never affect login or access decisions. */ }
       // Must make an authenticated GET to the SKV138 backend before showing app data.
-      const result = await verifyAccess(authClient);
-      if (result?.status !== "ready") {
-        throw new Error("SKV138 backend access not granted: " + (result?.status || "unknown") + (result?.testDiagnostic ? " TEST_JWT_" + result.testDiagnostic : "") + (result?.testClaim ? " TEST_CLAIM_" + result.testClaim : "") + (result?.testReason ? " TEST_REASON_" + result.testReason : ""));
-      }
-      await onAuthorized(result.payload, result.client);
+      await authorize();
     },
   });
   // Recover an existing Neon session on refresh without storing JWTs locally.
   // Access to the app is still gated by the authenticated backend GET.
   let active = true;
   const restoreSession = async () => {
-    const button = document.querySelector("#submit");
-    try {
+     try {
       const session = await login.session();
       if (!active || !session) return false;
-      const result = await verifyAccess(authClient);
-      if (!active || result?.status !== "ready") return false;
-      await onAuthorized(result.payload, result.client);
-      return true;
+      if (!active) return false;
+      return await authorize();
     } catch {
       // An expired session or offline backend must leave the normal login available.
       return false;
