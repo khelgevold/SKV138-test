@@ -1701,6 +1701,11 @@ renderRules=function(){
   if(rule?.platform==='Privat booking')select.value='Privat booking';
  }
 };
+const skvPrivateDoneBase=done;
+done=function(task){
+ if(task?.platform==='Privat booking')return !!state.completed[task.id];
+ return skvPrivateDoneBase(task);
+};
 const skvPrivateTaskHtmlBase=taskHtml;
 taskHtml=function(task){
  if(task.platform!=='Privat booking')return skvPrivateTaskHtmlBase(task);
