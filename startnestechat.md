@@ -1,3 +1,9 @@
+# START HER – 19.11.2026 – samlet versjonspakke påbegynt
+
+Brukeren godkjente **samtlige punkter i begge listene** og ba ChatGPT starte utviklingen. Les øverste seksjon i `project.md` for komplett omfang (11 punkter) før arbeid, samt `utviklingsregler.md`, `parkeringsplassen.md` og faktisk kode. Jobb i `khelgevold/SKV138-test`, `feature/neon-test-integration`; `main` V16.23 og PROD urørt. Ikke utelat noen av de tidligere avtalte oversikt-/booking-/oppgaveforbedringene. iPhone PWA-innlogging og refresh-sesjon er to åpne blokkere. Brukeren vil ha samlet TEST-kandidat med minst mulig deploys, og én nødvendig handling om gangen. Push/iCal utsettes til godkjent øvrig TEST. Dokumenter konkret fremdrift, ikke påstå at en samlet pakke er ferdig før alle punktene er gjennomført og verifisert.
+
+---
+
 # START HER – SKV138, oppdatert 18.11.2026 kl. 21:20
 
 ## Kritiske innloggingsfeil – 19.11.2026 (må løses før PROD)
