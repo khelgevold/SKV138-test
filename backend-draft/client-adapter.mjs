@@ -34,6 +34,19 @@ export function createSkv138Client({ authClient, fetchImpl, storage, endpoint = 
     } catch {
       tokenCallFailed = true;
     }
+    // Managed Better Auth can include the short-lived JWT in the current session.
+    // Read it afresh for each request; the backend still verifies every JWT.
+    if (!token && typeof authClient.getSession === "function") {
+      try {
+        const sessionResult = await authClient.getSession();
+        const sessionToken = sessionResult?.data?.session?.access_token;
+        if (!sessionResult?.error && typeof sessionToken === "string" && sessionToken) {
+          token = sessionToken;
+        }
+      } catch {
+        // Continue to the existing SDK JWT helper.
+      }
+    }
     if (!token && typeof authClient.getJWTToken === "function") {
       try { token = await authClient.getJWTToken(); }
       catch (error) {
