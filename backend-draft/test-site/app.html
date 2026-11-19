@@ -313,7 +313,7 @@ html{-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{font-size:15px;l
   #nav.nav { position:fixed; bottom:0; left:0; right:0; width:100%; max-width:790px; margin:0 auto; z-index:50; border:1px solid var(--line); border-radius:15px 15px 0 0; box-shadow:0 -6px 22px rgba(0,0,0,.08); }
   main { padding-bottom:110px; }
 }
-</style></head><body><header><div><h1>⌂ SKV138</h1><div style="opacity:.8;font-size:13px">V16 · Lokal testprototype</div></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
+</style><style id="skv-next-ui">.skv-private-platform{background:#26734b!important;color:#fff!important;border-color:#26734b!important}.skv-next-booking-meta{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0}.skv-next-booking-meta .tag{font-size:11px}.skv-forecast-frame{padding:14px;margin:12px 0}.skv-forecast-frame #metrics{margin-top:12px}.skv-places-accordion>summary{list-style:none;cursor:pointer;font-weight:700;padding:16px 18px}.skv-places-accordion>summary::-webkit-details-marker{display:none}.skv-places-accordion>summary:after{content:'⌄';float:right}.skv-places-accordion[open]>summary:after{content:'⌃'}</style></head><body><header><div><h1>⌂ SKV138</h1><div style="opacity:.8;font-size:13px">V16 · Lokal testprototype</div></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
 <section id="oversikt" class="active"><div class="row"><button onclick="changeYear(-1)">‹</button><span class="year" id="yearTitle"></span><button onclick="changeYear(1)">›</button></div><div class="grid" id="metrics"></div><div class="card"><h2>Utbetalinger og skatt hittil i år</h2><div class="grid" id="v15YtdMetrics"></div></div><div class="card"><div class="row"><h2>Neste oppgaver</h2><button onclick="show('oppgaver')">Se alle</button></div><div id="nextTasks"></div></div></section>
 <section id="bookinger"><div class="row"><h2>Bookinger</h2><div class="booking-create"><button class="primary" onclick="newBooking()">+ Ny booking</button><button onclick="newPrivateStay()">+ Privat booking</button></div></div><div class="segmented triple" id="bookingTypeFilters"><button onclick="setBookingTypeFilter('all')">Alle</button><button onclick="setBookingTypeFilter('rental')">Utleie</button><button onclick="setBookingTypeFilter('private')">Privat</button></div><div id="bookingList"></div><div id="bookingDetail"></div></section>
 <section id="kalender"><div class="row"><h2>Kalender</h2></div><div class="card"><div class="row"><button onclick="moveCalendar(-1)" aria-label="Forrige måned">‹</button><h2 id="calendarTitle"></h2><button onclick="moveCalendar(1)" aria-label="Neste måned">›</button></div><div class="calendar-legend"><span><i class="dot finn"></i>FINN</span><span><i class="dot airbnb"></i>Airbnb</span><span><i class="dot booking"></i>Booking.com</span><span><i class="dot direkte"></i>Direkte</span><span><i class="dot private"></i>Privat</span></div><div class="calendar-grid" id="calendarGrid"></div><p class="hint">Datoer viser overnattinger. Ved bytte av gjest samme dag kan du åpne datoen for å se både utsjekk og innsjekk. Trykk på en ledig dato for å legge til opphold.</p></div><div id="calendarDay"></div><div id="privateEditor"></div></section>
@@ -1687,6 +1687,64 @@ addStock=function(){
  save();$('stockName').value='';$('stockQty').value='1';
  const card=$('stockAddCard');if(card)card.dataset.open='false';
  renderStock();
+};
+
+
+/* Next TEST release: isolated visual corrections, no state/schema changes. */
+const skvNextBookingBase=renderBookings;
+renderBookings=function(){
+ skvNextBookingBase();
+ const list=$('bookingList');
+ if(!list)return;
+ list.querySelectorAll('.v16-booking-card').forEach(card=>{
+  const badge=card.querySelector('.platform');
+  if(badge?.textContent.trim()==='Privat')badge.classList.add('skv-private-platform');
+  const rental=card.getAttribute('onclick')?.match(/^v16OpenBooking\((\d+)\)$/);
+  if(!rental)return;
+  const b=state.bookings.find(x=>String(x.id)===rental[1]);
+  if(!b)return;
+  const details=[];
+  if(Number(b.guests)>0)details.push('👥 '+Number(b.guests)+' gjester');
+  if(b.stamp)details.push('♨️ Stamp');
+  if(b.dog||b.dogs||b.pet||b.pets)details.push('🐕 Hund');
+  if(b.charger)details.push('⚡ Elbillading');
+  if(b.linen)details.push('▤ Sengetøy/håndklær');
+  if(!details.length)return;
+  const meta=document.createElement('div');meta.className='skv-next-booking-meta';
+  details.forEach(value=>{const chip=document.createElement('span');chip.className='tag';chip.textContent=value;meta.appendChild(chip)});
+  card.querySelector('p.sub')?.insertAdjacentElement('beforebegin',meta);
+ });
+};
+const skvNextSettingsBase=renderSettings;
+renderSettings=function(){
+ skvNextSettingsBase();
+ const root=$('innstillinger');if(!root)return;
+ const desired=['Plattformgebyrer','Priskalkulator','Utleievarer','Plasseringer','Sjekklistemaler','Tidspunkter og oppgaver','Oppgaveregler','Meldingsmaler','Kalenderintegrasjon (iCal)','Testdata'];
+ const cards=[...root.children].filter(el=>el.classList.contains('card'));
+ const label=el=>el.querySelector('summary')?.textContent.trim()||el.querySelector('h2')?.textContent.trim()||'';
+ const byName=new Map(cards.map(el=>[label(el),el]));
+ for(const name of desired){const card=byName.get(name);if(card)root.appendChild(card)}
+ const places=byName.get('Plasseringer');
+ if(places){places.classList.add('v16-settings-accordion','skv-places-accordion')}
+};
+const skvNextOverviewBase=renderOverview;
+renderOverview=function(){
+ skvNextOverviewBase();
+ const metrics=$('metrics');
+ if(metrics){
+  metrics.querySelectorAll('.metric small').forEach(el=>{if(el.textContent.trim()==='Bruttoinntekt / prognose')el.textContent='Bruttoinntekt'});
+  let frame=$('skvForecastFrame');
+  if(!frame){frame=document.createElement('div');frame.id='skvForecastFrame';frame.className='card skv-forecast-frame';metrics.parentElement?.insertBefore(frame,metrics);const title=document.createElement('h2');title.textContent='Prognose år';frame.append(title,metrics)}
+ }
+ const ytd=$('v15YtdMetrics');
+ if(ytd){
+  const gross=state.bookings.reduce((sum,b)=>sum+bookingAmounts(b).gross* (b.cancelled?(Number((b.cancelDate||b.start).slice(0,4))===year?1:0):share(b,year)),0);
+  const fees=state.bookings.reduce((sum,b)=>sum+bookingAmounts(b).fee* (b.cancelled?(Number((b.cancelDate||b.start).slice(0,4))===year?1:0):share(b,year)),0);
+  const tax=v15TaxYtd(year),base=gross-fees;
+  const pct=base>0?(tax/base*100).toLocaleString('nb-NO',{maximumFractionDigits:1})+' %':'–';
+  const old=[...ytd.querySelectorAll('.metric')].find(el=>el.querySelector('small')?.textContent.trim()==='Sum utbetalt + skatt');
+  if(old){old.querySelector('small').textContent='Sum utbetalt + skatt';const extra=document.createElement('div');extra.className='metric';extra.innerHTML='<small>Reell skatt i prosent</small><b></b>';extra.querySelector('b').textContent=pct;old.insertAdjacentElement('afterend',extra)}
+ }
 };
 
 render();
