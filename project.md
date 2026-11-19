@@ -1,3 +1,10 @@
+## Fremdrift – målrettet kodegjennomgang 19.11.2026
+- Gjennomgått faktisk V16-kode og nye overstyringer. Commit `5cd5027`: korrigert **reell skatt %** slik at nevneren bruker samme *hittil-i-år*-periode og årsgrense som eksisterende `v15TaxYtd`, med brutto minus gebyr, ikke hele årets prognose mot YTD-skatt. Eksisterende beregnet skatt beholdes uendret.
+- Commit `165e46d`: erstattet kombinert «Sum utbetalt + skatt»-kort med «Reell skatt i prosent». De to separate kortene for «Utbetalt hittil i år» og «Estimert skatt hittil i år» beholdes.
+- Commit `b4e8a90`: «Plasseringer» bruker nå eksisterende standard-chevron for Innstillinger fremfor en avvikende CSS-variant.
+- **Ikke kjørt nettleser-/iPhone-test.** Viktig å verifisere at gebyrfelt, innstillingsrekkefølge og oppgjør fungerer i faktisk TEST-visning. `TEST_DIAG_TOKEN_EXCEPTION` på installert iPhone-PWA er fremdeles uavklart og blokkerer godkjenning; ikke anta at sesjonsgjenoppretting løser det.
+- Sikkerhet og datalagring er prioritert over rask prosentfremdrift. Ingen endring i PROD/main.
+
 ## Fremdrift – oppgavemaler og sesjon 19.11.2026
 - Commit `bb9a12d`: «Privat booking» som eget plattformvalg for oppgaveregler. Private opphold får kun regler valgt for privat; «Alle plattformer» genererer ikke privatoppgaver. Commit `eff8869`: private oppgaver kan fullføres/angres uten å åpne en utleiebookings sjekkliste. Merk: private sjekkliste-oppgaver er foreløpig en enkel fullføringshandling, ikke detaljert klargjøring/etterkontroll-sjekkliste; vurder i QA.
 - Commit `8d56086`: forsøk på sikker gjenoppretting av Neon-sesjon ved refresh i `backend-draft/neon-test-entry.mjs`; backend-tilgang kontrolleres før app vises. **Ikke bekreftet i browser eller iPhone.** iPhone `TEST_DIAG_TOKEN_EXCEPTION` er fremdeles åpen, og det er ikke dokumentert at refresh-rettelsen løser den.
