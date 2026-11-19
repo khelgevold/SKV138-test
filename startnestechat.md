@@ -1,3 +1,29 @@
+# Start neste chat – SKV138 etter produksjonssetting
+
+Vi fortsetter SKV138 etter produksjonssettingen.
+
+GitHub: `khelgevold/SKV138-test`
+TEST-gren: `feature/neon-test-integration`
+PROD-gren: `release/skv138-prod`
+TEST: https://skv138-neon-test.netlify.app
+PROD: https://skv138-prod.netlify.app
+
+Les `project.md`, `startnestechat.md`, `utviklingsregler.md`, `parkeringsplassen.md` og hele `innlogging-og-pwa.md` på `release/skv138-prod` først. Nyeste status står øverst. Les relevant kode på TEST-grenen før endringer.
+
+PROD er publisert med separat Neon-database og Better Auth. Ingen TEST-data er overført. Innlogging på PC, Chrome på iPhone og installert iPhone-webapp er bekreftet. Første ekte booking og innlogget sesjon besto F5. Jeg tester videre i vanlig bruk.
+
+Punkter før videre live-erfaring:
+1. Nye bookinger skal foreslå to netter. Brukeren skal kunne endre til én natt, og datoene skal lagres riktig.
+2. Sett opp egen PROD-konto for Melinda med e-post og passord hun selv velger. Bruk appens registrering og gi tilgang via `skv138_access`. Kontroller godkjent fremgangsmåte i innloggingsdokumentet.
+3. Legg inn headerbilder øverst i appen og på nettsiden. Avklar bilder og plassering før endringen.
+4. Legg inn et SKV138-ikon for den installerte iPhone-webappen, og kontroller ikonet på hjemskjermen.
+5. Legg til «Logg ut». Sjekk at F5 ikke gjenoppretter den avsluttede økten, og at ny innlogging fungerer.
+6. Endre Chrome-fanens tittel fra dagens TEST-tittel til «SKV138».
+
+Start med å spørre om jeg har funn fra live-bruken som skal inn i listen. Lag så en kort milepælsplan med omtrentlig fremdrift. Bruk TEST for kodeendringer, behold fungerende Neon Auth og same-origin-proxy, og samle avtalte endringer før Netlify-deploy. Ta Melindas PROD-tilgang som et eget steg etter avtale. Gjør GitHub-arbeidet selv og be om én nødvendig brukerhandling om gangen. Ingen endring i `main` eller PROD-publisering uten godkjenning.
+
+---
+
 # Gjeldende overlevering – 19.11.2026
 
 SKV138 PROD er publisert og brukeren har avsluttet produksjonsrunden. Brukeren følger opp i vanlig bruk. Les prosjektets dokumenter på release/skv138-prod for PROD-status og innloggingserfaringer. Siste deploy med oppryddede tekster viste Published, innloggingsteksten ble ikke visuelt kontrollert på grunn av automatisk innlogging. Når brukeren ønsker en Logg ut-knapp, start i TEST på feature/neon-test-integration og verifiser før eventuell godkjent PROD-publisering.
