@@ -1,3 +1,8 @@
+## TEST tokenretting 19.11.2026 – ikke publisert
+- Etter manuell TEST-deploy viste innlogging `TEST_DIAG_TOKEN_MISSING` (tidligere iPhone PWA viste `TEST_DIAG_TOKEN_EXCEPTION`). Feilen oppstår før backend-GET.
+- GitHub commit `c507ed7`: `backend-draft/client-adapter.mjs` bruker fortsatt `authClient.token()` først, men forsøker dokumentert `authClient.getJWTToken()` når tokenresponsen mangler eller tokenkallet feiler. JWT sendes kun som Bearer-header; ingen lokal tokenlagring, ingen svekket backend-autorisasjon. Diagnostikken beholdes inntil funksjonstest.
+- **Netlify TEST Stopped builds bekreftet av bruker.** Endringen er IKKE publisert/testet. Neste steg: én kontrollert TEST-deploy etter avtale, prøv innlogging og bookingpersistens; deretter PC/mobil. PROD/main urørt.
+
 ## Statisk UI-kontroll – bookingfelt og PC-layout 19.11.2026
 - Verifisert i faktisk `backend-draft/test-site/app.html`: V15-bookingskjemaet legger til `bdog` (hund), øvrige felter omfatter gjester, stamp, elbillading og sengetøy. Siste bookingkort-wrapper bruker de samme bookingegenskapene. Grønn privat-badge og separat prognosekort har CSS/DOM-koblinger.
 - PC-layout har eksplisitt `@media (min-width:651px)` for bunnnavigasjon; mobilvisningen er separat. Dette er **kun kildekodekontroll**, ikke visuell test. Ingen kodeendring uten påvist feil.
