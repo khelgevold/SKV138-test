@@ -1,5 +1,13 @@
 # START HER – SKV138, oppdatert 18.11.2026 kl. 21:20
 
+## Kritiske innloggingsfeil – 19.11.2026 (må løses før PROD)
+**To separate bekreftede brukeropplevelser i Neon TEST:**
+1. **Nettleser:** Brukeren blir logget ut ved hver sideoppdatering/refresh. Forventning: aktiv innloggingssesjon skal beholdes etter refresh.
+2. **iPhone installert webapp/PWA:** Innlogging feiler, mens vanlig Safari på samme telefon fungerer. Tidligere observert `TEST_DIAG_TOKEN_EXCEPTION`, også etter manuelt passord.
+
+**Begge er blokkerende feil for PROD**, ikke ordinære forbedringsønsker. Undersøk målrettet når øvrige testfunn samles til neste rettingspakke; ikke anta at de har samme årsak. Unngå unødvendige tester og deploys. Pushvarsler (prioritet 1) og iCal (prioritet 2) skal vente til øvrig TEST er visuelt og funksjonelt godkjent.
+
+
 ## Ny prioritering – 19.11.2026
 Brukeren vil først ferdigstille alle andre visuelle og funksjonelle forhold i Neon TEST og samle forbedringslisten for felles diskusjon. **Pushvarsler prioritet 1, iCal prioritet 2**, men ingen av dem skal påbegynnes før øvrig TEST er godkjent. Brukeren vurderer migrering av data til fremtidig PROD; dette er teknisk mulig, men migreringsomfang og valg mot ren oppstart avklares senere. Ikke kopier testdata ukritisk. Se øverste status i project.md. Ingen kode, DB-endring eller deploy nå.
 
