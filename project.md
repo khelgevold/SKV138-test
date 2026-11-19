@@ -1,3 +1,13 @@
+# F02 – teknisk undersøkelse 19.11.2026 (nyeste status)
+
+Bruker testet iPhone installert PWA: `TEST_DIAG_TOKEN_ENDPOINT_HTTP_401` etter innlogging. Samme feil etter full lukking og etter sletting/ny installasjon. Safari på iPhone og PC fungerer. Dette avkrefter ikke alle PWA-cacheproblemer, men gjør gammel installasjon lite sannsynlig som hovedårsak.
+
+Gjennomgått `neon-auth-bootstrap.mjs`, `neon-test-config.mjs`, `client-adapter.mjs` og login-controller: frontend `skv138-neon-test.netlify.app` kaller separat `*.neonauth.*.aws.neon.tech`-domene; SDK token() prøves før GET /token med credentials:include. Better Auth dokumenterer at Safari ITP kan blokkere tredjeparts sesjonscookies, og anbefaler same-origin reverse proxy eller delt parent-domene. **Dette er en sterk hypotese, ikke bekreftet rotårsak.** Dokumentasjon: https://github.com/better-auth/better-auth/blob/main/docs/content/docs/concepts/cookies.mdx . Neon-dokumentasjon viser at managed auth bruker HttpOnly sesjonscookie og at token er separat JWT: https://github.com/neondatabase/website/blob/main/content/docs/auth/authentication-flow.md .
+
+**Neste tekniske steg:** Utform en avgrenset same-origin Netlify Auth-proxy, med eksplisitt håndtering av cookie-domain/path, Neon trusted origin og SDK base URL. Ikke bare bytt /token-URL: både sign-in, get-session og token må bruke samme cookie-kontekst. Før kodeendring: avklar faktisk Netlify publish directory/redirect-konfigurasjon og hvordan proxyen påvirker Set-Cookie. Behold JWT-verifisering og server-allowlist. F04 rettet i commit `8eed144`, ikke publisert. Ingen ny deploy før kontrollert samlet kandidat.
+
+---
+
 # AKTIV STATUS – 19.11.2026 – QA F01–F05, samlet TEST-kandidat under forberedelse
 
 **Nyeste status overstyrer eldre historikk nedenfor.** Brukeren har fullført første manuelle QA-runde: 25 godkjente tester/kontroller og fem registrerte feil. Netlify TEST **Stopped builds bekreftet av bruker**. Eget PROD-miljø er **ikke** opprettet; `main` inneholder godkjent V16.23 og skal ikke endres.
