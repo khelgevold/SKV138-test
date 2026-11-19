@@ -12,7 +12,7 @@ test("isolated TEST shell imports only the built browser entry", () => {
   const imports = [...html.matchAll(/from\s+["']([^"']+)["']/g)].map(m => m[1]);
   assert.deepEqual(imports, ["./neon-test-entry.js"]);
   assert.match(html, /createNeonTestSession\(\)/);
-  assert.match(html, /if \(!token\) startConfiguredSkv138TestLogin/);
+  assert.match(html, /if \(!token\)\s*\{[^}]*startConfiguredSkv138TestLogin\(/);
 });
 
 test("TEST browser bundle exports every helper imported by the shell", () => {
