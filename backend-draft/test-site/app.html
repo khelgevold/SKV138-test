@@ -1020,17 +1020,6 @@ bookingForm=function(b){
 let v16StatsMode='net';
 function v16SetStatsMode(mode){v16StatsMode=mode==='gross'?'gross':'net';renderStatistics()}
 function v16EstimatedTax(gross){return Math.max(0,gross-15000)*0.85*0.22}
-const v16YearStatsBase=v10YearStats;
-v10YearStats=function(y){
- const stats=v16YearStatsBase(y);
- // Correct the legacy omission of cancelled-booking platform accumulation.
- for(const b of state.bookings.filter(b=>b.cancelled&&Number((b.cancelDate||b.start).slice(0,4))===y)){
-  const a=bookingAmounts(b);
-  const p=stats.platforms[b.platform]||(stats.platforms[b.platform]={gross:0,fees:0,count:0});
-  p.gross+=a.gross;p.fees+=a.fee;
- }
- return stats;
-};
 renderStatistics=function(){
  const metrics=$('statsMetrics');if(!metrics)return;
  const current=v10YearStats(statsYear),previous=v10YearStats(statsYear-1);
