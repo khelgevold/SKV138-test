@@ -14,6 +14,20 @@
 Brukeren ønsker å beholde eksisterende oppgavemal-skjema og regler. Legg til «Privat booking» som ekstra valg i eksisterende «Plattform»-nedtrekk (Alle plattformer, Finn.no, Airbnb, Booking.com, Direkte, Privat booking). «Alle plattformer» skal fortsatt bety utleieplattformene, ikke privat. Når Privat booking er valgt, skal oppgavemalen generere oppgaver for private opphold med samme relevante frister, oppgavetype, gjennomføring og visning i Oppgaver-fanen, tilpasset at private opphold har annen datamodell/skjema enn utleiebookinger. Eksempel: «Skru på varme». Ikke automatisk legg alle utleieoppgaver på privat. Ikke endre kode eller deploy nå; ta med i samlet forbedringspakke etter funksjonstest.
 
 
+## Nye funn til samlet versjonsdiskusjon – 19.11.2026
+Brukeren vil **samle alle forbedringsønsker og diskutere dem samlet før arbeid med neste versjon**. Ingen kodeendringer eller Netlify-publisering nå.
+
+**Oversikt**
+1. Ramme rundt de øverste prognosetallene, samme visuelle prinsipp som rammen under. Overskrift nøyaktig «Prognose år».
+2. I rammen for «utbetalinger og skatt hittil i år»: del eksisterende felt «sum utbetalt + skatt» i to; nytt felt til høyre for «reell skatt i prosent». Brukeren oppgir «netto utbetalt / brutto-plattform». **Avklar formelen i felles gjennomgang**: dette uttrykket kan representere utbetalingsandel snarere enn skatteandel, og «brutto-plattform» må defineres presist. Ikke endre beregning uten avklaring.
+
+**Bookinger**
+3. Gjenopprett tidligere ikoner på bookingoversikt/-kort for stamp, hund, elbillading og sengetøy/håndklær når relevant.
+4. Vis antall gjester på bookingkort i bookingoversikten.
+
+**Tidligere avtalt forbedring:** «Privat booking» som eget valg i eksisterende oppgavemal-plattformvalg, uten å endre skjema ellers. «Alle plattformer» omfatter Finn.no, Airbnb, Booking.com og Direkte, **ikke** Privat booking. Private oppgaver skal genereres fra private opphold med hensyn til egen datastruktur.
+
+
 ---
 
 # GJELDENDE STATUS – 18.11.2026 kl. 20:15 (les først)
