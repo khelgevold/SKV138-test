@@ -1,3 +1,8 @@
+## Kodegjennomgang punkt 1 – plattformgebyrer 19.11.2026
+- Commit `5bae1a1`: bekreftet at gebyrverdi-feltet i `renderPricePanels()` brukte `oninput="priceFeesChanged()"`, og at `priceFeesChanged()` kaller `save()`. Det kunne starte en Neon-lagring for hvert tastetrykk. Endret gebyrverdi til `onchange` slik at redigering lagres ved feltendring/avsluttet redigering; øvrige felt hadde allerede `onchange`. Brukeren må fortsatt verifisere faktisk persistens i TEST.
+- Statisk kontroll: V16.20 flytter gebyrfeltene til nye DOM-grupper, men beholder input-ID-ene som siste gebyrfunksjoner leser. V16.8 gjør Innstillinger-kort til `details` med `summary` inni eksisterende kort; siste sortering finner disse titlene. Dette er kodekontroll, **ikke** visuelt godkjent.
+- **Netlify TEST skal fortsatt ha Stopped builds.** Ingen deploy utført. Fortsett kontroll av oppgaver, state-bridge og sentrale brukerflyter før beskjed om kontrollert TEST-publisering.
+
 ## Kodegjennomgang punkt 1 – 19.11.2026 (Netlify builds stoppet)
 - Brukeren har satt Netlify TEST til **Stopped builds** etter 30–40 automatiske jobber. Ikke be om å aktivere igjen før samlet TEST-kandidat er klar; GitHub-commits skal ikke trigge nye automatiske bygg mens denne innstillingen står.
 - **Bekreftet økonomifeil rettet** i commit `bfc9a10`: `v10YearStats` summerte allerede kansellerte bookinger i `platforms`, mens V16.7-wrapperen la de samme beløpene til én gang til. Den overflødige wrapperen er fjernet. Dette hindrer dobbelttelling av brutto/gebyr per plattform for kanselleringer; samlet årssum var ikke påvirket av akkurat denne wrapperen.
