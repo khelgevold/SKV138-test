@@ -1,3 +1,9 @@
+# PROD-releasekandidat – 19.11.2026
+
+Kandidaten ligger i `release/skv138-prod` fra godkjent TEST-gren. `netlify.toml` velger PROD-bygget. Sett `SKV138_APP_ORIGIN` til eksakt PROD-origin for både bygg og funksjoner, og `SKV138_NEON_AUTH_UPSTREAM` til den offentlige Neon PROD Auth-URL-en for bygget. Bygget genererer same-origin Auth-URL og full /neondb/auth/*-rewrite. Database- og JWT-variabler settes for funksjoner. Ingen PROD-ressurser er opprettet. Neste godkjenningspunkt er separat Neon PROD med tomme appdata og egen Auth. Publisering krever egen godkjenning.
+
+---
+
 # BESLUTNING OG OVERLEVERING – 19.11.2026 – PROD STARTER TOMT
 
 Brukeren har besluttet: **Ingen TEST-data skal flyttes til PROD**. Opprett eget tomt PROD-datamiljø med nødvendig skjema og tilgangskonfigurasjon; ikke kopier bookinger, oppgaver, lager eller andre TEST-data. Dette er en planbeslutning, **ikke** autorisasjon til å opprette eller publisere PROD. Neste chat skal starte PROD-planlegging, ikke nye TEST-funksjonstester.
