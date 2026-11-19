@@ -1,3 +1,9 @@
+# STATUS – 19.11.2026 – neste milepæl
+
+Kodegjennomgang viser at `TEST_DIAG_TOKEN_EXCEPTION` kommer fra `authClient.token()` før backend-GET. Underliggende årsak på installert iPhone-webapp må undersøkes i faktisk PWA-miljø; ingen auth-omgåelse. Commit `29e5858` sikrer kanselleringsskjema ved manglende handlingsrad. Øvrig samlepakke ligger i `feature/neon-test-integration`, ikke funksjonstestet eller publisert. Se øverste `project.md` for komplett omfang og siste commits. Neste milepæl er samlet TEST-publisering etter avklaring, så én målrettet brukerhandling om gangen for iPhone/refresh og sentrale dataflyter. Ikke rør main/PROD. Push og iCal er utsatt.
+
+---
+
 # STATUS – 19.11.2026 – fortsatt TEST-utvikling
 
 Siste commits: `80934c9` retter fullføringskontroll for private sjekkliste-oppgaver; `b0d5dc4` fjerner uverifisert JWT-dekoding fra login-UI. iPhone PWA `TEST_DIAG_TOKEN_EXCEPTION` er **fortsatt åpen**; klientens øvrige TEST-diagnostikk må først fjernes når feilen er diagnostisert og verifisert løst. Les topp i `project.md` og `utviklingsregler.md`. Ikke publiser eller endre PROD uten godkjenning. Prioriter samlet TEST-verifisering av auth/refresh, lagring, private oppgaver, kansellering og skatt. Push/iCal fortsatt utsatt.
