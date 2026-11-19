@@ -1,5 +1,13 @@
 # GJELDENDE STATUS – 18.11.2026 kl. 21:20 (les først)
 
+## Kritiske innloggingsfeil – 19.11.2026 (må løses før PROD)
+**To separate bekreftede brukeropplevelser i Neon TEST:**
+1. **Nettleser:** Brukeren blir logget ut ved hver sideoppdatering/refresh. Forventning: aktiv innloggingssesjon skal beholdes etter refresh.
+2. **iPhone installert webapp/PWA:** Innlogging feiler, mens vanlig Safari på samme telefon fungerer. Tidligere observert `TEST_DIAG_TOKEN_EXCEPTION`, også etter manuelt passord.
+
+**Begge er blokkerende feil for PROD**, ikke ordinære forbedringsønsker. Undersøk målrettet når øvrige testfunn samles til neste rettingspakke; ikke anta at de har samme årsak. Unngå unødvendige tester og deploys. Pushvarsler (prioritet 1) og iCal (prioritet 2) skal vente til øvrig TEST er visuelt og funksjonelt godkjent.
+
+
 ## Prioritering og PROD-data – 19.11.2026
 Brukeren prioriterer **pushvarsler som første neste funksjonsområde** og **iCal som prioritet 2**, men **begge skal vente** til øvrige deler av Neon TEST er visuelt og funksjonelt ferdig/godkjent. Fortsett å samle funn og diskutere samlet før neste versjon. Ingen implementering/deploy nå.
 
