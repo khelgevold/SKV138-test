@@ -1,3 +1,8 @@
+# PUSH FASE 2 – 21.11.2026
+
+TEST commit `0ab0a25` har lagt inn inaktiv `push-sw.js` for mottak/visning/åpning av Oppgaver. Ikke registrert eller deployet. Neste er å etablere sikker eieridentitet, abonnementstabell, sendt-logg, Web Push VAPID, scheduled sender og testvarsel. Unngå påstander om ferdig push før iPhone-test. TEST/PROD holdes adskilt.
+
+---
 # AKTIVT ARBEID – Push i SKV138 TEST – 21.11.2026
 
 Les utviklingsregler og gjeldende kode. PROD er godkjent etter femfunksjonsrelease og korrigert økonomikort-rekkefølge. TEST branch `feature/neon-test-integration`, PROD branch `release/skv138-prod`; `main` urørt. Brukeren har bestilt push kun for oppgaver og kun til egen konto; ett varsel per oppgave, valgfritt per oppgaveregel, tidspunkt 30 min/1 t/2 t/1 dag før. Varme på, klargjøring av som ønskede defaults; ikke aktiver før levering er implementert. Commit `0f6ce77` har kodet innstillinger i TEST uten faktisk push; ikke deployet/testet. Neste: undersøk Neon state-kontrakt, Netlify scheduled functions, Web Push/VAPID og iOS installert PWA; implementer sikker server-side utsending med abonnementsregistrering, oppgave-ID og sendt-logg, samt testknapp. Be om nødvendig identifikasjon av eierens konto før varsler kan sendes. Ingen PROD-deploy uten særskilt godkjenning.
