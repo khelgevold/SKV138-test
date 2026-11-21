@@ -1,3 +1,8 @@
+# PUSH FASE 3 – 21.11.2026 – iPhone opt-in kodet, ikke testet
+
+Commits `9d712d2`, `c00a592`, `924fea9`, `3f8343f`: `push-client.mjs` bundlet via `neon-test-entry.mjs`, pushinnstilling i outer `index.html` etter godkjent innlogging, henter offentlig VAPID-nøkkel fra eierautorisert GET, ber om varslingstillatelse først ved brukertrykk, registrerer `/push-sw.js` og lagrer abonnement via JWT-autorisert POST. Ikke deployet eller testet. Ingen VAPID-nøkler er konfigurert, SQL er ikke kjørt, ingen scheduler/sender finnes. UI er foreløpig teknisk kontroll i outer shell og må vurderes for plassering før PROD. Push aktiveres ikke automatisk. Merk at test- og prod-bundler/entrypoints er forskjellige: PROD må integreres særskilt etter godkjenning.
+
+---
 # PUSH FASE 2 – 21.11.2026 – servergrunnlag kodet, ikke deployet
 
 TEST har nå `backend-draft/push-subscription.mjs` og Netlify-entrypoint for GET/POST/DELETE av pushabonnement. Serveren verifiserer Neon JWT, `skv138_access`, `SKV138_PUSH_OWNER_USER_ID` og Origin ved endringer; ingen andre brukere kan abonnere. `backend-draft/push-migration.sql` inneholder kun nye tabeller for abonnement og sendt-ID, **SQL er ikke kjørt**. Ingen VAPID, registreringsknapp, tidsstyrt sender eller utsending er implementert. Push kan ikke fungere ennå. Krever eierens Neon Auth `sub` (ikke e-post) som hemmelig miljøvariabel i TEST og separat i PROD. Ikke deploy eller kjør SQL uten godkjenning. Gjennomgå krav om eksakt ett varsel og retry-semantikk ved implementering av sender.
