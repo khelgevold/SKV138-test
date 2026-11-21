@@ -3,7 +3,7 @@ import { SKV138_TEST_AUTH_URL } from './neon-test-config.mjs';
 const endpoint='/.netlify/functions/skv138-push-subscription';
 async function tokenFor(authClient){
   try{const result=await authClient.token();if(!result?.error&&result?.data?.token)return result.data.token}catch{}
-  const response=await fetch(SKV138_TEST_AUTH_URL.replace(/\\/$/,'')+'/token',{credentials:'include'});
+  const response=await fetch(SKV138_TEST_AUTH_URL.replace(/\/$/,'')+'/token',{credentials:'include'});
   if(!response.ok)throw new Error('Kunne ikke hente innlogging');
   const data=await response.json();if(!data.token)throw new Error('Mangler innlogging');return data.token;
 }
