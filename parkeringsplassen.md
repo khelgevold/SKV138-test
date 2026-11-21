@@ -1,3 +1,8 @@
+# AKTIV PRIORITET – 21.11.2026
+
+Pushvarsler er flyttet fra utsatt til aktiv TEST-utvikling. Kun til eierens konto; kun oppgaver; på/av og ledetid per oppgaveregel; ett varsel per oppgave; ikke for fullførte/kansellerte. Fase 1 innstillinger kodet i TEST `0f6ce77`, ikke publisert, ingen varsler sendes ennå. Dynamisk iCal fortsatt utsatt.
+
+---
 # Parkeringsplassen – SKV138
 Opprettet: 2026-11-18.
 
