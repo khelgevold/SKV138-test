@@ -13,3 +13,7 @@ Her registreres utviklingsønsker som er diskutert og avtalt utsatt. Dette er ik
 - Senere: eget PROD-miljø og kontrollert produksjonssetting etter testing/godkjenning.
 
 Legg kun til ønsker som brukeren har godkjent for senere vurdering. Fjern eller merk som gjennomført når de implementeres.
+
+## Godkjent design – iPhone-ikon (21.11.2026)
+
+Brukeren har godkjent siste genererte SKV138-ikon: mørk blå vinternatt, hytta med faktisk bygningsform (sort kledning, bratt saltak, høy glassgavl, sideinngang), tydelig mer snø på tak og terreng, varm vindusbelysning og teksten «SKV138». Originalbildet er generert i ChatGPT-samtalen 21.11.2026, 1254 × 1254 PNG. **Selve PNG-filen er ennå ikke lastet opp til GitHub**; den må legges inn som bildeasset før implementasjon. Bruk ikonet som apple-touch-icon/PWA-ikon i neste samlede TEST-versjon, og kontroller iPhone-hjemskjerm. Headerbilde er utsatt og skal ikke inkluderes nå.
