@@ -1,3 +1,8 @@
+# PUSH FASE 2 – 21.11.2026 – delvis implementert, ikke deployet
+
+TEST commit `0ab0a25` legger til isolert `backend-draft/test-site/push-sw.js`: kan vise kun `kind=skv138-task`, viser varsel og åpner Oppgaver. Worker er **ikke registrert**, ingen VAPID-nøkler, push-abonnementer, server-endepunkt, planlagt utsending eller database-sendelogger finnes ennå. Ingen varsler sendes. Neste: serverautorisert eier-ID, Neon-tabeller for abonnement og atomisk deduplisering, planlagt Netlify-jobb med Europe/Oslo-frister og kansellerings/fullføringskontroll. Kontroller Netlify-planens planleggingsmuligheter. Ikke publiser PROD.
+
+---
 # AKTIV UTVIKLING – 21.11.2026 – Pushvarsler i TEST (ikke publisert)
 
 Forrige femfunksjonsrelease er brukerbekreftet fungerende i PROD, inkludert korrigert rekkefølge Utbetalt over Prognose (PROD commit `3173833`). Neste prioritet: push kun for oppgaver og kun til eierens konto; innstilling per oppgaveregel, valgfri varslingstid, maksimalt ett varsel per oppgave, ingen varsling for fullførte/kansellerte oppgaver. Varme ønskes på som standard, klargjøring av. Testvarselknapp ønskes. Ingen PROD-endring autorisert.
