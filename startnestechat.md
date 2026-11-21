@@ -1,3 +1,8 @@
+# PUSH FASE 2 – status 21.11.2026
+
+TEST commits `4b0a280`, `4d1b343`, `7c2f146` legger til eierautorisert abonnement-endepunkt og `push-migration.sql`, ikke deployet eller kjørt. Krever `SKV138_PUSH_OWNER_USER_ID` (Neon Auth subject) og eksisterende Neon JWT/DB miljøvariabler. Mangler VAPID, klientregistrering, testvarsel, planlagt sender og faktisk push. Neste: avklar Netlify scheduled job-kadens/plan og implementer fullført-/kansellert-kontroll samt deduplisering, uten PROD-endring. Se øverste project.md.
+
+---
 # PUSH FASE 2 – 21.11.2026
 
 TEST commit `0ab0a25` har lagt inn inaktiv `push-sw.js` for mottak/visning/åpning av Oppgaver. Ikke registrert eller deployet. Neste er å etablere sikker eieridentitet, abonnementstabell, sendt-logg, Web Push VAPID, scheduled sender og testvarsel. Unngå påstander om ferdig push før iPhone-test. TEST/PROD holdes adskilt.
