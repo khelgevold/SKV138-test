@@ -41,7 +41,7 @@ export async function handler(event){
     if(access.rowCount!==1)return reply(403,{error:'Access denied'});
     if(event.httpMethod==='GET'){
       const result=await client.query('SELECT COUNT(*)::int AS count FROM public.skv138_push_subscriptions WHERE user_id=$1',[id]);
-      return reply(200,{count:result.rows[0].count});
+      return reply(200,{count:result.rows[0].count,publicKey:process.env.SKV138_VAPID_PUBLIC_KEY||null});
     }
     if(Buffer.byteLength(event.body||'','utf8')>8192)return reply(413,{error:'Payload too large'});
     let data;try{data=JSON.parse(event.body||'')}catch{return reply(400,{error:'Invalid JSON'})}
