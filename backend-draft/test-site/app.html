@@ -469,21 +469,6 @@ const settingsCards=Array.from(document.querySelectorAll('#innstillinger .card')
 const timingCard=settingsCards.find(c=>c.querySelector('#settingHeat'));
 if(timingCard){const fields=timingCard.querySelectorAll('label');fields.forEach(label=>{if(label.querySelector('#settingHeat,#settingGate,#settingHeatOff'))label.remove()});timingCard.querySelectorAll('.field-grid').forEach(grid=>{if(!grid.children.length)grid.remove()});timingCard.querySelector('.hint:last-child')?.remove();timingCard.insertAdjacentHTML('beforeend','<p class="hint">Frister og oppgaver redigeres nå under Oppgaveregler nedenfor.</p>')}
 const css=document.createElement('style');css.textContent='.stock-edit{display:block;margin-top:7px;font-size:12px;padding:7px 10px}.stock-editor{padding:14px;border:1px solid var(--line);border-radius:14px;margin-bottom:12px}.hidden-stock{margin-top:12px;border-top:1px solid var(--line);padding-top:12px}.hidden-stock summary{cursor:pointer;padding:8px 0}.message-row{align-items:flex-start}';document.head.appendChild(css);
-/* Consistent YTD and forecast cards. Only registered payouts count as actuals. */
-const skvMatchingOverviewBase=renderOverview;
-renderOverview=function(){
- skvMatchingOverviewBase();
- const actual=$('v15YtdMetrics'),forecast=$('skvForecastFrame');
- if(!actual||!forecast)return;
- const paidBookings=state.bookings.filter(b=>b.paid&&b.paidDate&&Number(b.paidDate.slice(0,4))===year&&Number.isFinite(Number(b.paidAmount)));
- const paid=paidBookings.reduce((sum,b)=>sum+Number(b.paidAmount),0);
- const fees=paidBookings.reduce((sum,b)=>sum+bookingAmounts(b).fee,0);
- const tax=v15TaxYtd(year);
- actual.innerHTML=[['Bruttoinntekt',paid+fees],['Plattformgebyrer',fees],['Estimert skatt',tax],['Netto etter skatt',paid-tax]].map(([label,value])=>'<div class="metric"><small>'+label+'</small><b>'+money(value)+'</b></div>').join('');
- const section=actual.parentElement;
- section.querySelector('h2').textContent='Utbetalt hittil i år';
- forecast.parentElement.insertBefore(section,forecast);
-};
 
 /* Next release: two-night default for new rental bookings only. */
 const skvBookingFormBase=bookingForm;
@@ -1915,6 +1900,23 @@ renderOverview=function(){
   if(paidCard&&!netCard){const paid=state.bookings.reduce((sum,b)=>sum+(b.paid&&b.paidDate&&Number(b.paidDate.slice(0,4))===year?Number(b.paidAmount)||0:0),0);const card=document.createElement('div');card.className='metric';const label=document.createElement('small');label.textContent='Estimert netto hittil i år';const value=document.createElement('b');value.textContent=money(paid-tax);card.append(label,value);old?.before(card);}
  }
 };
+
+/* Consistent YTD and forecast cards. Only registered payouts count as actuals. */
+const skvMatchingOverviewBase=renderOverview;
+renderOverview=function(){
+ skvMatchingOverviewBase();
+ const actual=$('v15YtdMetrics'),forecast=$('skvForecastFrame');
+ if(!actual||!forecast)return;
+ const paidBookings=state.bookings.filter(b=>b.paid&&b.paidDate&&Number(b.paidDate.slice(0,4))===year&&Number.isFinite(Number(b.paidAmount)));
+ const paid=paidBookings.reduce((sum,b)=>sum+Number(b.paidAmount),0);
+ const fees=paidBookings.reduce((sum,b)=>sum+bookingAmounts(b).fee,0);
+ const tax=v15TaxYtd(year);
+ actual.innerHTML=[['Bruttoinntekt',paid+fees],['Plattformgebyrer',fees],['Estimert skatt',tax],['Netto etter skatt',paid-tax]].map(([label,value])=>'<div class="metric"><small>'+label+'</small><b>'+money(value)+'</b></div>').join('');
+ const section=actual.parentElement;
+ section.querySelector('h2').textContent='Utbetalt hittil i år';
+ forecast.parentElement.insertBefore(section,forecast);
+};
+
 
 render();
 // Restore the last main tab after a refresh; sessionStorage contains UI state only.
