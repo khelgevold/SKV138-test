@@ -1,0 +1,17 @@
+{
+  "name": "SKV138",
+  "short_name": "SKV138",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#101f1a",
+  "theme_color": "#101f1a",
+  "icons": [
+    {
+      "src": "/skv138-icon.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
