@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="nb"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SKV138 – Neon TEST</title>
+<title>SKV138</title>
 <meta name="theme-color" content="#101f1a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,7 +12,7 @@ h1{margin:0 0 8px}p{line-height:1.5;color:#50695a}label{display:block;margin:18p
 input{width:100%;padding:13px;font:inherit;border:1px solid #a7b9ae;border-radius:9px}
 button{width:100%;margin-top:22px;padding:13px;border:0;border-radius:9px;background:#245c43;color:white;font:inherit;font-weight:600}
 button:disabled{opacity:.6}.secondary{background:transparent;color:#245c43;border:1px solid #9bb8a5;margin-top:8px}[hidden]{display:none!important}#status[data-error=true]{color:#a12a2a}#status{min-height:1.5em}
-small{color:#526b5c}#authorized{display:none}body.app-ready{display:block;padding:0;background:#101f1a}body.app-ready>main{display:none}#app-frame{display:none;width:100%;height:100dvh;border:0}body.app-ready #app-frame{display:block}#save-alert{display:none;position:fixed;top:0;left:0;right:0;z-index:1000;background:#fff1dc;color:#633c00;padding:12px 16px;text-align:center}body.save-blocked #save-alert{display:block}body.save-blocked #app-frame{pointer-events:none;filter:grayscale(.55)}body.restoring-session>main{visibility:hidden}body.restoring-session:not(.app-ready)::before{content:'Gjenoppretter innlogging …';position:fixed;inset:0;display:grid;place-items:center;color:#245c43;font-weight:600}
+small{color:#526b5c}#authorized{display:none}body.app-ready{display:block;padding:0;background:#101f1a}body.app-ready>main{display:none}#app-frame{display:none;width:100%;height:100dvh;border:0}body.app-ready #app-frame{display:block}#save-alert{display:none;position:fixed;top:0;left:0;right:0;z-index:1000;background:#fff1dc;color:#633c00;padding:12px 16px;text-align:center}body.save-blocked #save-alert{display:block}body.save-blocked #app-frame{pointer-events:none;filter:grayscale(.55)}body.app-ready #skv-logout{display:block;position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:12px;z-index:30;width:auto;margin:0;padding:7px 11px;font-size:12px;background:#263c33;border:1px solid #71877a}#skv-logout{display:none}body.restoring-session>main{visibility:hidden}body.restoring-session:not(.app-ready)::before{content:'Gjenoppretter innlogging …';position:fixed;inset:0;display:grid;place-items:center;color:#245c43;font-weight:600}
 </style></head><body><main>
 <h1>SKV138</h1><p>Innlogging – isolert TEST-miljø.</p>
 <form id="login"><label for="email">E-post</label><input id="email" type="email" autocomplete="username" required>
@@ -26,13 +26,29 @@ small{color:#526b5c}#authorized{display:none}body.app-ready{display:block;paddin
 <form id="new-password-form" hidden><label for="new-password">Nytt passord</label><input id="new-password" type="password" autocomplete="new-password" minlength="8" required><label for="confirm-password">Gjenta passord</label><input id="confirm-password" type="password" autocomplete="new-password" minlength="8" required><button id="new-password-submit" type="submit">Oppdater passord</button><p id="new-password-status" role="status" aria-live="polite"></p></form>
 <section id="authorized"><h2>Tilgang bekreftet</h2><p>Backend har bekreftet at kontoen har tilgang. Hytteappen er ikke koblet til dette TEST-skallet ennå.</p></section>
 <small>Ingen passord lagres i denne siden. Ikke bruk PROD-data i TEST.</small>
-</main><div id="save-alert" role="alert"><span id="save-message">Lagring er stoppet.</span> <button id="download-recovery" type="button">Last ned ulagrede data</button></div><iframe id="app-frame" title="SKV138 hytteapp" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-downloads"></iframe>
+</main><button id="skv-logout" type="button">Logg ut</button><div id="save-alert" role="alert"><span id="save-message">Lagring er stoppet.</span> <button id="download-recovery" type="button">Last ned ulagrede data</button></div><iframe id="app-frame" title="SKV138 hytteapp" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-downloads"></iframe>
 <script type="module">
 import { startConfiguredSkv138TestLogin, createNeonTestSession, mountPasswordResetForm, mountNewPasswordForm, readResetToken, clearResetTokenFromUrl, createV1623StateBridge } from "./neon-test-entry.js";
 const status=document.querySelector("#status");
 try {
   const neonLogin=createNeonTestSession();
   const {login}=neonLogin;
+  document.querySelector("#skv-logout").addEventListener("click",async()=>{
+    const button=document.querySelector("#skv-logout");
+    const bridge=window.__SKV138_TEST_BRIDGE__;
+    if(bridge){
+      const state=bridge.getStatus();
+      if(state.dirty||state.blocked){alert("Lagring er ikke fullført. Avslutt ikke økten før dataene er lagret eller lastet ned.");return}
+    }
+    button.disabled=true;button.textContent="Logger ut …";
+    try{
+      const result=await login.signOut();
+      if(result?.ok===false)throw new Error("Sign-out failed");
+      window.__SKV138_TEST_BRIDGE__=null;
+      window.location.reload();
+    }catch{button.disabled=false;button.textContent="Logg ut";alert("Utlogging mislyktes. Prøv igjen.");}
+  });
+
   const token=readResetToken(window.location.href,window.location.origin);
   if(token){
     document.querySelector("#login").hidden=true;
