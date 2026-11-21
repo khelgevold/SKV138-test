@@ -1887,6 +1887,22 @@ renderOverview=function(){
  }
 };
 
+/* Consistent YTD and forecast cards. Only registered payouts count as actuals. */
+const skvMatchingOverviewBase=renderOverview;
+renderOverview=function(){
+ skvMatchingOverviewBase();
+ const actual=$('v15YtdMetrics'),forecast=$('skvForecastFrame');
+ if(!actual||!forecast)return;
+ const paidBookings=state.bookings.filter(b=>b.paid&&b.paidDate&&Number(b.paidDate.slice(0,4))===year&&Number.isFinite(Number(b.paidAmount)));
+ const paid=paidBookings.reduce((sum,b)=>sum+Number(b.paidAmount),0);
+ const fees=paidBookings.reduce((sum,b)=>sum+bookingAmounts(b).fee,0);
+ const tax=v15TaxYtd(year);
+ actual.innerHTML=[['Bruttoinntekt',paid+fees],['Plattformgebyrer',fees],['Estimert skatt',tax],['Netto etter skatt',paid-tax]].map(([label,value])=>'<div class="metric"><small>'+label+'</small><b>'+money(value)+'</b></div>').join('');
+ const section=actual.parentElement;
+ section.querySelector('h2').textContent='Utbetalt hittil i år';
+ forecast.parentElement.insertBefore(section,forecast);
+};
+
 /* Next release: two-night default for new rental bookings only. */
 const skvBookingFormBase=bookingForm;
 bookingForm=function(booking){
