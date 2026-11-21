@@ -1,3 +1,9 @@
+# TEST-utvikling – 21.11.2026 (ikke publisert)
+
+Brukeren har godkjent samlet utvikling i TEST, men skal først aktivere Netlify etter beskjed. Følgende er kodet i `feature/neon-test-integration`, **ikke deployet eller funksjonstestet**: nye utleiebookinger foreslår to netter etter valgt ankomst, avreise kan endres til én natt; økonomikort viser utbetalt først og prognose under, begge med brutto/gebyrer/estimert skatt/netto; nettlesertittel SKV138; egen Logg ut-knapp som kaller Better Auth signOut og laster inn på nytt, med vern mot ulagrede data. Faktisk brutto i YTD-kort er beregnet som registrert netto utbetalt pluss gebyr på de utbetalte bookingene; skatt beholder eksisterende YTD-beregningsmetode. Dette må gjennomgås i målrettet TEST før PROD. Godkjent iPhone-ikon (siste snørike versjon fra samtalen) er **ennå ikke lagt inn som PNG-asset i GitHub**, og PWA-ikonkonfigurasjon gjenstår. Header og Melindas konto er utsatt. Ingen PROD/main-endring. Ikke be bruker aktivere Netlify før ikon og samlet kode er klare.
+
+---
+
 # START NESTE CHAT – SKV138 PROD-FORBEREDELSE – 19.11.2026
 
 Vi fortsetter SKV138. GitHub: `khelgevold/SKV138-test`; arbeidsgren: `feature/neon-test-integration`. TEST: https://skv138-neon-test.netlify.app. `main` inneholder godkjent V16.23 og skal ikke endres uten eksplisitt godkjenning. Eget PROD-miljø finnes ennå ikke.
