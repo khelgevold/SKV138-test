@@ -1,3 +1,8 @@
+# PUSH FASE 2 – 21.11.2026 – servergrunnlag kodet, ikke deployet
+
+TEST har nå `backend-draft/push-subscription.mjs` og Netlify-entrypoint for GET/POST/DELETE av pushabonnement. Serveren verifiserer Neon JWT, `skv138_access`, `SKV138_PUSH_OWNER_USER_ID` og Origin ved endringer; ingen andre brukere kan abonnere. `backend-draft/push-migration.sql` inneholder kun nye tabeller for abonnement og sendt-ID, **SQL er ikke kjørt**. Ingen VAPID, registreringsknapp, tidsstyrt sender eller utsending er implementert. Push kan ikke fungere ennå. Krever eierens Neon Auth `sub` (ikke e-post) som hemmelig miljøvariabel i TEST og separat i PROD. Ikke deploy eller kjør SQL uten godkjenning. Gjennomgå krav om eksakt ett varsel og retry-semantikk ved implementering av sender.
+
+---
 # PUSH FASE 2 – 21.11.2026 – delvis implementert, ikke deployet
 
 TEST commit `0ab0a25` legger til isolert `backend-draft/test-site/push-sw.js`: kan vise kun `kind=skv138-task`, viser varsel og åpner Oppgaver. Worker er **ikke registrert**, ingen VAPID-nøkler, push-abonnementer, server-endepunkt, planlagt utsending eller database-sendelogger finnes ennå. Ingen varsler sendes. Neste: serverautorisert eier-ID, Neon-tabeller for abonnement og atomisk deduplisering, planlagt Netlify-jobb med Europe/Oslo-frister og kansellerings/fullføringskontroll. Kontroller Netlify-planens planleggingsmuligheter. Ikke publiser PROD.
