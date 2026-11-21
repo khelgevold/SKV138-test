@@ -1,3 +1,8 @@
+# PUSH FASE 3 – 21.11.2026
+
+TEST har nå `push-client.mjs` og innloggingsstyrt opt-in i `test-site/index.html`, kun for serverautorisert eier. Ikke deployet/testet. SQL `backend-draft/push-migration.sql` ikke kjørt. Ingen VAPID-nøkler, sender eller planlagt jobb. Neste er å velge enkel tidsstyrt arkitektur og implementere sender med korrekt oppgaveutledning og fullført-/kansellert-kontroll. Ikke publiser PROD. Se øverste project.md.
+
+---
 # PUSH FASE 2 – status 21.11.2026
 
 TEST commits `4b0a280`, `4d1b343`, `7c2f146` legger til eierautorisert abonnement-endepunkt og `push-migration.sql`, ikke deployet eller kjørt. Krever `SKV138_PUSH_OWNER_USER_ID` (Neon Auth subject) og eksisterende Neon JWT/DB miljøvariabler. Mangler VAPID, klientregistrering, testvarsel, planlagt sender og faktisk push. Neste: avklar Netlify scheduled job-kadens/plan og implementer fullført-/kansellert-kontroll samt deduplisering, uten PROD-endring. Se øverste project.md.
