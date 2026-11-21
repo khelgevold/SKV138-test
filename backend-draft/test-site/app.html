@@ -1,4 +1,4 @@
-<!doctype html><html lang="no"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SKV138 V16 – Neon TEST</title><style>
+<!doctype html><html lang="no"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SKV138</title><style>
 :root{font-family:Inter,system-ui,-apple-system,sans-serif;color:#26352f;background:#f7f7f2;--ink:#26352f;--line:#e5e9e1;--soft:#f0f3ec;--accent:#466b59}*{box-sizing:border-box}body{margin:0}main{max-width:790px;margin:auto;padding:22px 16px 108px}header{background:#e8eee6;color:#26352f;padding:23px 18px;border-bottom:1px solid #dce5da}header>div{max-width:790px;margin:auto}h1{margin:0;font-size:25px;letter-spacing:-.6px}h2{font-size:19px;letter-spacing:-.3px}small,.muted{color:#69776d}.card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:18px;margin:13px 0;box-shadow:0 2px 10px #26352f08}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.metric{background:#f0f3ec;border-radius:13px;padding:15px}.metric b{display:block;font-size:20px;margin-top:8px;letter-spacing:-.5px}button,input,select{font:inherit}button{cursor:pointer;border:1px solid #d6dfd4;border-radius:10px;padding:10px 12px;background:#fff;color:#385444}button.primary{background:#466b59;color:#fff;border-color:#466b59}button:disabled{opacity:.45}button:hover{filter:brightness(.97)}input,select{width:100%;padding:11px;border:1px solid #d6dfd4;border-radius:10px;background:#fff;color:#26352f}input:focus,select:focus{outline:2px solid #9eb6a3;outline-offset:1px}label{display:block;font-size:13px;margin:12px 0 5px}.row{display:flex;gap:10px;align-items:center;justify-content:space-between}.row>div{min-width:0}.row.wrap{flex-wrap:wrap}.task{display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid #edf0e9;padding:13px 0}.task:last-child{border:0}.task input{width:19px;height:19px;flex:none;accent-color:#466b59}.task strong{display:block}.tag{display:inline-block;border-radius:8px;padding:5px 9px;background:#edf2e9;color:#496351;font-size:12px}.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -3px 15px #26352f08}.nav button{border:0;border-radius:0;flex:1;max-width:158px;font-size:11px;padding:12px 2px;color:#69776d}.nav button.active{background:#edf2e9;color:#2f503e;font-weight:700}section{display:none}section.active{display:block}.check{display:flex;align-items:center;gap:8px;margin:11px 0}.check input{width:18px;accent-color:#466b59}.empty{padding:24px;text-align:center;color:#69776d}.sub{font-size:12px;color:#69776d}.pill{padding:6px 10px}.year{font-size:20px;font-weight:700}.hint{font-size:12px;color:#69776d;line-height:1.5}.notice{padding:12px 14px;background:#f0f3ec;border-radius:12px;margin:12px 0;font-size:13px}.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field-grid label{min-width:0}@media(min-width:650px){.nav{position:static;margin:auto;max-width:790px;border:1px solid var(--line);border-radius:12px}.nav button{font-size:14px}main{padding-bottom:20px}}
 .more-link{width:100%;border:0;border-radius:0;border-bottom:1px solid var(--line);padding:17px 3px;display:flex;align-items:center;justify-content:space-between;text-align:left;background:transparent;color:var(--ink)}.more-link:last-child{border-bottom:0}.more-link small{display:block;margin-top:5px;font-size:12px}.more-link>span:last-child{font-size:24px;color:#69776d}
 
@@ -1885,6 +1885,19 @@ renderOverview=function(){
   const netCard=[...ytd.querySelectorAll('.metric')].find(el=>el.querySelector('small')?.textContent.trim()==='Estimert netto hittil i år');
   if(paidCard&&!netCard){const paid=state.bookings.reduce((sum,b)=>sum+(b.paid&&b.paidDate&&Number(b.paidDate.slice(0,4))===year?Number(b.paidAmount)||0:0),0);const card=document.createElement('div');card.className='metric';const label=document.createElement('small');label.textContent='Estimert netto hittil i år';const value=document.createElement('b');value.textContent=money(paid-tax);card.append(label,value);old?.before(card);}
  }
+};
+
+/* Next release: two-night default for new rental bookings only. */
+const skvBookingFormBase=bookingForm;
+bookingForm=function(booking){
+ skvBookingFormBase(booking);
+ if(booking)return;
+ const start=$('bs'),end=$('be');
+ if(!start||!end)return;
+ const plusDays=(date,days)=>{const [y,m,d]=date.split('-').map(Number);return new Date(Date.UTC(y,m-1,d+days)).toISOString().slice(0,10)};
+ const sync=()=>{if(start.value)end.value=plusDays(start.value,2)};
+ start.addEventListener('change',sync);
+ if(start.value&&!end.value)sync();
 };
 
 render();
