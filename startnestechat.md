@@ -1,3 +1,8 @@
+# PUSH FASE 4 – 21.11.2026
+
+TEST har ren `backend-draft/push-task-schedule.mjs` for oppgaveutledning og Europe/Oslo-tid (commit `364c5a3`), samt rettet JWT Bearer-regex i push-endepunkt (`1d77be9`). Ingen scheduler, VAPID-sending eller atomisk sendelogging ennå; ingen SQL/deploy. Neste steg er implementasjon og målrettet test av senderen, etter verifisering av Netlify scheduled functions og hensiktsmessig tidsvindu. PROD urørt.
+
+---
 # PUSH FASE 3 – 21.11.2026
 
 TEST har nå `push-client.mjs` og innloggingsstyrt opt-in i `test-site/index.html`, kun for serverautorisert eier. Ikke deployet/testet. SQL `backend-draft/push-migration.sql` ikke kjørt. Ingen VAPID-nøkler, sender eller planlagt jobb. Neste er å velge enkel tidsstyrt arkitektur og implementere sender med korrekt oppgaveutledning og fullført-/kansellert-kontroll. Ikke publiser PROD. Se øverste project.md.
