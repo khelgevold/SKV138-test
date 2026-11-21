@@ -1,3 +1,8 @@
+# PUSH FASE 4 – 21.11.2026 – tidsberegning kodet, ikke aktivert
+
+TEST `backend-draft/push-task-schedule.mjs` (commit `7477938`, regexretting `364c5a3`) utleder kandidater for varsling fra eksisterende booking-/privatoppholdsdata og oppgaveregler, med Europe/Oslo-tid, valgfri ledetid, utelukkelse av kansellerte bookinger, deaktiverte regler og fullførte oppgaver. Dette er **kun en ren beregningsmodul**, ikke en scheduled Netlify-funksjon; ingen push blir sendt. `push-subscription.mjs` Bearer-regex rettet `1d77be9`. Mangler Web Push/VAPID sender, planlagt kjøring, atomisk sendelogging, TEST SQL og konfigurering. Ingen funksjonstester utført, ingen deploy.
+
+---
 # PUSH FASE 3 – 21.11.2026 – iPhone opt-in kodet, ikke testet
 
 Commits `9d712d2`, `c00a592`, `924fea9`, `3f8343f`: `push-client.mjs` bundlet via `neon-test-entry.mjs`, pushinnstilling i outer `index.html` etter godkjent innlogging, henter offentlig VAPID-nøkkel fra eierautorisert GET, ber om varslingstillatelse først ved brukertrykk, registrerer `/push-sw.js` og lagrer abonnement via JWT-autorisert POST. Ikke deployet eller testet. Ingen VAPID-nøkler er konfigurert, SQL er ikke kjørt, ingen scheduler/sender finnes. UI er foreløpig teknisk kontroll i outer shell og må vurderes for plassering før PROD. Push aktiveres ikke automatisk. Merk at test- og prod-bundler/entrypoints er forskjellige: PROD må integreres særskilt etter godkjenning.
