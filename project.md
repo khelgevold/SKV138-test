@@ -1,3 +1,9 @@
+# TEST-utvikling – 21.11.2026 (ikke publisert)
+
+Brukeren har godkjent samlet utvikling i TEST, men skal først aktivere Netlify etter beskjed. Følgende er kodet i `feature/neon-test-integration`, **ikke deployet eller funksjonstestet**: nye utleiebookinger foreslår to netter etter valgt ankomst, avreise kan endres til én natt; økonomikort viser utbetalt først og prognose under, begge med brutto/gebyrer/estimert skatt/netto; nettlesertittel SKV138; egen Logg ut-knapp som kaller Better Auth signOut og laster inn på nytt, med vern mot ulagrede data. Faktisk brutto i YTD-kort er beregnet som registrert netto utbetalt pluss gebyr på de utbetalte bookingene; skatt beholder eksisterende YTD-beregningsmetode. Dette må gjennomgås i målrettet TEST før PROD. Godkjent iPhone-ikon (siste snørike versjon fra samtalen) er **ennå ikke lagt inn som PNG-asset i GitHub**, og PWA-ikonkonfigurasjon gjenstår. Header og Melindas konto er utsatt. Ingen PROD/main-endring. Ikke be bruker aktivere Netlify før ikon og samlet kode er klare.
+
+---
+
 # BESLUTNING OG OVERLEVERING – 19.11.2026 – PROD STARTER TOMT
 
 Brukeren har besluttet: **Ingen TEST-data skal flyttes til PROD**. Opprett eget tomt PROD-datamiljø med nødvendig skjema og tilgangskonfigurasjon; ikke kopier bookinger, oppgaver, lager eller andre TEST-data. Dette er en planbeslutning, **ikke** autorisasjon til å opprette eller publisere PROD. Neste chat skal starte PROD-planlegging, ikke nye TEST-funksjonstester.
