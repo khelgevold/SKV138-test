@@ -13,7 +13,7 @@ function config(){
   if(!pool)pool=new pg.Pool({connectionString:process.env.DATABASE_URL,max:2});
 }
 async function userId(event){
-  const token=/^Bearer (\\S+)$/i.exec(event.headers.authorization||event.headers.Authorization||'')?.[1];
+  const token=/^Bearer (\S+)$/i.exec(event.headers.authorization||event.headers.Authorization||'')?.[1];
   if(!token)return null;
   const opts={issuer:process.env.NEON_AUTH_ISSUER,algorithms:['EdDSA']};
   if(process.env.NEON_AUTH_AUDIENCE)opts.audience=process.env.NEON_AUTH_AUDIENCE;
