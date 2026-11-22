@@ -1,3 +1,8 @@
+# PUSH FASE 6 – 22.11.2026 – testvarsel kodet, ikke deployet
+
+TEST `push-subscription.mjs` commit `30a433f` støtter nå eierautorisert `POST {action:'test'}` som sender Web Push til nyeste abonnement uten oppgave eller sendt-logg. `test-site/index.html` commit `f5b1d16` har testknapp, `push-client.mjs` commit `b673414` kobler knapp til API etter abonnement. **Ikke kjørt/testet/deployet.** Ingen SQL/VAPID-miljøvariabler satt. Gjenstår: verifisere Netlify-konfigurasjon og build (inkl. avhengighetslås), identifisere eier-sub, generere VAPID uten å committe private key, kjøre SQL i Neon TEST, konfigurere TEST, publisere etter eksplisitt godkjenning og teste på iPhone. PROD urørt.
+
+---
 # PUSH FASE 5 – 22.11.2026 – scheduled sender kodet, ikke deployet
 
 TEST commit `8f6c0d6` legger til `backend-draft/netlify-functions/skv138-push-scheduled.mjs` med Netlify schedule `*/15 * * * *`, `web-push` VAPID, Neon-kontroll av owner access, oppgavedue-kandidater fra `push-task-schedule.mjs` og atomisk `INSERT ... ON CONFLICT DO NOTHING` i `skv138_push_sent` før sendeforsøk. Kun nyeste abonnement brukes for ett varsel per oppgave; 404/410 fjerner ugyldig abonnement. `package.json` oppdatert med `web-push` (`ea41e36`). **Ikke kjørt, ikke testet, ikke publisert**. VIKTIG: 'at most once' sendeforsøk kan miste varsel ved nettfeil, men unngår duplikat; scheduler på 15 min kan forsinkes. Må kontrollere Netlify-build med manglende lockfile, faktisk planstøtte og serverless packaging. SQL ikke kjørt, VAPID ikke satt. Testvarsel ikke implementert. Ikke deploy PROD.
