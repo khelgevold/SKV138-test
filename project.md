@@ -1,3 +1,8 @@
+# PUSH FASE 5 – 22.11.2026 – scheduled sender kodet, ikke deployet
+
+TEST commit `8f6c0d6` legger til `backend-draft/netlify-functions/skv138-push-scheduled.mjs` med Netlify schedule `*/15 * * * *`, `web-push` VAPID, Neon-kontroll av owner access, oppgavedue-kandidater fra `push-task-schedule.mjs` og atomisk `INSERT ... ON CONFLICT DO NOTHING` i `skv138_push_sent` før sendeforsøk. Kun nyeste abonnement brukes for ett varsel per oppgave; 404/410 fjerner ugyldig abonnement. `package.json` oppdatert med `web-push` (`ea41e36`). **Ikke kjørt, ikke testet, ikke publisert**. VIKTIG: 'at most once' sendeforsøk kan miste varsel ved nettfeil, men unngår duplikat; scheduler på 15 min kan forsinkes. Må kontrollere Netlify-build med manglende lockfile, faktisk planstøtte og serverless packaging. SQL ikke kjørt, VAPID ikke satt. Testvarsel ikke implementert. Ikke deploy PROD.
+
+---
 # PUSH FASE 4 – 21.11.2026 – tidsberegning kodet, ikke aktivert
 
 TEST `backend-draft/push-task-schedule.mjs` (commit `7477938`, regexretting `364c5a3`) utleder kandidater for varsling fra eksisterende booking-/privatoppholdsdata og oppgaveregler, med Europe/Oslo-tid, valgfri ledetid, utelukkelse av kansellerte bookinger, deaktiverte regler og fullførte oppgaver. Dette er **kun en ren beregningsmodul**, ikke en scheduled Netlify-funksjon; ingen push blir sendt. `push-subscription.mjs` Bearer-regex rettet `1d77be9`. Mangler Web Push/VAPID sender, planlagt kjøring, atomisk sendelogging, TEST SQL og konfigurering. Ingen funksjonstester utført, ingen deploy.
