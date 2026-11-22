@@ -1,3 +1,8 @@
+# PUSH TESTKLARGJØRING – 22.11.2026
+
+Push-regresjonstester lagt til TEST i `backend-draft/push-task-schedule.test.mjs` (`c4beb0e`), ikke kjørt. `backend-draft/netlify.template.toml` er inaktiv, faktisk Netlify TEST-konfigurasjon må kontrolleres. Fortsatt ikke deploy, Neon SQL eller VAPID. Neste: målrettet test/build, sikre Netlify Function Directory, deretter TEST-konfigurasjon med én brukerhandling av gangen.
+
+---
 # PUSH FASE 6 – 22.11.2026
 
 Manuelt testvarsel kodet i TEST (`30a433f`, `f5b1d16`, `b673414`), bare for eier, sender til nyeste abonnement. Ingen reell utsending før TEST SQL + VAPID + miljøvariabler + deploy. Neste prioritet: Netlify build/konfig, avhengighetslås og reelle målrettede tester, deretter be om nødvendig handling én av gangen. PROD urørt.
