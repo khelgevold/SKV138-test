@@ -1,3 +1,8 @@
+# PUSH – NEON TEST SQL BEKREFTET 22.11.2026
+
+Brukeren bekreftet `Statement executed successfully` etter å ha kjørt `backend-draft/push-migration.sql` i Neon TEST. To push-tabeller og indeks er dermed opprettet ifølge bruker. Ingen endringer i PROD. Neste: VAPID-konfigurasjon i Netlify TEST og verifisering av eierens Neon Auth user ID, med én brukerhandling om gangen. `SKV138_PUSH_SENDING_ENABLED` skal være av til testen er godkjent.
+
+---
 # PUSH TEST AKTIVERING – 22.11.2026
 
 Scheduled sender har nå sikker av-bryter `SKV138_PUSH_SENDING_ENABLED` (commit `2ea2871`). Netlify Scheduled Functions støttes; cron hvert 15 min er gyldig, kun published deploy kjører automatisk. Neste nødvendige brukerhandling: kjøre `backend-draft/push-migration.sql` i **Neon TEST**, ikke PROD, når bruker er klar. Deretter identifiser owner `sub`, VAPID-nøkler og TEST Netlify config. Ikke publiser uten samtykke.
