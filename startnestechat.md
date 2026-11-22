@@ -1,3 +1,8 @@
+# PUSH FASE 5 – 22.11.2026
+
+TEST `skv138-push-scheduled.mjs` lagt til med cron hvert 15 min, owner-only, VAPID og atomisk claim før én sending til nyeste abonnement. `package.json` fikk web-push. Ikke testet/deployet; VAPID/Neon SQL og TEST-miljøvariabler mangler, og Netlify-build må verifiseres. At-most-once sendeforsøk betyr at feilede sendeforsøk ikke prøves igjen. Testvarsel mangler. PROD urørt.
+
+---
 # PUSH FASE 4 – 21.11.2026
 
 TEST har ren `backend-draft/push-task-schedule.mjs` for oppgaveutledning og Europe/Oslo-tid (commit `364c5a3`), samt rettet JWT Bearer-regex i push-endepunkt (`1d77be9`). Ingen scheduler, VAPID-sending eller atomisk sendelogging ennå; ingen SQL/deploy. Neste steg er implementasjon og målrettet test av senderen, etter verifisering av Netlify scheduled functions og hensiktsmessig tidsvindu. PROD urørt.
