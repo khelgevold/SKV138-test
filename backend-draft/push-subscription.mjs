@@ -2,6 +2,7 @@
 // No notification delivery or scheduled execution is enabled by this endpoint.
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import pg from 'pg';
+import webpush from 'web-push';
 let pool;
 let jwks;
 const reply=(statusCode,body)=>({statusCode,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'},body:JSON.stringify(body)});
@@ -45,6 +46,21 @@ export async function handler(event){
     }
     if(Buffer.byteLength(event.body||'','utf8')>8192)return reply(413,{error:'Payload too large'});
     let data;try{data=JSON.parse(event.body||'')}catch{return reply(400,{error:'Invalid JSON'})}
+    if(event.httpMethod==='POST' && data.action==='test'){
+      if(!process.env.SKV138_VAPID_PUBLIC_KEY||!process.env.SKV138_VAPID_PRIVATE_KEY||!process.env.SKV138_VAPID_SUBJECT)return reply(503,{error:'VAPID not configured'});
+      const found=await client.query('SELECT endpoint,p256dh,auth_key FROM public.skv138_push_subscriptions WHERE user_id=$1 ORDER BY updated_at DESC LIMIT 1',[id]);
+      if(!found.rowCount)return reply(409,{error:'No push subscription'});
+      const sub=found.rows[0];
+      webpush.setVapidDetails(process.env.SKV138_VAPID_SUBJECT,process.env.SKV138_VAPID_PUBLIC_KEY,process.env.SKV138_VAPID_PRIVATE_KEY);
+      try{
+        await webpush.sendNotification({endpoint:sub.endpoint,keys:{p256dh:sub.p256dh,auth:sub.auth_key}},JSON.stringify({kind:'skv138-task',taskId:'test',title:'SKV138 – testvarsel',body:'Pushvarsler fungerer på denne enheten.'}),{TTL:300});
+        return reply(200,{ok:true});
+      }catch(error){
+        console.error('SKV138 test push failed',error?.statusCode||'unknown');
+        if([404,410].includes(error?.statusCode))await client.query('DELETE FROM public.skv138_push_subscriptions WHERE endpoint=$1',[sub.endpoint]);
+        return reply(502,{error:'Push delivery failed'});
+      }
+    }
     if(event.httpMethod==='POST'){
       if(!validSubscription(data.subscription))return reply(400,{error:'Invalid subscription'});
       const s=data.subscription;
