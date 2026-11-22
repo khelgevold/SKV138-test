@@ -23,6 +23,14 @@ export async function initializePushSettings({authClient,container}){
   container.hidden=false;
   const status=container.querySelector('[data-push-status]');
   const button=container.querySelector('[data-push-enable]');
+  const testButton=container.querySelector('[data-push-test]');
+  if(config.count>0)testButton.hidden=false;
+  testButton.addEventListener('click',async()=>{
+    testButton.disabled=true;
+    try{await api(authClient,'POST',{action:'test'});status.textContent='Testvarsel sendt til push-tjenesten.'}
+    catch(error){status.textContent=error.message||'Testvarsel mislyktes.'}
+    finally{testButton.disabled=false}
+  });
   if(!config.publicKey){status.textContent='Push er ikke konfigurert i TEST ennå.';button.disabled=true;return}
   const registration=await navigator.serviceWorker.getRegistration('/');
   const existing=registration?await registration.pushManager.getSubscription():null;
@@ -39,6 +47,7 @@ export async function initializePushSettings({authClient,container}){
       const subscription=await worker.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:keyBytes(config.publicKey)});
       await api(authClient,'POST',{subscription:subscription.toJSON()});
       status.textContent='Pushabonnement registrert for denne enheten.';
+      testButton.hidden=false;
       button.textContent='Oppdater pushabonnement';
     }catch(error){status.textContent=error.message||'Kunne ikke aktivere push.'}
     finally{button.disabled=false}
