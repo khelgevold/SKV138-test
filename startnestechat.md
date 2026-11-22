@@ -1,3 +1,8 @@
+# PUSH FASE 6 – 22.11.2026
+
+Manuelt testvarsel kodet i TEST (`30a433f`, `f5b1d16`, `b673414`), bare for eier, sender til nyeste abonnement. Ingen reell utsending før TEST SQL + VAPID + miljøvariabler + deploy. Neste prioritet: Netlify build/konfig, avhengighetslås og reelle målrettede tester, deretter be om nødvendig handling én av gangen. PROD urørt.
+
+---
 # PUSH FASE 5 – 22.11.2026
 
 TEST `skv138-push-scheduled.mjs` lagt til med cron hvert 15 min, owner-only, VAPID og atomisk claim før én sending til nyeste abonnement. `package.json` fikk web-push. Ikke testet/deployet; VAPID/Neon SQL og TEST-miljøvariabler mangler, og Netlify-build må verifiseres. At-most-once sendeforsøk betyr at feilede sendeforsøk ikke prøves igjen. Testvarsel mangler. PROD urørt.
