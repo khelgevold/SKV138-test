@@ -7,6 +7,8 @@ import { pendingPushTasks } from '../push-task-schedule.mjs';
 export const config = { schedule: '*/15 * * * *' };
 
 export default async function handler() {
+  // Explicit kill switch: TEST deploys cannot send automatically until enabled.
+  if(process.env.SKV138_PUSH_SENDING_ENABLED!=='true')return;
   const required=['DATABASE_URL','SKV138_PUSH_OWNER_USER_ID','SKV138_VAPID_PUBLIC_KEY','SKV138_VAPID_PRIVATE_KEY','SKV138_VAPID_SUBJECT'];
   if(required.some(key=>!process.env[key])){console.error('SKV138 push sender not configured');return}
   webpush.setVapidDetails(process.env.SKV138_VAPID_SUBJECT,process.env.SKV138_VAPID_PUBLIC_KEY,process.env.SKV138_VAPID_PRIVATE_KEY);
@@ -21,7 +23,7 @@ export default async function handler() {
     if(!subscriptions.rowCount)return;
     const sub=subscriptions.rows[0];
     const now=Date.now();
-    for(const task of pendingPushTasks(data.rows[0].payload,now,15)){
+    for(const task of pendingPushTasks(data.rows[0].payload,now,20)){
       // Claim before delivery: at most one send attempt per task, including concurrent invocations.
       const claimed=await client.query('INSERT INTO public.skv138_push_sent(task_id) VALUES($1) ON CONFLICT DO NOTHING RETURNING task_id',[task.taskId]);
       if(!claimed.rowCount)continue;
