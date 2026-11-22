@@ -1,3 +1,8 @@
+# PUSH TEST AKTIVERING – 22.11.2026
+
+Scheduled sender har nå sikker av-bryter `SKV138_PUSH_SENDING_ENABLED` (commit `2ea2871`). Netlify Scheduled Functions støttes; cron hvert 15 min er gyldig, kun published deploy kjører automatisk. Neste nødvendige brukerhandling: kjøre `backend-draft/push-migration.sql` i **Neon TEST**, ikke PROD, når bruker er klar. Deretter identifiser owner `sub`, VAPID-nøkler og TEST Netlify config. Ikke publiser uten samtykke.
+
+---
 # PUSH TESTKLARGJØRING – 22.11.2026
 
 Push-regresjonstester lagt til TEST i `backend-draft/push-task-schedule.test.mjs` (`c4beb0e`), ikke kjørt. `backend-draft/netlify.template.toml` er inaktiv, faktisk Netlify TEST-konfigurasjon må kontrolleres. Fortsatt ikke deploy, Neon SQL eller VAPID. Neste: målrettet test/build, sikre Netlify Function Directory, deretter TEST-konfigurasjon med én brukerhandling av gangen.
