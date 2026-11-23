@@ -1,3 +1,8 @@
+# KORRIGERT FEILBESKRIVELSE – 23.11.2026
+
+Brukeren bekrefter at privatopphold **allerede vises riktig i kalenderen**; tidligere rapport skyldtes feil dato ved opprettelse. Reell feil: trykk på privatopphold gjør ingenting både i kalender og bookingoversikt. Rett åpning til detaljer/redigering/sletting fra begge steder i neste TEST-release. Ikke bruk tid på å reparere visning som allerede virker. I koden peker `openCalendarStay('private',id)` til `editPrivateStay(id)` og `privateStayForm` kaller `show('kalender')`; undersøk særlig navigasjon/elementtilgjengelighet og hendelser. Ikke deploy før samlet TEST-release godkjennes.
+
+---
 # AVKLARING 23.11.2026 – HISTORISKE PLATTFORMGEBYRER
 
 Bruker har besluttet at **bookingdato** (datoen bestillingen ble gjort) avgjør hvilken gebyrperiode som brukes, **ikke innsjekkdato**. Ny booking må derfor ha lagret bookingdato; for eldre bookinger uten bookingdato må vi unngå å gjette og beholde deres eksisterende lagrede gebyr. Gebyrperiode med «gjeldende fra» velges ut fra bookingdato. Lagret gebyrbeløp på eksisterende bookinger skal ikke endres retroaktivt. Samles med privatopphold i kalender og push i neste TEST-release.
