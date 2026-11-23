@@ -1,3 +1,8 @@
+# AVKLARING 23.11.2026 – HISTORISKE PLATTFORMGEBYRER
+
+Bruker har besluttet at **bookingdato** (datoen bestillingen ble gjort) avgjør hvilken gebyrperiode som brukes, **ikke innsjekkdato**. Ny booking må derfor ha lagret bookingdato; for eldre bookinger uten bookingdato må vi unngå å gjette og beholde deres eksisterende lagrede gebyr. Gebyrperiode med «gjeldende fra» velges ut fra bookingdato. Lagret gebyrbeløp på eksisterende bookinger skal ikke endres retroaktivt. Samles med privatopphold i kalender og push i neste TEST-release.
+
+---
 # AVTALT TIL NESTE SAMLEDE TEST-RELEASE – 23.11.2026
 
 1. **Privatopphold i kalender:** Bruker rapporterer at privat booking ikke vises. `v10Stays()` inkluderer `state.privateStays`, og siste `renderCalendar()` bygger bånd av disse, så undersøk konkret feil i datatilstand/rendering/CSS, rett og regresjonstest. Privatopphold skal vises tydelig og kunne åpnes/redigeres fra kalenderen.
