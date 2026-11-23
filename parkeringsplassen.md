@@ -1,3 +1,12 @@
+# AVTALT TIL NESTE SAMLEDE TEST-RELEASE – 23.11.2026
+
+1. **Privatopphold i kalender:** Bruker rapporterer at privat booking ikke vises. `v10Stays()` inkluderer `state.privateStays`, og siste `renderCalendar()` bygger bånd av disse, så undersøk konkret feil i datatilstand/rendering/CSS, rett og regresjonstest. Privatopphold skal vises tydelig og kunne åpnes/redigeres fra kalenderen.
+2. **Automatisk plattformgebyr ved opprettelse av Airbnb/Booking.com-booking:** Koble eksisterende `state.priceConfig.fees` (komponenter med `kind` prosent/fast og `base` total/natt/vask) til bookingformular. Beregn fra registrerte satser, vis beregnet beløp, tillat manuell overstyring og behold lagret faktisk gebyr på booking. Legg til gebyrperioder med «gjeldende fra» og vis historiske perioder; eksisterende bookinger skal ikke endres retroaktivt. Avklar hvilken dato som velger sats (innsjekk vs bookingdato) ved implementasjon. Ta hensyn til at Booking.com kan ha vask inkludert i nattpris.
+3. **Pushvarsler:** Fortsett pågående TEST-arbeid; SQL-tabeller opprettet i Neon TEST ifølge bruker, VAPID/Netlify TEST konfig og funksjonstest gjenstår. Ingen PROD før bruker godkjenner.
+
+Alle tre endringer skal samles i én TEST-release. Ikke start Netlify-deploy uten eksplisitt godkjenning.
+
+---
 # AKTIV PRIORITET – 21.11.2026
 
 Pushvarsler er flyttet fra utsatt til aktiv TEST-utvikling. Kun til eierens konto; kun oppgaver; på/av og ledetid per oppgaveregel; ett varsel per oppgave; ikke for fullførte/kansellerte. Fase 1 innstillinger kodet i TEST `0f6ce77`, ikke publisert, ingen varsler sendes ennå. Dynamisk iCal fortsatt utsatt.
