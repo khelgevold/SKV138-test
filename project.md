@@ -1,6 +1,8 @@
 ## Status 24.11.2026 – Samlet PROD-release for innstillinger og statistikk
 
-Releasen samler tre knapper på én linje i Lager, fjerner den gamle Varsler-siden og Testdata-panelet, og ordner Innstillinger i avtalt rekkefølge med mer luft rundt Pushvarsler og Plasseringer. Kalenderintegrasjon har kortere tittel. Statistikk viser prosentfordeling og en dynamisk Total-visning med skatt per år. Sjekklistemaler støtter Hund, og oppgaveregler samt planlagt push støtter Alle inkl. privat. Velkomstmeldingen kan kopieres med eller uten salgstekst fra ett av sju konfigurerbare scenarioer. Avhukingene for utvask fungerer igjen. Kalkulatoren viser leietakergebyr i gjestens total, mens bookinggebyr bare bruker utleiergebyr. Eksakt FINN-sats og salgstekster konfigureres i innstillingene. Ingen SQL-migrering. Lokal DOM-kontroll og målrettede beregningstester besto. Publisering og kontroll på iPhone må bekreftes.
+Commit `5e63f32` utløste publisering. PROD-domenet leverte samme HTML som besto lokal DOM-kontroll. Kontroll på fysisk iPhone gjenstår.
+
+Releasen samler tre knapper på én linje i Lager, fjerner den gamle Varsler-siden og Testdata-panelet, og ordner Innstillinger i avtalt rekkefølge med mer luft rundt Pushvarsler og Plasseringer. Kalenderintegrasjon har kortere tittel. Statistikk viser prosentfordeling og en dynamisk Total-visning med skatt per år. Sjekklistemaler støtter Hund, og oppgaveregler samt planlagt push støtter Alle inkl. privat. Velkomstmeldingen kan kopieres med eller uten salgstekst fra ett av sju konfigurerbare scenarioer. Avhukingene for utvask fungerer igjen. Kalkulatoren viser leietakergebyr i gjestens total, mens bookinggebyr bare bruker utleiergebyr. Eksakt FINN-sats og salgstekster konfigureres i innstillingene. Ingen SQL-migrering. Lokal DOM-kontroll og målrettede beregningstester besto. Kontroll på iPhone gjenstår.
 
 ## Status 24.11.2026 – Automatisk push bekreftet i PROD
 
