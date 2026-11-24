@@ -1,13 +1,13 @@
-## Status 24.11.2026 – Samlet PROD-release under klargjøring
+## Status 24.11.2026 – Samlet PROD-release godkjent for publisering
 
-PROD-kandidaten ligger på `prep/skv138-prod-2026-11-24` med utgangspunkt i publisert PROD-gren `release/skv138-prod` ved `3173833`. Den overfører godkjente TEST-endringer for bookinger, gebyrer, økonomikort, oppgaver, handleliste, iCal og push. Eksisterende PROD-byggekommando, Netlify-konfigurasjon, Neon Auth-proxy, PWA-manifest og ikon er beholdt. Ingen TEST-data overføres. PROD-grenen er uendret. Brukeren bekreftet at den additive pushmigreringen i Neon PROD ble kjørt med suksess.
+PROD-kandidaten ligger på `prep/skv138-prod-2026-11-24` med utgangspunkt i publisert PROD-gren `release/skv138-prod` ved `3173833`. Den overfører godkjente TEST-endringer for bookinger, gebyrer, økonomikort, oppgaver, handleliste, iCal og push. Eksisterende PROD-byggekommando, Netlify-konfigurasjon, Neon Auth-proxy, PWA-manifest og ikon er beholdt. Ingen TEST-data overføres. Brukeren ga eksplisitt klarsignal. Produksjonsgrenen er oppdatert med releasekandidaten, og Netlify-publisering gjenstår å verifisere. Brukeren bekreftet at den additive pushmigreringen i Neon PROD ble kjørt med suksess.
 
 TEST er funksjonelt brukergodkjent, inklusive Bookingdato og automatisk push med 0 og 1 times ledetid med lukket iPhone-app. PROD-autentiseringspakken er bygget lokalt med en fiktiv Neon Auth-adresse. Build sjekket generert redirect og at TEST-adressen ikke er med. Syntakskontroll og fem push-planleggingstester besto, og de tre nye Netlify-funksjonsmodulene kunne lastes lokalt. Dette verifiserer ikke faktiske Netlify-innstillinger, Neon-tilgang eller mottak i PROD.
 
 Før publisering:
 1. Fullført: `backend-draft/push-migration-prod.sql` er kjørt i SKV138 PROD ifølge brukeren. Migreringen oppretter to pushtabeller og gir den dokumenterte runtime-rollen `skv138_app` de nødvendige rettighetene. Brukeren har lagt inn eierens PROD-ID som `SKV138_PUSH_OWNER_USER_ID` og satt `SKV138_PUSH_SENDING_ENABLED=false` i Netlify PROD.
 2. Fullført ifølge brukeren: PROD-verdier for VAPID og iCal er lagt inn i Netlify, og database-URL, privat VAPID-nøkkel og iCal-token er merket som hemmelige. `SKV138_PUSH_SENDING_ENABLED=false` inntil manuelt PROD-varsel er verifisert. Kalenderadressen gis kun til den autoriserte eierkontoen, og funksjonen krever gyldig token.
-3. Innhent eksplisitt klarsignal før PROD-grenen oppdateres eller det publiseres. Ved behov kan forrige PROD-deploy gjenpubliseres fra Netlify. Etter publisering kontrolleres eksisterende bookingdata, iPhone-innlogging, push på PROD-domenet og iCal i Homey. Eksisterende Homey-kalender beholdes som reserve under testen.
+3. Klarsignal er gitt og produksjonsgrenen er oppdatert. Ved behov kan forrige PROD-deploy gjenpubliseres fra Netlify. Etter publisering kontrolleres eksisterende bookingdata, iPhone-innlogging, push på PROD-domenet og iCal i Homey. Eksisterende Homey-kalender beholdes som reserve under testen.
 
 # Neste utviklingsrunde – 19.11.2026
 
