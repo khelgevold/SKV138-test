@@ -313,17 +313,26 @@ html{-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{font-size:15px;l
   #nav.nav { position:fixed; bottom:0; left:0; right:0; width:100%; max-width:790px; margin:0 auto; z-index:50; border:1px solid var(--line); border-radius:15px 15px 0 0; box-shadow:0 -6px 22px rgba(0,0,0,.08); }
   main { padding-bottom:110px; }
 }
-</style><style id="skv-next-ui">.skv-private-platform{background:#26734b!important;color:#fff!important;border-color:#26734b!important}.skv-next-booking-meta{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0}.skv-next-booking-meta .tag{font-size:11px}.skv-forecast-frame{padding:14px;margin:12px 0}.skv-forecast-frame #metrics{margin-top:12px}</style><style>#oversikt #skvConfirmedMetrics{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}#oversikt #skvConfirmedMetrics .metric{display:flex;flex-direction:column}</style></head><body><header><div><h1>⌂ SKV138</h1></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
+</style><style id="skv-next-ui">.skv-private-platform{background:#26734b!important;color:#fff!important;border-color:#26734b!important}.skv-next-booking-meta{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0}.skv-next-booking-meta .tag{font-size:11px}.skv-forecast-frame{padding:14px;margin:12px 0}.skv-forecast-frame #metrics{margin-top:12px}</style><style>#oversikt #skvConfirmedMetrics{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}#oversikt #skvConfirmedMetrics .metric{display:flex;flex-direction:column}</style><style>
+#lager .skv-stock-tabs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px}
+#lager .skv-stock-tabs button{width:100%;min-width:0;padding-inline:3px;font-size:clamp(12px,3.6vw,16px)}
+#skvPushCard #skv-push-settings>button:not([hidden]){display:block;margin-bottom:8px}
+#skvPushCard [data-push-status]{display:block;margin-top:8px}
+#v1617Locations .skv-add-location{margin-top:12px}
+#statistikk .skv-stats-share{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(46px,auto);gap:8px}
+.skv-stats-share>*:last-child{text-align:right}
+#priceResults .price-guest-fee{display:block;font-size:.78em;font-weight:400}
+</style></head><body><header><div><h1>⌂ SKV138</h1></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
 <section id="oversikt" class="active"><div class="row"><button onclick="changeYear(-1)">‹</button><span class="year" id="yearTitle"></span><button onclick="changeYear(1)">›</button></div><div class="grid" id="metrics"></div><div class="card"><h2>Utbetalinger og skatt hittil i år</h2><div class="grid" id="v15YtdMetrics"></div></div><div class="card"><div class="row"><h2>Neste oppgaver</h2><button onclick="show('oppgaver')">Se alle</button></div><div id="nextTasks"></div></div></section>
 <section id="bookinger"><div class="row"><h2>Bookinger</h2><div class="booking-create"><button class="primary" onclick="newBooking()">+ Ny booking</button><button onclick="newPrivateStay()">+ Privat booking</button></div></div><div class="segmented triple" id="bookingTypeFilters"><button onclick="setBookingTypeFilter('all')">Alle</button><button onclick="setBookingTypeFilter('rental')">Utleie</button><button onclick="setBookingTypeFilter('private')">Privat</button></div><div id="bookingList"></div><div id="bookingDetail"></div></section>
 <section id="kalender"><div class="row"><h2>Kalender</h2></div><div class="card"><div class="row"><button onclick="moveCalendar(-1)" aria-label="Forrige måned">‹</button><h2 id="calendarTitle"></h2><button onclick="moveCalendar(1)" aria-label="Neste måned">›</button></div><div class="calendar-legend"><span><i class="dot finn"></i>FINN</span><span><i class="dot airbnb"></i>Airbnb</span><span><i class="dot booking"></i>Booking.com</span><span><i class="dot direkte"></i>Direkte</span><span><i class="dot private"></i>Privat</span></div><div class="calendar-grid" id="calendarGrid"></div><p class="hint">Datoer viser overnattinger. Ved bytte av gjest samme dag kan du åpne datoen for å se både utsjekk og innsjekk. Trykk på en ledig dato for å legge til opphold.</p></div><div id="calendarDay"></div><div id="privateEditor"></div></section>
 <section id="oppgaver"><h2>Oppgaver</h2><div class="row wrap"><div class="segmented triple" id="taskTabs"><button id="taskOpen" onclick="setTaskFilter('open')">Kommende</button><button id="taskDone" onclick="setTaskFilter('done')">Fullførte</button><button id="taskAll" onclick="setTaskFilter('all')">Alle</button></div><span class="tag" id="taskCount"></span></div><div class="card" id="taskList"></div></section>
-<section id="lager"><h2>Lager</h2><div class="segmented"><button id="stockUtleie" onclick="stockKind='Utleie';renderStock()">Utleie</button><button id="stockPrivat" onclick="stockKind='Privat';renderStock()">Privat</button></div><div class="card" id="stockList"></div><div class="card" id="v1619StockAdd"><h2>Ny vare</h2><label>Navn<input id="stockName"></label><label>Antall<input type="number" id="stockQty" value="1" min="0"></label><label id="stockMinRow">Minimumsbeholdning<input type="number" id="stockMin" value="2" min="0"></label><label class="check" id="newFixedRow"><input id="stockFixed" type="checkbox" checked>Fast vare – vis også ved 0</label><button class="primary" onclick="addStock()">Legg til</button></div></section>
-<section id="mer"><h2>Mer</h2><div class="card" style="padding:5px 16px"><button class="more-link" onclick="show('statistikk')"><span><strong>▥ Statistikk</strong><small>Inntekter, belegg og sammenligninger</small></span><span>›</span></button><button class="more-link" onclick="show('innstillinger')"><span><strong>⚙ Innstillinger</strong><small>Standardtider, sjekklister og oppgaver</small></span><span>›</span></button><button class="more-link" onclick="show('varsler')"><span><strong>♧ Varsler</strong><small>Pushvarsler og påminnelser – planlagt</small></span><span>›</span></button></div></section>
+<section id="lager"><h2>Lager</h2><div class="segmented skv-stock-tabs"><button id="stockUtleie" onclick="stockKind='Utleie';renderStock()">Utleie</button><button id="stockPrivat" onclick="stockKind='Privat';renderStock()">Privat</button></div><div class="card" id="stockList"></div><div class="card" id="v1619StockAdd"><h2>Ny vare</h2><label>Navn<input id="stockName"></label><label>Antall<input type="number" id="stockQty" value="1" min="0"></label><label id="stockMinRow">Minimumsbeholdning<input type="number" id="stockMin" value="2" min="0"></label><label class="check" id="newFixedRow"><input id="stockFixed" type="checkbox" checked>Fast vare – vis også ved 0</label><button class="primary" onclick="addStock()">Legg til</button></div></section>
+<section id="mer"><h2>Mer</h2><div class="card" style="padding:5px 16px"><button class="more-link" onclick="show('statistikk')"><span><strong>▥ Statistikk</strong><small>Inntekter, belegg og sammenligninger</small></span><span>›</span></button><button class="more-link" onclick="show('innstillinger')"><span><strong>⚙ Innstillinger</strong><small>Standardtider, sjekklister og oppgaver</small></span><span>›</span></button></div></section>
 <section id="statistikk"><div class="row"><button onclick="show('mer')">‹ Mer</button><h2>Statistikk</h2></div><div class="card"><div class="row"><button onclick="changeStatsYear(-1)">‹</button><h2 id="statsYear"></h2><button onclick="changeStatsYear(1)">›</button></div><div id="statsMetrics" class="grid"></div></div><div class="card"><h2>Leieinntekter per måned</h2><div id="statsMonths"></div></div><div class="card"><h2>Plattformer</h2><div id="statsPlatforms"></div></div><div class="card"><h2>Bruk av hytta</h2><div id="statsUsage"></div></div><div class="card"><h2>Sammenligning med forrige år</h2><div id="statsCompare"></div></div></section>
-<section id="varsler"><div class="row"><button onclick="show('mer')">‹ Mer</button><h2>Varsler</h2></div><div class="card"><h2>Planlagt funksjon</h2><p class="muted">Her vil du senere kunne styre pushvarsler ved oppgavefrist, påminnelser i forkant og daglig oppsummering.</p><p class="hint">Pushvarsler krever en publisert app og en tjeneste som sender varslene. Ingenting sendes fra denne prototypen.</p></div></section>
-<section id="innstillinger"><div class="row"><button onclick="show('mer')">‹ Mer</button><h2>Innstillinger</h2></div><div class="card"><h2>Sjekklistemaler</h2><div class="segmented"><button id="tplBefore" onclick="editType='before';renderSettings()">Klargjøring</button><button id="tplAfter" onclick="editType='after';renderSettings()">Etterkontroll</button></div><div id="templateList"></div><label>Ny oppgave<input id="templateName"></label><label>Legg til når<select id="templateCondition"><option value="always">Alltid</option><option value="stamp">Stamp bestilt</option><option value="charger">Elbillading bestilt</option><option value="linen">Sengetøy bestilt</option></select></label><button class="primary" onclick="addTemplate()">Legg til</button></div><div class="card"><h2>Tidspunkter og oppgaver</h2><p class="hint">Disse standardtidene brukes på nye bookinger. Eksisterende bookinger beholder avtalte klokkeslett.</p><div class="field-grid"><label>Standard innsjekk<input type="time" id="settingCheckin" onchange="setSetting('checkin',this.value)"></label><label>Standard utsjekk<input type="time" id="settingCheckout" onchange="setSetting('checkout',this.value)"></label></div><div class="field-grid"><label>Skru på varme (timer før innsjekk)<input type="number" min="0" max="168" id="settingHeat" onchange="setSetting('heatBefore',this.value)"></label><label>Test bom (timer før innsjekk)<input type="number" min="0" max="168" id="settingGate" onchange="setSetting('gateBefore',this.value)"></label></div><label>Skru av varme (timer etter utsjekk)<input type="number" min="0" max="168" id="settingHeatOff" onchange="setSetting('heatOffAfter',this.value)"></label><p class="hint">Oppgaver oppdateres ved endring. Pushvarsler og Homey-integrasjon er ikke aktivert.</p></div><div class="card"><h2>Meldingsmaler</h2><p class="hint">Opprett, rediger og kopier meldinger til den aktuelle plattformen. Bruk en booking for å fylle inn gjest, dato og klokkeslett.</p><div id="messageTemplates"></div><div id="messageEditor"></div></div><div class="card"><div class="row"><h2>Oppgaveregler</h2><button class="primary" onclick="editRule(null)">+ Ny regel</button></div><p class="hint">Reglene lager oppgaver automatisk når du oppretter eller endrer en booking. Endringer oppdaterer også fremtidige frister.</p><div id="ruleList"></div><div id="ruleEditor"></div></div><div class="card" id="rentalStockSettings"><div class="row"><h2>Utleievarer</h2><button class="primary" onclick="toggleRentalAdd()">+ Ny vare</button></div><div id="rentalStockSettingsList"></div><div id="rentalAddPanel" hidden><h3>Ny utleievare</h3><label>Navn<input id="rentalAddName"></label><div class="field-grid"><label>Antall<input id="rentalAddQty" type="number" min="0" value="0"></label><label>Minimum<input id="rentalAddMin" type="number" min="0" value="2"></label></div><label class="check"><input id="rentalAddFixed" type="checkbox" checked>Alltid synlig</label><button class="primary" onclick="createRentalStock()">Lagre vare</button></div><div id="rentalEditPanel"></div></div>
-<div class="card" id="priceSettings"><h2>Priskalkulator</h2><p class="hint">Legg inn hva du vil sitte igjen med etter plattformgebyrer. Kalkulatoren beregner veiledende priser, ikke automatisk publisering.</p><div class="field-grid"><label>Ønsket netto per natt (kr)<input id="priceNight" type="number" min="0" oninput="priceInputChanged()"></label><label>Ønsket netto utvask (kr)<input id="priceClean" type="number" min="0" oninput="priceInputChanged()"></label></div><label>Antall netter i eksempelet<input id="priceNights" type="number" min="2" max="365" oninput="priceInputChanged()"></label><div id="priceModeSettings"></div><div id="priceResults"></div><div id="priceDiscounts"></div></div><div class="card" id="priceFeeSettings"><div class="row"><div><h2>Plattformgebyrer</h2><p class="sub">Administrer gebyrer separat fra priskalkulatoren.</p></div></div><div id="priceFeeEditor"><div id="priceFeePanels"></div><p class="hint">Endringer lagres lokalt og oppdaterer priskalkulatoren automatisk. Sjekk beregningsgrunnlaget mot avtalen med plattformen.</p></div></div><div class="card" id="v15CalendarSettings"><h2>Kalenderintegrasjon (iCal)</h2><p class="hint">Fast kalenderadresse for Homey. Hold adressen privat.</p><button class="primary" onclick="copyHomeyCalendar()">Kopier kalenderadresse</button><p id="homeyCalendarStatus" class="hint"></p></div><div class="card"><h2>Testdata</h2><p class="muted">TEST: Data lagres i Neon når innloggingen er godkjent. Ikke legg inn hemmelige dørkoder.</p><p>Tilbakestilling av fellesdata er deaktivert i TEST.</p></div></section>
+
+<section id="innstillinger"><div class="row"><button onclick="show('mer')">‹ Mer</button><h2>Innstillinger</h2></div><div class="card"><h2>Sjekklistemaler</h2><div class="segmented"><button id="tplBefore" onclick="editType='before';renderSettings()">Klargjøring</button><button id="tplAfter" onclick="editType='after';renderSettings()">Etterkontroll</button></div><div id="templateList"></div><label>Ny oppgave<input id="templateName"></label><label>Legg til når<select id="templateCondition"><option value="always">Alltid</option><option value="stamp">Stamp bestilt</option><option value="charger">Elbillading bestilt</option><option value="linen">Sengetøy bestilt</option><option value="dog">Hund kommer til hytta</option></select></label><button class="primary" onclick="addTemplate()">Legg til</button></div><div class="card"><h2>Tidspunkter og oppgaver</h2><p class="hint">Disse standardtidene brukes på nye bookinger. Eksisterende bookinger beholder avtalte klokkeslett.</p><div class="field-grid"><label>Standard innsjekk<input type="time" id="settingCheckin" onchange="setSetting('checkin',this.value)"></label><label>Standard utsjekk<input type="time" id="settingCheckout" onchange="setSetting('checkout',this.value)"></label></div><div class="field-grid"><label>Skru på varme (timer før innsjekk)<input type="number" min="0" max="168" id="settingHeat" onchange="setSetting('heatBefore',this.value)"></label><label>Test bom (timer før innsjekk)<input type="number" min="0" max="168" id="settingGate" onchange="setSetting('gateBefore',this.value)"></label></div><label>Skru av varme (timer etter utsjekk)<input type="number" min="0" max="168" id="settingHeatOff" onchange="setSetting('heatOffAfter',this.value)"></label><p class="hint">Oppgaver oppdateres ved endring. Pushvarsler og Homey-integrasjon er ikke aktivert.</p></div><div class="card"><h2>Meldingsmaler</h2><p class="hint">Opprett, rediger og kopier meldinger til den aktuelle plattformen. Bruk en booking for å fylle inn gjest, dato og klokkeslett.</p><div id="messageTemplates"></div><div id="messageEditor"></div></div><div class="card"><div class="row"><h2>Oppgaveregler</h2><button class="primary" onclick="editRule(null)">+ Ny regel</button></div><p class="hint">Reglene lager oppgaver automatisk når du oppretter eller endrer en booking. Endringer oppdaterer også fremtidige frister.</p><div id="ruleList"></div><div id="ruleEditor"></div></div><div class="card" id="rentalStockSettings"><div class="row"><h2>Utleievarer</h2><button class="primary" onclick="toggleRentalAdd()">+ Ny vare</button></div><div id="rentalStockSettingsList"></div><div id="rentalAddPanel" hidden><h3>Ny utleievare</h3><label>Navn<input id="rentalAddName"></label><div class="field-grid"><label>Antall<input id="rentalAddQty" type="number" min="0" value="0"></label><label>Minimum<input id="rentalAddMin" type="number" min="0" value="2"></label></div><label class="check"><input id="rentalAddFixed" type="checkbox" checked>Alltid synlig</label><button class="primary" onclick="createRentalStock()">Lagre vare</button></div><div id="rentalEditPanel"></div></div>
+<div class="card" id="priceSettings"><h2>Priskalkulator</h2><p class="hint">Legg inn hva du vil sitte igjen med etter plattformgebyrer. Kalkulatoren beregner veiledende priser, ikke automatisk publisering.</p><div class="field-grid"><label>Ønsket netto per natt (kr)<input id="priceNight" type="number" min="0" oninput="priceInputChanged()"></label><label>Ønsket netto utvask (kr)<input id="priceClean" type="number" min="0" oninput="priceInputChanged()"></label></div><label>Antall netter i eksempelet<input id="priceNights" type="number" min="2" max="365" oninput="priceInputChanged()"></label><div id="priceModeSettings"></div><div id="priceResults"></div><div id="priceDiscounts"></div></div><div class="card" id="priceFeeSettings"><div class="row"><div><h2>Plattformgebyrer</h2><p class="sub">Administrer gebyrer separat fra priskalkulatoren.</p></div></div><div id="priceFeeEditor"><div id="priceFeePanels"></div><p class="hint">Endringer lagres lokalt og oppdaterer priskalkulatoren automatisk. Sjekk beregningsgrunnlaget mot avtalen med plattformen.</p></div></div><div class="card" id="v15CalendarSettings"><h2>Kalenderintegrasjon</h2><p class="hint">Fast kalenderadresse for Homey. Hold adressen privat.</p><button class="primary" onclick="copyHomeyCalendar()">Kopier kalenderadresse</button><p id="homeyCalendarStatus" class="hint"></p></div><div class="card"><h2>Testdata</h2><p class="muted">TEST: Data lagres i Neon når innloggingen er godkjent. Ikke legg inn hemmelige dørkoder.</p><p>Tilbakestilling av fellesdata er deaktivert i TEST.</p></div></section>
 </main><nav class="nav" id="nav"></nav><script>
 
 // V15.1: file-preview-safe storage adapter. Warn if changes cannot persist.
@@ -439,7 +448,7 @@ if(!Array.isArray(state.taskRules)){
 let editingRule=null, editingStock=null;
 function tasks(){return state.bookings.flatMap(b=>{
  if(b.cancelled||b.historical)return [];
- return state.taskRules.filter(r=>r.active&&(r.platform==='Alle plattformer'||r.platform===b.platform)).map(r=>({id:b.id+'-'+r.id,bookingId:b.id,title:r.title,due:shiftHours(r.anchor==='checkin'?b.start:b.end,r.anchor==='checkin'?b.checkin:b.checkout,Number(r.offset)),type:r.type,guest:b.name,platform:b.platform,ruleId:r.id,task:r.task||'none'}));
+ return state.taskRules.filter(r=>r.active&&(r.platform==='Alle plattformer'||r.platform==='Alle inkl. privat'||r.platform===b.platform)).map(r=>({id:b.id+'-'+r.id,bookingId:b.id,title:r.title,due:shiftHours(r.anchor==='checkin'?b.start:b.end,r.anchor==='checkin'?b.checkin:b.checkout,Number(r.offset)),type:r.type,guest:b.name,platform:b.platform,ruleId:r.id,task:r.task||'none'}));
 }).sort((a,b)=>a.due.localeCompare(b.due)||a.title.localeCompare(b.title))}
 function updateCheckoutFromStart(){const a=$('bs'),b=$('be');if(!a||!b||!a.value)return;b.min=shift(a.value,1);if(!b.value||b.value<=a.value)b.value=shift(a.value,1);}
 const bookingFormV8=bookingForm;
@@ -454,8 +463,39 @@ function renderStock(){
 function editStock(id){editingStock=id;const x=state.stock.find(z=>z.id===id);if(!x)return;const host=$('stockList');host.insertAdjacentHTML('afterbegin',`<div class="stock-editor"><h3>Rediger vare</h3><label>Navn<input id="editStockName" value="${esc(x.name)}"></label><label>Antall<input id="editStockQty" type="number" min="0" value="${x.qty}"></label>${x.kind==='Utleie'?`<label>Minimumsbeholdning<input id="editStockMin" type="number" min="0" value="${x.min||0}"></label><label class="check"><input type="checkbox" id="editStockFixed" ${x.fixed?'checked':''}>Fast vare – alltid synlig, også ved 0</label>`:''}<div class="form-actions"><button class="primary" onclick="saveStockEdit()">Lagre vare</button><button onclick="renderStock()">Avbryt</button></div></div>`);host.scrollIntoView({behavior:'smooth',block:'nearest'})}
 function saveStockEdit(){const x=state.stock.find(z=>z.id===editingStock);if(!x)return;const name=$('editStockName').value.trim(),qty=Number($('editStockQty').value),min=x.kind==='Utleie'?Number($('editStockMin').value):0;if(!name||!Number.isInteger(qty)||qty<0||!Number.isInteger(min)||min<0){alert('Kontroller navn og antall.');return}Object.assign(x,{name,qty,min,fixed:x.kind==='Utleie'?$('editStockFixed').checked:false});editingStock=null;save();renderStock()}
 function addStock(){const name=$('stockName').value.trim(),qty=Number($('stockQty').value),min=stockKind==='Utleie'?Number($('stockMin').value):0;if(!name||!Number.isInteger(qty)||qty<0||!Number.isInteger(min)||min<0){alert('Kontroller varenavn og antall.');return}state.stock.push({id:Math.max(0,...state.stock.map(x=>x.id))+1,name,qty,min,kind:stockKind,fixed:stockKind==='Utleie'&&$('stockFixed').checked});save();$('stockName').value='';renderStock()}
-function renderMessages(){const list=$('messageTemplates');if(!list)return;list.innerHTML=state.messageTemplates.map(m=>`<div class="message-row"><div><strong>${esc(m.name)}</strong><div class="sub">${esc(m.platform)}</div></div><div class="message-actions"><button onclick="editMessage('${m.id}')">Rediger</button><button onclick="copyMessage('${m.id}')">Kopier</button><button onclick="deleteMessage('${m.id}')">Slett</button></div></div>`).join('')+'<button class="primary" onclick="editMessage(null)">+ Ny meldingsmal</button>';const editor=$('messageEditor');if(editingMessage===null){editor.innerHTML='';return}let m=state.messageTemplates.find(x=>x.id===editingMessage)||{name:'',platform:'Alle plattformer',task:'none',body:''};editor.innerHTML=`<div class="message-editor"><h3>${m.id?'Rediger mal':'Ny meldingsmal'}</h3><label>Navn<input id="msgName" value="${esc(m.name)}"></label><label>Plattform<select id="msgPlatform">${['Alle plattformer','Finn.no','Airbnb','Booking.com','Direkte'].map(p=>`<option ${p===m.platform?'selected':''}>${p}</option>`).join('')}</select></label><label>Brukes ved<select id="msgTask"><option value="none" ${m.task==='none'?'selected':''}>Manuelt</option><option value="welcome" ${m.task==='welcome'?'selected':''}>Velkomstmelding</option><option value="arrival" ${m.task==='arrival'?'selected':''}>Ankomstinformasjon</option></select></label><label>Meldingstekst<textarea id="msgBody" rows="7">${esc(m.body)}</textarea></label><p class="hint">Plassholdere: {gjest}, {ankomst}, {avreise}, {innsjekk}, {utsjekk}, {gjester}. Ikke lagre adgangskoder.</p><div class="row wrap"><button class="primary" onclick="saveMessage()">Lagre mal</button><button onclick="editingMessage=null;renderMessages()">Avbryt</button></div></div>`}
-function bookingMessages(b){let arr=state.messageTemplates.filter(m=>m.platform===b.platform||m.platform==='Alle plattformer');return `<div class="booking-messages"><h3>Meldinger</h3>${arr.length?arr.map(m=>`<div class="row message-row"><span>${esc(m.name)}</span><button onclick="copyMessage('${m.id}',${b.id})">Kopier ferdig melding</button></div>`).join(''):'<p class="sub">Ingen meldingsmaler for denne plattformen.</p>'}</div>`}
+function salesScenarioOptions(task){
+ const choices=['Stamp','Sengetøy','Elbillading'];
+ return Array.from({length:7},(_,index)=>{
+  const mask=index+1;
+  const label=choices.filter((_,i)=>mask&(1<<i)).join(' + ');
+  return '<option value="sales-'+mask+'" '+(task==='sales-'+mask?'selected':'')+'>'+label+'</option>';
+ }).join('');
+}
+function welcomeSalesTemplate(booking){
+ const mask=['stamp','linen','charger'].reduce((sum,key,i)=>sum+(booking[key]?0:1<<i),0);
+ if(!mask)return null;
+ const matches=state.messageTemplates.filter(m=>m.task==='sales-'+mask);
+ return matches.find(m=>m.platform===booking.platform)||matches.find(m=>m.platform==='Alle plattformer')||null;
+}
+function copyWelcomeWithExtras(id,bookingId){
+ const booking=state.bookings.find(b=>b.id===Number(bookingId));
+ const welcome=state.messageTemplates.find(m=>m.id===id&&m.task==='welcome');
+ if(!booking||!welcome)return;
+ const sales=welcomeSalesTemplate(booking);
+ copyTextV8([welcome,sales].filter(Boolean).map(m=>fillMessage(m,booking).trim()).join('\n\n'));
+}
+function renderMessages(){const list=$('messageTemplates');if(!list)return;list.innerHTML=state.messageTemplates.map(m=>`<div class="message-row"><div><strong>${esc(m.name)}</strong><div class="sub">${esc(m.platform)}</div></div><div class="message-actions"><button onclick="editMessage('${m.id}')">Rediger</button><button onclick="copyMessage('${m.id}')">Kopier</button><button onclick="deleteMessage('${m.id}')">Slett</button></div></div>`).join('')+'<button class="primary" onclick="editMessage(null)">+ Ny meldingsmal</button>';const editor=$('messageEditor');if(editingMessage===null){editor.innerHTML='';return}let m=state.messageTemplates.find(x=>x.id===editingMessage)||{name:'',platform:'Alle plattformer',task:'none',body:''};editor.innerHTML=`<div class="message-editor"><h3>${m.id?'Rediger mal':'Ny meldingsmal'}</h3><label>Navn<input id="msgName" value="${esc(m.name)}"></label><label>Plattform<select id="msgPlatform">${['Alle plattformer','Finn.no','Airbnb','Booking.com','Direkte'].map(p=>`<option ${p===m.platform?'selected':''}>${p}</option>`).join('')}</select></label><label>Brukes ved<select id="msgTask"><option value="none" ${m.task==='none'?'selected':''}>Manuelt</option><option value="welcome" ${m.task==='welcome'?'selected':''}>Velkomstmelding</option><option value="arrival" ${m.task==='arrival'?'selected':''}>Ankomstinformasjon</option><optgroup label="Salg av tilvalg – det gjesten mangler">${salesScenarioOptions(m.task)}</optgroup></select></label><label>Meldingstekst<textarea id="msgBody" rows="7">${esc(m.body)}</textarea></label><p class="hint">Plassholdere: {gjest}, {ankomst}, {avreise}, {innsjekk}, {utsjekk}, {gjester}. Ikke lagre adgangskoder.</p><div class="row wrap"><button class="primary" onclick="saveMessage()">Lagre mal</button><button onclick="editingMessage=null;renderMessages()">Avbryt</button></div></div>`}
+function bookingMessages(b){
+ const templates=state.messageTemplates.filter(m=>!m.task?.startsWith('sales-')&&(m.platform===b.platform||m.platform==='Alle plattformer'));
+ const sales=welcomeSalesTemplate(b);
+ const rows=templates.map(m=>{
+  const args=esc(JSON.stringify(m.id))+','+Number(b.id);
+  const combined=m.task==='welcome'&&sales?'<button onclick="copyWelcomeWithExtras('+args+')">Velkomstmelding med tilvalg</button>':'';
+  const text=m.task==='welcome'?'Velkomstmelding':'Kopier ferdig melding';
+  return '<div class="row message-row"><span>'+esc(m.name)+'</span><button onclick="copyMessage('+args+')">'+text+'</button>'+combined+'</div>';
+ }).join('');
+ return '<div class="booking-messages"><h3>Meldinger</h3>'+(rows||'<p class="sub">Ingen meldingsmaler for denne plattformen.</p>')+'</div>';
+}
 function openMessageForTask(id){let t=tasks().find(x=>x.id===id);if(!t)return;let kind=t.task;if(!kind||kind==='none'){alert('Ingen meldingsmal knyttet til denne oppgaven.');return}let matches=state.messageTemplates.filter(m=>(m.platform===t.platform||m.platform==='Alle plattformer')&&m.task===kind);if(!matches.length){alert('Ingen meldingsmal for denne oppgaven. Opprett en under Mer → Innstillinger → Meldingsmaler.');return}copyMessage(matches[0].id,t.bookingId)}
 function taskHtml(t){let isDone=done(t);return `<div class="task"><div style="flex:1;min-width:0"><strong>${esc(t.title)}</strong><div class="sub">${fmtDue(t.due)} · ${esc(t.guest)} · ${esc(t.platform)}</div>${isDone?'<span class="tag">Fullført</span>':''}</div><div class="task-buttons">${t.type==='check'?`<button class="primary" onclick="openTask('${t.id}')">Åpne sjekkliste</button>`:`<button class="${isDone?'':'primary'}" onclick="toggleTask('${t.id}')">${isDone?'Angre':'Merk som ferdig'}</button>`}${t.type==='manual'&&t.task&&t.task!=='none'?`<button onclick="openMessageForTask('${t.id}')">Melding</button>`:''}</div></div>`}
 function renderRules(){const el=$('ruleList');if(!el)return;el.innerHTML=state.taskRules.map(r=>`<div class="message-row"><div style="flex:1"><strong>${esc(r.title)}</strong><div class="sub">${esc(r.platform)} · ${Math.abs(r.offset)} timer ${r.offset<0?'før':r.offset>0?'etter':'ved'} ${r.anchor==='checkin'?'innsjekk':'utsjekk'} · ${r.active?'Aktiv':'Deaktivert'} · ${r.pushEnabled===true?'Push på':'Push av'}</div></div><div class="message-actions"><button onclick="editRule('${r.id}')">Rediger</button><button onclick="toggleRule('${r.id}')">${r.active?'Deaktiver':'Aktiver'}</button><button onclick="deleteRule('${r.id}')">Slett</button></div></div>`).join('')||'<p class="sub">Ingen oppgaveregler</p>';const ed=$('ruleEditor');if(editingRule===null){ed.innerHTML='';return}const r=state.taskRules.find(x=>x.id===editingRule)||{title:'',platform:'Alle plattformer',anchor:'checkin',offset:-24,type:'manual',task:'none',active:true};const pushEnabled=r.pushEnabled===true;const pushLeadHours=Number.isFinite(Number(r.pushLeadHours))?Number(r.pushLeadHours):0;ed.innerHTML=`<div class="message-editor"><h3>${editingRule==='new'?'Ny oppgaveregel':'Rediger oppgaveregel'}</h3><label>Oppgave<input id="ruleTitle" value="${esc(r.title)}"></label><label>Plattform<select id="rulePlatform">${['Alle plattformer','Finn.no','Airbnb','Booking.com','Direkte'].map(x=>`<option ${r.platform===x?'selected':''}>${x}</option>`).join('')}</select></label><label>Regn fra<select id="ruleAnchor"><option value="checkin" ${r.anchor==='checkin'?'selected':''}>Innsjekk</option><option value="checkout" ${r.anchor==='checkout'?'selected':''}>Utsjekk</option></select></label><div class="field-grid"><label>Antall timer<input id="ruleHours" type="number" min="0" max="8760" step="1" value="${Math.abs(r.offset)}"></label><label>Når<select id="ruleDirection"><option value="before" ${r.offset<0?'selected':''}>Før</option><option value="after" ${r.offset>0?'selected':''}>Etter</option><option value="at" ${r.offset===0?'selected':''}>Ved tidspunktet</option></select></label></div><label>Oppgavetype<select id="ruleType"><option value="manual" ${r.type==='manual'?'selected':''}>Manuell oppgave</option><option value="check" ${r.type==='check'?'selected':''}>Sjekkliste</option></select></label><label>Kobling til meldingsmal<select id="ruleTask"><option value="none" ${(!r.task||r.task==='none')?'selected':''}>Ingen</option><option value="welcome" ${r.task==='welcome'?'selected':''}>Velkomstmelding</option><option value="arrival" ${r.task==='arrival'?'selected':''}>Ankomstinformasjon</option></select></label><label><input id="rulePushEnabled" type="checkbox" style="width:auto" ${pushEnabled?'checked':''}> Pushvarsel for denne oppgavetypen</label><label>Varsle før oppgavens tidspunkt<select id="rulePushLead"><option value="0" ${pushLeadHours===0?'selected':''}>Ved oppgavens tidspunkt</option><option value="0.5" ${pushLeadHours===0.5?'selected':''}>30 minutter</option><option value="1" ${pushLeadHours===1?'selected':''}>1 time</option><option value="2" ${pushLeadHours===2?'selected':''}>2 timer</option><option value="24" ${pushLeadHours===24?'selected':''}>1 dag</option></select></label><div class="form-actions"><button class="primary" onclick="saveRule()">Lagre regel</button><button onclick="editingRule=null;renderRules()">Avbryt</button></div></div>`}
@@ -511,7 +551,23 @@ function savePrivateStay(){let s={name:$('privateName').value.trim()||'Privat',s
 function deletePrivateStay(){if(editingPrivateId===null||!confirm('Slette dette privatoppholdet?'))return;state.privateStays=state.privateStays.filter(x=>x.id!==editingPrivateId);editingPrivateId=null;$('privateEditor').innerHTML='';save();render()}
 function v10YearNights(s,y){let n=0;for(let d=s.start;d<s.end;d=shift(d,1))if(Number(d.slice(0,4))===y)n++;return n}
 function v10YearStats(y){let gross=0,fees=0,bookings=0,bookedNights=0,guestNights=0,cancelled=0;let months=Array(12).fill(0),platforms={};for(let b of state.bookings){let a=bookingAmounts(b);if(b.cancelled){let cy=Number((b.cancelDate||b.start).slice(0,4));if(cy===y){gross+=a.gross;fees+=a.fee;cancelled++;months[Number((b.cancelDate||b.start).slice(5,7))-1]+=a.gross;let p=platforms[b.platform]||{gross:0,fees:0,count:0};p.gross+=a.gross;p.fees+=a.fee}continue}let total=nights(b),yn=v10YearNights(b,y);if(!yn||total<=0)continue;bookings++;bookedNights+=yn;guestNights+=yn*(Number(b.guests)||1);let p=platforms[b.platform]||{gross:0,fees:0,count:0};p.count++;p.gross+=a.gross*yn/total;p.fees+=a.fee*yn/total;gross+=a.gross*yn/total;fees+=a.fee*yn/total;for(let d=b.start;d<b.end;d=shift(d,1))if(Number(d.slice(0,4))===y)months[Number(d.slice(5,7))-1]+=a.gross/total}let privateDays=new Set;for(let s of state.privateStays)for(let d=s.start;d<s.end;d=shift(d,1))if(Number(d.slice(0,4))===y)privateDays.add(d);let totalDays=(new Date(y+1,0,1)-new Date(y,0,1))/86400000;return {gross,fees,net:gross-fees,bookings,bookedNights,guestNights,cancelled,privateNights:privateDays.size,availableDays:Math.max(0,totalDays-bookedNights-privateDays.size),totalDays,months,platforms,adr:bookedNights?gross/bookedNights:0}}
-function changeStatsYear(delta){statsYear+=delta;renderStatistics()}
+function statsYears(){
+ const years=new Set();
+ for(const b of [...state.bookings,...state.privateStays]){
+  if(b.cancelled){const year=Number((b.cancelDate||b.start||'').slice(0,4));if(year)years.add(year);continue;}
+  if(!b.start||!b.end||b.start>=b.end)continue;
+  const first=Number(b.start.slice(0,4)),last=Number(shift(b.end,-1).slice(0,4));
+  for(let year=first;year<=last;year++)years.add(year);
+ }
+ return [...years].sort((a,b)=>a-b);
+}
+function changeStatsYear(delta){
+ const years=statsYears(),last=years.at(-1)??new Date().getFullYear();
+ if(statsYear==='Total'){if(delta<0)statsYear=last;}
+ else if(delta>0&&statsYear>=last)statsYear='Total';
+ else statsYear+=delta;
+ renderStatistics();
+}
 function renderStatistics(){if(!$('statsMetrics'))return;let s=v10YearStats(statsYear),prev=v10YearStats(statsYear-1);$('statsYear').textContent=statsYear;let data=[['Brutto / prognose',money(s.gross)],['Etter plattformgebyr',money(s.net)],['Plattformgebyrer',money(s.fees)],['Bookinger',s.bookings],['Utleiedøgn',s.bookedNights],['Privatdøgn',s.privateNights],['Gjestedøgn',s.guestNights],['Snittpris / natt',money(s.adr)],['Kanselleringer',s.cancelled],['Belegg (utleie)',(100*s.bookedNights/s.totalDays).toFixed(1).replace('.',',')+' %']];$('statsMetrics').innerHTML=data.map(([label,value])=>`<div class="metric"><small>${label}</small><b>${value}</b></div>`).join('');let max=Math.max(1,...s.months);$('statsMonths').innerHTML=`<div class="stats-bars">${s.months.map((v,i)=>`<div class="stats-barrow"><span>${['Jan','Feb','Mar','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Des'][i]}</span><div class="stats-track"><div class="stats-fill" style="width:${Math.max(0,100*v/max)}%"></div></div><span style="text-align:right">${money(v)}</span></div>`).join('')}</div>`;$('statsPlatforms').innerHTML=Object.entries(s.platforms).map(([p,v])=>`<div class="stats-row"><div><strong>${esc(p)}</strong><div class="sub">${v.count} bookinger · gebyr ${money(v.fees)}</div></div><strong>${money(v.gross-v.fees)}</strong></div>`).join('')||'<p class="sub">Ingen inntekter registrert.</p>';$('statsUsage').innerHTML=[['Utleid',s.bookedNights],['Privat',s.privateNights],['Ledig',s.availableDays]].map(([k,v])=>`<div class="stats-row"><span>${k}</span><strong>${v} døgn</strong></div>`).join('')+'<p class="hint">Ledig betyr ingen registrerte opphold. Utleie og privatopphold kan ikke overlappe.</p>';$('statsCompare').innerHTML=`<div class="stats-row"><span>Brutto ${statsYear-1}</span><strong>${money(prev.gross)}</strong></div><div class="stats-row"><span>Brutto ${statsYear}</span><strong>${money(s.gross)}</strong></div><div class="stats-row"><span>Endring</span><strong>${money(s.gross-prev.gross)}</strong></div>`}
 function renderOverview(){let {gross,fees}=yearIncome(year),tax=Math.max(0,gross-15000)*.85*.22;$('yearTitle').textContent=year;$('metrics').innerHTML=[['Bruttoinntekt / prognose',gross],['Plattformgebyrer',fees],['Estimert skatt',tax],['Netto etter skatt',gross-fees-tax]].map(([k,v])=>`<div class="metric"><small>${k}</small><b>${money(v)}</b></div>`).join('');let now=Date.now(),b=state.bookings.filter(x=>!x.cancelled&&v10Time(x.end,x.checkout)>now).sort((a,b)=>v10Time(a.start,a.checkin)-v10Time(b.start,b.checkin))[0];if(!b){$('nextTasks').innerHTML='<div class="empty">Ingen kommende eller aktive bookinger.</div>';return}let ts=tasks().filter(t=>t.bookingId===b.id&&!done(t));$('nextTasks').innerHTML=`<p class="sub"><strong>${esc(b.name)}</strong> · ${fmt(b.start)}–${fmt(b.end)} · ${esc(b.platform)}</p>`+(ts.length?ts.map(taskHtml).join(''):'<div class="empty">Alle oppgaver for denne bookingen er fullført.</div>')}
 render=function(){oldRenderV10();renderCalendar();renderStatistics()};
@@ -555,11 +611,11 @@ const PRICE_PLATFORMS=['Finn.no','Airbnb','Booking.com'];
 if(!state.priceConfig)state.priceConfig={night:3000,clean:1500,nights:3,fees:{'Finn.no':[],'Airbnb':[{id:'a1',name:'Vertsgebyr (eksempel)',kind:'percent',base:'total',value:15.5}],'Booking.com':[{id:'b1',name:'Provisjon (eksempel)',kind:'percent',base:'total',value:15},{id:'b2',name:'Tilleggsgebyr (eksempel)',kind:'percent',base:'total',value:1.5}]}};
 for(let p of PRICE_PLATFORMS)state.priceConfig.fees[p]??=[];
 function priceInputChanged(){const p=state.priceConfig;p.night=Number($('priceNight').value)||0;p.clean=Number($('priceClean').value)||0;p.nights=Math.max(1,Math.min(365,Math.floor(Number($('priceNights').value)||1)));save();renderPriceResults()}
-function priceFeesChanged(){for(let p of PRICE_PLATFORMS){state.priceConfig.fees[p].forEach(f=>{const id='fee-'+f.id;f.name=$(id+'-name').value;f.kind=$(id+'-kind').value;f.base=$(id+'-base').value;f.value=Math.max(0,Number($(id+'-value').value)||0)})}save();renderPriceResults()}
-function addPriceFee(p){priceFeesChanged();state.priceConfig.fees[p].push({id:'fee'+Date.now()+Math.floor(Math.random()*1000),name:'Nytt gebyr',kind:'percent',base:'total',value:0});save();renderPricePanels()}
+function priceFeesChanged(){for(let p of PRICE_PLATFORMS){state.priceConfig.fees[p].forEach(f=>{const id='fee-'+f.id;f.name=$(id+'-name').value;f.kind=$(id+'-kind').value;f.base=$(id+'-base').value;f.payer=$(id+'-payer').value;f.value=Math.max(0,Number($(id+'-value').value)||0)})}save();renderPriceResults()}
+function addPriceFee(p){priceFeesChanged();state.priceConfig.fees[p].push({id:'fee'+Date.now()+Math.floor(Math.random()*1000),name:'Nytt gebyr',kind:'percent',base:'total',value:0,payer:p==='Finn.no'?'guest':'host'});save();renderPricePanels()}
 function removePriceFee(p,id){state.priceConfig.fees[p]=state.priceConfig.fees[p].filter(x=>x.id!==id);save();renderPricePanels()}
 function renderPricePanels(){const pc=state.priceConfig;for(let [id,value] of [['priceNight',pc.night],['priceClean',pc.clean],['priceNights',pc.nights]])if($(id)&&document.activeElement!==$(id))$(id).value=value;
- $('priceFeePanels').innerHTML=PRICE_PLATFORMS.map(p=>`<div class="price-platform"><div class="row"><h3>${esc(p)}</h3><button onclick="addPriceFee(${esc(JSON.stringify(p))})">+ Gebyr</button></div>${pc.fees[p].map(f=>{const id='fee-'+f.id;return `<div class="fee-row"><label>Navn<input id="${id}-name" value="${esc(f.name)}" onchange="priceFeesChanged()"></label><label>Type<select id="${id}-kind" onchange="priceFeesChanged()"><option value="percent" ${f.kind==='percent'?'selected':''}>%</option><option value="fixed" ${f.kind==='fixed'?'selected':''}>kr</option></select></label><label>Grunnlag<select id="${id}-base" onchange="priceFeesChanged()"><option value="total" ${f.base==='total'?'selected':''}>Hele</option><option value="night" ${f.base==='night'?'selected':''}>Natt</option><option value="clean" ${f.base==='clean'?'selected':''}>Vask</option></select></label><button title="Slett gebyr" onclick="removePriceFee(${esc(JSON.stringify(p))},${esc(JSON.stringify(f.id))})">×</button></div><label>Gebyrverdi<input id="${id}-value" type="number" min="0" step="0.01" value="${f.value}" onchange="priceFeesChanged()"></label>`}).join('')||'<p class="sub">Ingen gebyrer.</p>'}</div>`).join('');renderPriceResults()}
+ $('priceFeePanels').innerHTML=PRICE_PLATFORMS.map(p=>`<div class="price-platform"><div class="row"><h3>${esc(p)}</h3><button onclick="addPriceFee(${esc(JSON.stringify(p))})">+ Gebyr</button></div>${pc.fees[p].map(f=>{const id='fee-'+f.id;return `<div class="fee-row"><label>Navn<input id="${id}-name" value="${esc(f.name)}" onchange="priceFeesChanged()"></label><label>Type<select id="${id}-kind" onchange="priceFeesChanged()"><option value="percent" ${f.kind==='percent'?'selected':''}>%</option><option value="fixed" ${f.kind==='fixed'?'selected':''}>kr</option></select></label><label>Grunnlag<select id="${id}-base" onchange="priceFeesChanged()"><option value="total" ${f.base==='total'?'selected':''}>Hele</option><option value="night" ${f.base==='night'?'selected':''}>Natt</option><option value="clean" ${f.base==='clean'?'selected':''}>Vask</option></select></label><label>Betales av<select id="${id}-payer" onchange="priceFeesChanged()"><option value="host" ${feePayer(f,p)==='host'?'selected':''}>Utleier</option><option value="guest" ${feePayer(f,p)==='guest'?'selected':''}>Leietaker</option></select></label><button title="Slett gebyr" onclick="removePriceFee(${esc(JSON.stringify(p))},${esc(JSON.stringify(f.id))})">×</button></div><label>Gebyrverdi<input id="${id}-value" type="number" min="0" step="0.01" value="${f.value}" onchange="priceFeesChanged()"></label>`}).join('')||'<p class="sub">Ingen gebyrer.</p>'}</div>`).join('');renderPriceResults()}
 function priceSolve(p){const c=state.priceConfig,ns=Math.max(1,c.nights),targetNight=Math.max(0,c.night),targetClean=Math.max(0,c.clean),rules=c.fees[p];let percentNight=0,percentClean=0,fixed=0;
  for(let f of rules){const v=Number(f.value)||0;if(f.kind==='fixed'){fixed+=v;continue}if(f.base==='night')percentNight+=v/100;else if(f.base==='clean')percentClean+=v/100;else{percentNight+=v/100;percentClean+=v/100}}
  // Allocate booking-level fixed fees proportionally to target revenue across the stay.
@@ -623,10 +679,23 @@ v13Price.cleaningIncluded??={'Finn.no':false,'Airbnb':false,'Booking.com':true};
 v13Price.discountBaseNights??={'Finn.no':2,'Airbnb':2,'Booking.com':2};
 v13Price.discountLengths??={'Finn.no':[3,4,5,6,7,10,14],'Airbnb':[7,10,14],'Booking.com':[3,4,5,6,7,10,14]};
 function v13Money(x){return Number.isFinite(x)?money(Math.ceil(x)):'Ugyldig'}
+if(!state.priceConfig.fees['Finn.no'].some(f=>feePayer(f,'Finn.no')==='guest')){
+ state.priceConfig.fees['Finn.no'].push({id:'finn-guest-fee',name:'FINN-gebyr',kind:'percent',base:'total',value:0,payer:'guest'});
+}
+function feePayer(f,p){return f.payer||(p==='Finn.no'?'guest':'host');}
+function guestPlatformFee(platform,nights,nightly,cleaning,included){
+ const config=state.priceConfig;
+ const total=nightly*nights+cleaning;
+ const cleaningShare=included?config.clean/(config.night*nights+config.clean||1)*total:cleaning;
+ return (config.fees[platform]||[]).filter(f=>feePayer(f,platform)==='guest').reduce((sum,f)=>{
+  const base=f.base==='night'?total-cleaningShare:f.base==='clean'?cleaningShare:total;
+  return sum+(f.kind==='fixed'?Number(f.value)||0:base*(Number(f.value)||0)/100);
+ },0);
+}
 function v13Pricing(p,ns){
  const c=state.priceConfig,night=Math.max(0,Number(c.night)||0),clean=Math.max(0,Number(c.clean)||0);
  const inc=!!c.cleaningIncluded[p];let pn=0,pc=0,fixed=0;
- for(const f of (c.fees[p]||[])){
+ for(const f of (c.fees[p]||[]).filter(f=>feePayer(f,p)==='host')){
   const v=Math.max(0,Number(f.value)||0);
   if(f.kind==='fixed'){fixed+=v;continue}
   if(f.base==='night')pn+=v/100;
@@ -658,17 +727,19 @@ function priceInputChanged(){const c=state.priceConfig;c.night=Math.max(0,Number
 function renderPriceResults(){
  if(!$('priceResults'))return;
  const c=state.priceConfig,ns=Math.max(2,Number(c.nights)||2);
- $('priceModeSettings').innerHTML='<h3>Hvordan håndteres utvask?</h3><p class="hint">Velg per plattform. Utvask inkludert gir én samlet nattpris og en tabell med veiledende rabatter. Gebyrer endres separat nedenfor.</p>'+PRICE_PLATFORMS.map(p=>`<label class="check" style="margin:10px 0"><input type="checkbox" ${c.cleaningIncluded[p]?'checked':''} onchange="v13ToggleCleaning(${JSON.stringify(p)},this.checked)"> <strong>${esc(p)}</strong> – utvask inkludert i nattprisen</label>`).join('');
+ $('priceModeSettings').innerHTML='<h3>Hvordan håndteres utvask?</h3><p class="hint">Velg per plattform. Utvask inkludert gir én samlet nattpris og en tabell med veiledende rabatter. Gebyrer endres separat nedenfor.</p>'+PRICE_PLATFORMS.map(p=>`<label class="check" style="margin:10px 0"><input type="checkbox" ${c.cleaningIncluded[p]?'checked':''} onchange="v13ToggleCleaning(${esc(JSON.stringify(p))},this.checked)"> <strong>${esc(p)}</strong> – utvask inkludert i nattprisen</label>`).join('');
  let html=`<h3>Anbefalte priser · ${ns} netter</h3><div class="price-result"><strong>Plattform</strong><strong>Nattpris</strong><strong>Utvask</strong></div>`;
  for(const p of PRICE_PLATFORMS){const x=v13Pricing(p,ns);if(!x){html+=`<div class="price-result"><span>${esc(p)}</span><strong>Ugyldig</strong><strong>–</strong></div>`;continue}
  const nightly=Math.ceil(x.nightly),cleaning=x.inc?0:Math.ceil(x.cleaning);
- html+=`<div class="price-result"><span>${esc(p)}</span><strong>${money(nightly)}</strong><strong>${x.inc?'Inkludert':money(cleaning)}</strong></div><p class="price-note">Totalpris: <strong>${money(nightly*ns+cleaning)}</strong> · Netto mål: ${money(c.night*ns+c.clean)}</p>`;
+ const extra=guestPlatformFee(p,ns,nightly,cleaning,x.inc);
+ const guestFeePending=p==='Finn.no'&&!(c.fees[p]||[]).some(f=>feePayer(f,p)==='guest'&&Number(f.value)>0);
+ html+=`<div class="price-result"><span>${esc(p)}</span><strong>${money(nightly)}</strong><strong>${x.inc?'Inkludert':money(cleaning)}</strong></div><p class="price-note">Totalpris: <strong>${money(nightly*ns+cleaning+extra)}${guestFeePending?' + FINN-gebyr':''}</strong>${extra>0?`<small class="price-guest-fee">Inkl. ${money(extra)} i leietakergebyr</small>`:''} · Netto mål: ${money(c.night*ns+c.clean)}</p>`;
  }
  $('priceResults').innerHTML=html+'<p class="hint">Prisene er veiledende, avrundet opp til hele kroner. Kontroller faktiske plattformgebyrer og hvordan rabatter kombineres før du endrer annonser.</p>';
  let discountHtml='<h3>Oppholdsrabatter når utvask er inkludert</h3>';
  for(const p of PRICE_PLATFORMS){if(!c.cleaningIncluded[p])continue;
  const base=Math.max(2,Number(c.discountBaseNights[p])||2),basePrice=v13Pricing(p,base);
- discountHtml+=`<div class="price-platform"><h3>${esc(p)}</h3><label>Grunnpris beregnet for antall netter<input type="number" min="2" max="30" value="${base}" onchange="v13SetBase(${JSON.stringify(p)},this.value)"></label><label>Vis oppholdslengder (kommadelt)<input value="${(c.discountLengths[p]||[]).join(', ')}" onchange="v13SetLengths(${JSON.stringify(p)},this.value)"></label>`;
+ discountHtml+=`<div class="price-platform"><h3>${esc(p)}</h3><label>Grunnpris beregnet for antall netter<input type="number" min="2" max="30" value="${base}" onchange="v13SetBase(${esc(JSON.stringify(p))},this.value)"></label><label>Vis oppholdslengder (kommadelt)<input value="${(c.discountLengths[p]||[]).join(', ')}" onchange="v13SetLengths(${esc(JSON.stringify(p))},this.value)"></label>`;
  if(!basePrice){discountHtml+='<p class="hint">Gebyrinnstillingene gir ugyldig pris.</p></div>';continue}
  const baseNight=basePrice.nightly;
  discountHtml+='<div class="price-result"><strong>Netter</strong><strong>Nattpris</strong><strong>Rabatt</strong></div>';
@@ -1034,18 +1105,50 @@ bookingForm=function(b){
    monthly/platform allocations are proportional estimates. */
 let v16StatsMode='net';
 function v16SetStatsMode(mode){v16StatsMode=mode==='gross'?'gross':'net';renderStatistics()}
+function totalYearStats(years,netMode){
+ const rows=(years.length?years:[new Date().getFullYear()]).map(v10YearStats);
+ const total={months:Array(12).fill(0),platforms:Object.create(null),tax:0};
+ for(const key of ['gross','fees','net','bookedNights','guestNights','cancelled','privateNights','availableDays','totalDays']){
+  total[key]=rows.reduce((sum,row)=>sum+row[key],0);
+ }
+ total.bookings=state.bookings.filter(b=>!b.cancelled&&b.start&&b.end&&b.start<b.end).length;
+ for(const row of rows){
+  const tax=v16EstimatedTax(row.gross);
+  total.tax+=tax;
+  const ratio=netMode?(row.gross>0?(row.net-tax)/row.gross:0):1;
+  row.months.forEach((amount,i)=>{total.months[i]+=amount*ratio;});
+  for(const [name,platform] of Object.entries(row.platforms)){
+   const target=total.platforms[name]??={gross:0,fees:0,count:0};
+   target.gross+=platform.gross*ratio;
+   target.fees+=platform.fees;
+  }
+ }
+ for(const b of state.bookings){
+  if(!b.cancelled&&b.start&&b.end&&b.start<b.end&&total.platforms[b.platform])total.platforms[b.platform].count++;
+ }
+ return total;
+}
+function statsShare(value,total){
+ return total>0?(100*value/total).toLocaleString('nb-NO',{maximumFractionDigits:1})+' %':'–';
+}
 function v16EstimatedTax(gross){return Math.max(0,gross-15000)*0.85*0.22}
 renderStatistics=function(){
  const metrics=$('statsMetrics');if(!metrics)return;
- const current=v10YearStats(statsYear),previous=v10YearStats(statsYear-1);
- const tax=v16EstimatedTax(current.gross),prevTax=v16EstimatedTax(previous.gross);
- const afterTax=current.net-tax,prevAfterTax=previous.net-prevTax;
- const netMode=v16StatsMode==='net';
+ const isTotal=statsYear==='Total',netMode=v16StatsMode==='net';
+ const current=isTotal?totalYearStats(statsYears(),netMode):v10YearStats(statsYear);
+ const previous=isTotal?null:v10YearStats(statsYear-1);
+ const tax=isTotal?current.tax:v16EstimatedTax(current.gross),prevTax=previous?v16EstimatedTax(previous.gross):0;
+ const afterTax=current.net-tax,prevAfterTax=(previous?.net||0)-prevTax;
+ const compare=$('statsCompare').closest('.card');
+ compare.hidden=isTotal;
+ const next=$('statsYear').parentElement.querySelector('button:last-child');
+ next.disabled=isTotal;
  const selectedValue=netMode?afterTax:current.gross;
- const prevValue=netMode?prevAfterTax:previous.gross;
+ const prevValue=netMode?prevAfterTax:(previous?.gross||0);
  const ratio=current.gross>0?afterTax/current.gross:0;
- const monthValues=current.months.map(x=>netMode?x*ratio:x);
- const platformValue=p=>netMode?p.gross*ratio:p.gross;
+ const monthValues=current.months.map(x=>!isTotal&&netMode?x*ratio:x);
+ const platformValue=p=>!isTotal&&netMode?p.gross*ratio:p.gross;
+ const platformTotal=Object.values(current.platforms).reduce((sum,p)=>sum+platformValue(p),0);
  $('statsYear').textContent=statsYear;
  let toggle=$('v16StatsToggle');
  if(!toggle){
@@ -1065,8 +1168,9 @@ renderStatistics=function(){
  metrics.innerHTML=values.map(([label,value])=>`<div class="metric"><small>${label}</small><b>${value}</b></div>`).join('');
  const max=Math.max(1,...monthValues);
  $('statsMonths').innerHTML='<div class="stats-bars">'+monthValues.map((v,i)=>`<div class="stats-barrow"><span>${['Jan','Feb','Mar','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Des'][i]}</span><div class="stats-track"><div class="stats-fill" style="width:${Math.max(0,100*v/max)}%"></div></div><span style="text-align:right">${money(v)}</span></div>`).join('')+'</div>';
- $('statsPlatforms').innerHTML=Object.entries(current.platforms).map(([p,v])=>`<div class="stats-row"><div><strong>${esc(p)}</strong><div class="sub">${v.count} bookinger · gebyr ${money(v.fees)}</div></div><strong>${money(platformValue(v))}</strong></div>`).join('')||'<p class="sub">Ingen inntekter registrert.</p>';
- $('statsUsage').innerHTML=[['Utleid',current.bookedNights],['Privat',current.privateNights],['Ledig',current.availableDays]].map(([label,value])=>`<div class="stats-row"><span>${label}</span><strong>${value} døgn</strong></div>`).join('');
+ $('statsPlatforms').innerHTML=Object.entries(current.platforms).map(([p,v])=>`<div class="stats-row skv-stats-share"><div><strong>${esc(p)}</strong><div class="sub">${v.count} bookinger · gebyr ${money(v.fees)}</div></div><strong>${money(platformValue(v))}</strong><span>${statsShare(platformValue(v),platformTotal)}</span></div>`).join('')||'<p class="sub">Ingen inntekter registrert.</p>';
+ $('statsUsage').innerHTML=[['Utleid',current.bookedNights],['Privat',current.privateNights],['Ledig',current.availableDays]].map(([label,value])=>`<div class="stats-row skv-stats-share"><span>${label}</span><strong>${value} døgn</strong><span>${statsShare(value,current.totalDays)}</span></div>`).join('');
+ if(isTotal)return;
  const delta=selectedValue-prevValue;
  const percent=Math.abs(prevValue)>0.0001?(' ('+(100*delta/Math.abs(prevValue)).toLocaleString('nb-NO',{maximumFractionDigits:1})+' %)'):'';
  const label=netMode?'Netto etter skatt':'Brutto';
@@ -1391,7 +1495,7 @@ saveStockEdit=function(){
 };
 function v1617RenderLocations(){
  const host=$('v1617Locations');if(!host)return;
- host.innerHTML=v1617Locations.map((x,i)=>'<div class="v1617-location-row"><span>'+esc(x)+'</span><button onclick="v1617RenameLocation('+i+')">Rediger</button><button onclick="v1617DeleteLocation('+i+')">Slett</button></div>').join('')+'<div class="row"><input id="v1617LocationName" placeholder="Ny plassering" aria-label="Ny plassering"><button onclick="v1617AddLocation()">Legg til</button></div>';
+ host.innerHTML=v1617Locations.map((x,i)=>'<div class="v1617-location-row"><span>'+esc(x)+'</span><button onclick="v1617RenameLocation('+i+')">Rediger</button><button onclick="v1617DeleteLocation('+i+')">Slett</button></div>').join('')+'<div class="row skv-add-location"><input id="v1617LocationName" placeholder="Ny plassering" aria-label="Ny plassering"><button onclick="v1617AddLocation()">Legg til</button></div>';
 }
 function v1617AddLocation(){const v=$('v1617LocationName')?.value.trim();if(!v||v1617Locations.includes(v))return;v1617Locations.push(v);v1617SaveLocations();v1617RenderLocations()}
 function v1617RenameLocation(i){const old=v1617Locations[i],v=prompt('Nytt navn på plassering',old)?.trim();if(!v||v1617Locations.some((x,j)=>i!==j&&x===v))return;v1617Locations[i]=v;state.stock.filter(x=>x.kind==='Privat'&&x.location===old).forEach(x=>x.location=v);save();v1617SaveLocations();v1617RenderLocations()}
@@ -1483,10 +1587,11 @@ renderPriceResults=function(){
  const rows=[...root.querySelectorAll('.price-result')],notes=[...root.querySelectorAll('.price-note')];
  rows.forEach((row,i)=>{
   row.classList.add('v1618-price-row');
-  if(i===0){const h=document.createElement('strong');h.textContent='Totalpris';row.appendChild(h);return}
+  if(i===0){const h=document.createElement('strong');h.textContent='Totalt for leietaker';row.appendChild(h);return}
   const note=notes[i-1];if(!note)return;
-  const match=note.textContent.match(/Totalpris:\s*([^·]+)/);
-  const val=document.createElement('strong');val.textContent=match?match[1].trim():'–';row.appendChild(val);note.remove();
+  const val=document.createElement('strong');val.textContent=note.querySelector('strong')?.textContent||'–';
+  const fee=note.querySelector('.price-guest-fee');if(fee)val.appendChild(fee);
+  row.appendChild(val);note.remove();
  });
 };
 function v1618AdjustSettings(){
@@ -1621,6 +1726,7 @@ renderPricePanels=function(){
    head.append(title,remove);
    const grid=document.createElement('div');grid.className='v1620-fee-grid';
    grid.append(nameLabel,valueLabel,typeLabel,baseLabel);
+   const payer=$(id+'-payer')?.closest('label');if(payer)grid.appendChild(payer);
    group.append(head,grid);row.replaceWith(group);
    name.addEventListener('input',()=>{title.textContent=name.value||'Gebyr'});
   });
@@ -1699,6 +1805,7 @@ const skvPrivateRuleRenderBase=renderRules;
 renderRules=function(){
  skvPrivateRuleRenderBase();
  const select=$('rulePlatform');
+ if(select){select.add(new Option('Alle inkl. privat','Alle inkl. privat'),1);if(state.taskRules.find(r=>r.id===editingRule)?.platform==='Alle inkl. privat')select.value='Alle inkl. privat';}
  if(select&&!Array.from(select.options).some(o=>o.value==='Privat booking')){
   const option=document.createElement('option');option.value='Privat booking';option.textContent='Privat booking';select.appendChild(option);
   const rule=state.taskRules.find(r=>r.id===editingRule);
@@ -1714,7 +1821,7 @@ const skvPrivateTaskHtmlBase=taskHtml;
 taskHtml=function(task){
  if(task.platform!=='Privat booking')return skvPrivateTaskHtmlBase(task);
  const isDone=done(task);
- return '<div class="task"><div style="flex:1"><strong>'+esc(task.title)+'</strong><div class="sub">'+fmtDue(task.due)+' · '+esc(task.guest)+' · Privat booking</div>'+(isDone?'<span class="tag">Fullført</span>':'')+'</div><div class="task-buttons"><button class="'+(isDone?'':'primary')+'" onclick="skvTogglePrivateTask('+JSON.stringify(task.id)+')">'+(isDone?'Angre':'Merk som ferdig')+'</button></div></div>';
+ return '<div class="task"><div style="flex:1"><strong>'+esc(task.title)+'</strong><div class="sub">'+fmtDue(task.due)+' · '+esc(task.guest)+' · Privat booking</div>'+(isDone?'<span class="tag">Fullført</span>':'')+'</div><div class="task-buttons"><button class="'+(isDone?'':'primary')+'" onclick="skvTogglePrivateTask('+esc(JSON.stringify(task.id))+')">'+(isDone?'Angre':'Merk som ferdig')+'</button></div></div>';
 };
 function skvTogglePrivateTask(id){
  const task=tasks().find(t=>t.id===id&&t.platform==='Privat booking');
@@ -1728,7 +1835,7 @@ tasks=function(){
  const privateTasks=state.privateStays.flatMap(stay=>{
   // Keep completed history, but do not create overdue tasks for past private stays.
   const past=stamp(stay.end,stay.checkout).getTime()<Date.now();
-  return state.taskRules.filter(rule=>rule.active&&rule.platform==='Privat booking'&&(!past||!!state.completed[String(stay.id)+'-'+rule.id])).map(rule=>({
+  return state.taskRules.filter(rule=>rule.active&&(rule.platform==='Privat booking'||rule.platform==='Alle inkl. privat')&&(!past||!!state.completed[String(stay.id)+'-'+rule.id])).map(rule=>({
    id:String(stay.id)+'-'+rule.id,bookingId:stay.id,title:rule.title,
    due:shiftHours(rule.anchor==='checkin'?stay.start:stay.end,rule.anchor==='checkin'?stay.checkin:stay.checkout,Number(rule.offset)),
    type:rule.type,guest:stay.name||'Privat',platform:'Privat booking',ruleId:rule.id,task:rule.task||'none'
@@ -1806,7 +1913,7 @@ priceFeesChanged=function(){
    const name=$(id+'-name'),kind=$(id+'-kind'),base=$(id+'-base'),value=$(id+'-value');
    if(name)fee.name=name.value;
    if(kind)fee.kind=kind.value;
-   if(base)fee.base=base.value;
+   if(base)fee.base=base.value;const payer=$('fee-'+fee.id+'-payer');if(payer)fee.payer=payer.value;
    if(value)fee.value=Math.max(0,Number(value.value)||0);
   }
  }
@@ -1815,14 +1922,14 @@ priceFeesChanged=function(){
 addPriceFee=function(platform){
  if(!PRICE_PLATFORMS.includes(platform))return;
  // Capture unsaved input edits without issuing an intermediate write.
- for(const p of PRICE_PLATFORMS)for(const fee of state.priceConfig.fees[p]||[]){const id='fee-'+fee.id;const name=$(id+'-name'),kind=$(id+'-kind'),base=$(id+'-base'),value=$(id+'-value');if(name)fee.name=name.value;if(kind)fee.kind=kind.value;if(base)fee.base=base.value;if(value)fee.value=Math.max(0,Number(value.value)||0)}
- state.priceConfig.fees[platform].push({id:'fee'+Date.now()+Math.floor(Math.random()*100000),name:'Nytt gebyr',kind:'percent',base:'total',value:0});
+ for(const p of PRICE_PLATFORMS)for(const fee of state.priceConfig.fees[p]||[]){const id='fee-'+fee.id;const name=$(id+'-name'),kind=$(id+'-kind'),base=$(id+'-base'),value=$(id+'-value');if(name)fee.name=name.value;if(kind)fee.kind=kind.value;if(base)fee.base=base.value;const payer=$('fee-'+fee.id+'-payer');if(payer)fee.payer=payer.value;if(value)fee.value=Math.max(0,Number(value.value)||0)}
+ state.priceConfig.fees[platform].push({id:'fee'+Date.now()+Math.floor(Math.random()*100000),name:'Nytt gebyr',kind:'percent',base:'total',value:0,payer:platform==='Finn.no'?'guest':'host'});
  save();renderPricePanels();
 };
 removePriceFee=function(platform,id){
  if(!PRICE_PLATFORMS.includes(platform))return;
  // Preserve other fee edits; avoid saving a transient state before deletion.
- for(const p of PRICE_PLATFORMS)for(const fee of state.priceConfig.fees[p]||[]){const key='fee-'+fee.id;const name=$(key+'-name'),kind=$(key+'-kind'),base=$(key+'-base'),value=$(key+'-value');if(name)fee.name=name.value;if(kind)fee.kind=kind.value;if(base)fee.base=base.value;if(value)fee.value=Math.max(0,Number(value.value)||0)}
+ for(const p of PRICE_PLATFORMS)for(const fee of state.priceConfig.fees[p]||[]){const key='fee-'+fee.id;const name=$(key+'-name'),kind=$(key+'-kind'),base=$(key+'-base'),value=$(key+'-value');if(name)fee.name=name.value;if(kind)fee.kind=kind.value;if(base)fee.base=base.value;const payer=$('fee-'+fee.id+'-payer');if(payer)fee.payer=payer.value;if(value)fee.value=Math.max(0,Number(value.value)||0)}
  state.priceConfig.fees[platform]=state.priceConfig.fees[platform].filter(f=>f.id!==id);
  save();renderPricePanels();
 };
@@ -1855,10 +1962,11 @@ const skvNextSettingsBase=renderSettings;
 renderSettings=function(){
  skvNextSettingsBase();
  const root=$('innstillinger');if(!root)return;
- const desired=['Plattformgebyrer','Priskalkulator','Utleievarer','Plasseringer','Sjekklistemaler','Tidspunkter og oppgaver','Oppgaveregler','Meldingsmaler','Kalenderintegrasjon (iCal)','Testdata'];
- const cards=[...root.children].filter(el=>el.classList.contains('card'));
+ const desired=['Tidspunkter og oppgaver','Oppgaveregler','Sjekklistemaler','Pushvarsler','Meldingsmaler','Plattformgebyrer','Priskalkulator','Utleievarer','Plasseringer','Kalenderintegrasjon'];
+ const cards=[...root.children].filter(el=>el.matches('.card, .settings-accordion'));
  const label=el=>el.querySelector('summary')?.textContent.trim()||el.querySelector('h2')?.textContent.trim()||'';
  const byName=new Map(cards.map(el=>[label(el),el]));
+ byName.get('Testdata')?.remove();
  for(const name of desired){const card=byName.get(name);if(card)root.appendChild(card)}
  const places=byName.get('Plasseringer');
  if(places){places.classList.add('v16-settings-accordion','skv-places-accordion');if(places.querySelector('summary'))for(const h of places.querySelectorAll('h2,h3'))if(h.textContent.trim()==='Plasseringer')h.style.display='none';}
@@ -1927,7 +2035,7 @@ function bookingFeePeriods(){
 function bookingFeeFor(platform,day,gross){
  const period=bookingFeePeriods().filter(p=>p.from<=day).sort((a,b)=>b.from.localeCompare(a.from))[0];
  if(!period||!day)return null;
- return Math.round((period.fees[platform]||[]).reduce((sum,f)=>sum+(f.kind==='fixed'?Number(f.value)||0:gross*(Number(f.value)||0)/100),0)*100)/100;
+ return Math.round((period.fees[platform]||[]).filter(f=>feePayer(f,platform)==='host').reduce((sum,f)=>sum+(f.kind==='fixed'?Number(f.value)||0:gross*(Number(f.value)||0)/100),0)*100)/100;
 }
 const bookingFormFeeBase=bookingForm;
 bookingForm=function(b){
@@ -1947,7 +2055,7 @@ function renderBookingFeePeriods(){
  const anchor=$('priceFeePanels');if(!anchor)return;
  let el=$('bookingFeePeriodPanel');if(!el){el=document.createElement('div');el.id='bookingFeePeriodPanel';anchor.after(el);}
  const periods=bookingFeePeriods().slice().sort((a,b)=>b.from.localeCompare(a.from));
- el.innerHTML='<h3>Automatiske bookinggebyrer</h3><p class="sub">Alle prosentgebyrer beregnes av samlet brutto inkludert vask.</p><label>Ny periode – gjeldende fra<input type="date" id="newFeePeriodDate" min="2027-01-01"></label><button onclick="addBookingFeePeriod()">Opprett periode</button>'+periods.map(p=>`<details class="card"><summary>Gjeldende fra ${esc(p.from)}</summary>${['Finn.no','Airbnb','Booking.com','Direkte'].map(platform=>`<h3>${esc(platform)}</h3>${(p.fees[platform]||[]).map((f,i)=>`<div class="field-grid"><label>Navn<input value="${esc(f.name)}" onchange="changeBookingFeePeriod('${p.from}',${esc(JSON.stringify(platform))},${i},'name',this.value)"></label><label>Type<select onchange="changeBookingFeePeriod('${p.from}',${esc(JSON.stringify(platform))},${i},'kind',this.value)"><option value="percent" ${f.kind==='percent'?'selected':''}>%</option><option value="fixed" ${f.kind==='fixed'?'selected':''}>kr</option></select></label><label>Verdi<input type="number" min="0" step="0.01" value="${Number(f.value)||0}" onchange="changeBookingFeePeriod('${p.from}',${esc(JSON.stringify(platform))},${i},'value',this.value)"></label><button onclick="removeBookingFeePeriodRule('${p.from}',${esc(JSON.stringify(platform))},${i})">Slett gebyr</button></div>`).join('')}<button onclick="addBookingFeePeriodRule('${p.from}',${esc(JSON.stringify(platform))})">+ Gebyr</button>`).join('')}</details>`).join('');
+ el.innerHTML='<h3>Automatiske bookinggebyrer</h3><p class="sub">Alle prosentgebyrer beregnes av samlet brutto inkludert vask.</p><label>Ny periode – gjeldende fra<input type="date" id="newFeePeriodDate" min="2027-01-01"></label><button onclick="addBookingFeePeriod()">Opprett periode</button>'+periods.map(p=>`<details class="card"><summary>Gjeldende fra ${esc(p.from)}</summary>${['Finn.no','Airbnb','Booking.com','Direkte'].map(platform=>`<h3>${esc(platform)}</h3>${(p.fees[platform]||[]).map((f,i)=>`<div class="field-grid"><label>Navn<input value="${esc(f.name)}" onchange="changeBookingFeePeriod('${p.from}',${esc(JSON.stringify(platform))},${i},'name',this.value)"></label><label>Type<select onchange="changeBookingFeePeriod('${p.from}',${esc(JSON.stringify(platform))},${i},'kind',this.value)"><option value="percent" ${f.kind==='percent'?'selected':''}>%</option><option value="fixed" ${f.kind==='fixed'?'selected':''}>kr</option></select></label><label>Betales av<select onchange="changeBookingFeePeriod('${p.from}',${esc(JSON.stringify(platform))},${i},'payer',this.value)"><option value="host" ${feePayer(f,platform)==='host'?'selected':''}>Utleier</option><option value="guest" ${feePayer(f,platform)==='guest'?'selected':''}>Leietaker</option></select></label><label>Verdi<input type="number" min="0" step="0.01" value="${Number(f.value)||0}" onchange="changeBookingFeePeriod('${p.from}',${esc(JSON.stringify(platform))},${i},'value',this.value)"></label><button onclick="removeBookingFeePeriodRule('${p.from}',${esc(JSON.stringify(platform))},${i})">Slett gebyr</button></div>`).join('')}<button onclick="addBookingFeePeriodRule('${p.from}',${esc(JSON.stringify(platform))})">+ Gebyr</button>`).join('')}</details>`).join('');
 }
 function addBookingFeePeriod(){
  const day=$('newFeePeriodDate').value,periods=bookingFeePeriods();
@@ -1957,7 +2065,7 @@ function addBookingFeePeriod(){
 }
 function bookingFeePeriodRules(day,platform){const p=bookingFeePeriods().find(p=>p.from===day);return p?(p.fees[platform]??=[]):null;}
 function changeBookingFeePeriod(day,platform,i,key,value){const f=bookingFeePeriodRules(day,platform)?.[i];if(!f)return;f[key]=key==='value'?Math.max(0,Number(value)||0):value;save();}
-function addBookingFeePeriodRule(day,platform){bookingFeePeriodRules(day,platform)?.push({name:'Nytt gebyr',kind:'percent',base:'total',value:0});save();renderBookingFeePeriods();}
+function addBookingFeePeriodRule(day,platform){bookingFeePeriodRules(day,platform)?.push({name:'Nytt gebyr',kind:'percent',base:'total',value:0,payer:platform==='Finn.no'?'guest':'host'});save();renderBookingFeePeriods();}
 function removeBookingFeePeriodRule(day,platform,i){bookingFeePeriodRules(day,platform)?.splice(i,1);save();renderBookingFeePeriods();}
 const renderPricePanelsFeeBase=renderPricePanels;
 renderPricePanels=function(){renderPricePanelsFeeBase();renderBookingFeePeriods();};
@@ -2068,10 +2176,12 @@ renderSettings=function(){
  skvPushSettingsBase();
  const root=$('innstillinger');if(!root)return;
  let card=$('skvPushCard');
- if(!card){card=document.createElement('div');card.className='card';card.id='skvPushCard';card.innerHTML='<h2>Pushvarsler</h2><p class="hint">Aktiver varsler på denne enheten. Varslingstid velges under Oppgaveregler.</p>';root.appendChild(card);}
+ if(!card){card=document.createElement('div');card.className='card';card.id='skvPushCard';card.innerHTML='<h2>Pushvarsler</h2><p class="hint">Aktiver varsler på denne enheten. Varslingstid velges under Oppgaveregler.</p>';root.appendChild(card);v16InitSettingsAccordions();}
  const controls=window.parent.document.getElementById('skv-push-settings');
  if(controls&&!controls.hidden){controls.style.display='block';card.appendChild(controls);card.hidden=false;}
  else if(!card.querySelector('#skv-push-settings'))card.hidden=true;
+ const messages=[...root.children].find(el=>el.contains($('messageTemplates')));
+ if(messages)root.insertBefore(card,messages);
 };
 
 render();
