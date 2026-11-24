@@ -1,3 +1,8 @@
+# AVKLARING – ICAL EMNEFELT
+
+Godkjent: SUMMARY for utleie er «Utleie – Airbnb», «Utleie – Booking.com», «Utleie – FINN» eller «Utleie – Direkte», og «Privat» for privatopphold. Homey-flows reagerer på emnefelt; bruker kan enkelt tilpasse disse etter at feeden er klar. Punkt 4 ferdig avklart.
+
+---
 # AVKLARING – HANDLELISTE OG LAGERLOGIKK
 
 Godkjent: automatisk handleliste med manglende antall opp til minimumsbeholdning, justerbart antall. Ved avkryssing som kjøpt økes tilknyttet utleielager med kjøpt antall; eventuell restmangel beholdes. Manuelle varer fjernes uten lagerendring. Kopiering påvirker ikke lager. Punkt 3 ferdig avklart.
