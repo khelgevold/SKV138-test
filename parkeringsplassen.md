@@ -1,3 +1,8 @@
+# NESTE TEST-RELEASE – BEKREFTEDE INNTEKTER – 24.11.2026
+
+Bruker ønsker bekreftede inntekter basert på avbestillingsregler. Plassering og fremstilling avklares senere av bruker. Skjermbilder: antatt Booking.com: gratis inntil 30 døgn før innsjekk, totalpris ved avbestilling innen 30 døgn; Airbnb Begrensede, kortvarige opphold under 28 netter: full refusjon minst 30 dager før innsjekkingstidspunkt, 50 % refusjon 7–30 dager før, ingen deretter; antatt FINN Moderat: full refusjon mer enn 30 dager før innsjekksdato, 50 % 14–30 dager før, ingen under 14 dager. Bekreft plattformtilordning for første og tredje bilde samt eksakte grensevilkår før implementasjon. Forslag: historiske regelperioder basert på bookingdato, skille estimert ikke-refunderbar nettoinntekt fra faktisk utbetalt, hensynta gebyrer og eventuelle unntak. Ikke implementer visning før bruker har avklart hvor/hvordan. Samles med push, privatopphold åpning og automatisk plattformgebyr i neste TEST-release.
+
+---
 # KORRIGERT FEILBESKRIVELSE – 23.11.2026
 
 Brukeren bekrefter at privatopphold **allerede vises riktig i kalenderen**; tidligere rapport skyldtes feil dato ved opprettelse. Reell feil: trykk på privatopphold gjør ingenting både i kalender og bookingoversikt. Rett åpning til detaljer/redigering/sletting fra begge steder i neste TEST-release. Ikke bruk tid på å reparere visning som allerede virker. I koden peker `openCalendarStay('private',id)` til `editPrivateStay(id)` og `privateStayForm` kaller `show('kalender')`; undersøk særlig navigasjon/elementtilgjengelighet og hendelser. Ikke deploy før samlet TEST-release godkjennes.
