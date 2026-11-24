@@ -23,17 +23,22 @@ export default async function handler() {
     if(!subscriptions.rowCount)return;
     const sub=subscriptions.rows[0];
     const now=Date.now();
-    for(const task of pendingPushTasks(data.rows[0].payload,now,20)){
+    const tasks=pendingPushTasks(data.rows[0].payload,now,20);
+    let skipped=0,sent=0,failed=0;
+    for(const task of tasks){
       // Claim before delivery: at most one send attempt per task, including concurrent invocations.
       const claimed=await client.query('INSERT INTO public.skv138_push_sent(task_id) VALUES($1) ON CONFLICT DO NOTHING RETURNING task_id',[task.taskId]);
-      if(!claimed.rowCount)continue;
+      if(!claimed.rowCount){skipped++;continue;}
       const payload=JSON.stringify({kind:'skv138-task',taskId:task.taskId,title:'SKV138: '+task.title,body:'Du har en oppgave som nærmer seg.'});
       try{
         await webpush.sendNotification({endpoint:sub.endpoint,keys:{p256dh:sub.p256dh,auth:sub.auth_key}},payload,{TTL:3600});
+        sent++;
       }catch(error){
+        failed++;
         console.error('SKV138 push delivery failed',error?.statusCode||'unknown');
         if(error?.statusCode===404||error?.statusCode===410)await client.query('DELETE FROM public.skv138_push_subscriptions WHERE endpoint=$1',[sub.endpoint]);
       }
     }
+    console.info('SKV138 push summary',JSON.stringify({eligible:tasks.length,skipped,sent,failed}));
   }finally{client.release();await pool.end()}
 }
