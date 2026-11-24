@@ -1,3 +1,7 @@
+## Status 24.11.2026 – Automatisk push bekreftet i PROD
+
+Brukeren bekreftet at automatisk push planlagt kl. 20.40 kom kl. 20.45 med iPhone-appen helt lukket. PROD-deploy `417e986` aktiverte automatisk utsending. Netlify-funksjonen er konfigurert til å kjøre på hvert hele kvarter (`*/15 * * * *`). Både manuelt og automatisk pushvarsel er funksjonelt bekreftet i PROD. Homey-import og oppdatering gjenstår, med eksisterende kalender som reserve. Overgangen til ett produksjonsmiljø vurderes etter en stabil driftsperiode.
+
 ## Status 24.11.2026 – Manuell push bekreftet i PROD
 
 Brukeren bekreftet mottak av manuelt pushvarsel på iPhone etter oppdatering av abonnementet. PROD-deploy `d95d2f1` tok i bruk det nye VAPID-nøkkelparet. Automatisk utsending står fortsatt av. Neste steg er aktivering og én automatisk PROD-test med helt lukket app. Homey gjenstår.
