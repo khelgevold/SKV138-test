@@ -1,3 +1,8 @@
+# AVKLARING – HANDLELISTE OG LAGERLOGIKK
+
+Godkjent: automatisk handleliste med manglende antall opp til minimumsbeholdning, justerbart antall. Ved avkryssing som kjøpt økes tilknyttet utleielager med kjøpt antall; eventuell restmangel beholdes. Manuelle varer fjernes uten lagerendring. Kopiering påvirker ikke lager. Punkt 3 ferdig avklart.
+
+---
 # AVKLARING – ØKONOMISK FORSIDE
 
 Godkjent: tre visuelt like kort med eksisterende 2x2-oppsett: Bekreftede kommende inntekter øverst, Utbetalt hittil i år, Prognose. Brutto, plattformgebyrer, estimert skatt og netto etter skatt. På bekreftet-kortet brukes estimert tilleggsskatt = eksisterende skattefunksjon på utbetalt + bekreftet minus skatt på utbetalt alene, slik at skattefritt beløp ikke dobbelttelles. Tidligere foreslåtte grafer utgår. Oppgaver fjernes fra Oversikt. Punkt 2 ferdig avklart.
