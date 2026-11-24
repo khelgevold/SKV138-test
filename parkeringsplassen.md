@@ -1,3 +1,8 @@
+# AVKLARING – AVBESTILLINGSREGLER
+
+Bruker bekrefter tidligere gjennomgåtte regler for Airbnb, Booking.com og FINN: Airbnb 0/50/100 % ved 30 og 7 dagers grenser, Booking.com 0/100 % ved 30 dager, FINN 0/50/100 % ved 30 og 14 dager. Prosent angir beholdt brutto ved avbestilling. Bruk opprinnelige vilkårsbeskrivelser for eksakte grenseverdier og tidspunkt. Historiske regelsett basert på bookingdato. Direkte og første gyldighetsdato gjenstår å avklare.
+
+---
 # AVTALT NESTE TEST-RELEASE – LEVENDE ICAL FOR HOMEY
 
 Erstatt manuell iCal-eksport med permanent HTTPS .ics-feed generert ved forespørsel fra Neon via Netlify. Én hemmelig, tilbakekallbar kalenderadresse med kopi-ikon under Innstillinger. Alle aktive utleiebookinger og privatopphold, eksakte innsjekk-/utsjekktider (Europe/Oslo), stabile UID-er, kun plattformnavn som tittel, ingen person- eller økonomidata. Kansellerte opphold utelates. Ingen import/eksport mot Airbnb, Booking.com eller FINN, ingen periodisk jobb på vår side. Bruker har fungerende Homey iCal-integrasjon med manuelt vedlikeholdt Google-kalender; hensikten er å erstatte denne og unngå dobbeltregistrering. Test feed, oppdateringsfrekvens og kompatibilitet med eksisterende Homey-flows før Google-kalender kobles fra. TEST/PROD må ha separate nøkler og data. Samles i neste TEST-release; ingen deploy nå.
