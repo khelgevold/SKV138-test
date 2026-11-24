@@ -1,3 +1,7 @@
+## Status 24.11.2026 – Ny PROD-deploy for push
+
+Inntektsrettelsen er godkjent i PROD. Brukeren har oppdatert eier-ID-en i Netlify til ID-en fra den aktive PROD-sesjonen, og godkjent en ny deploy. Etter publisering verifiseres Pushvarsler og manuelt testvarsel på iPhone. Automatisk utsending står av.
+
 ## Status 24.11.2026 – Oppfølgingsrelease publisert i PROD
 
 Commit `a8a0111` er publisert ifølge brukeren og bekreftet levert på PROD-domenet. Bekreftede kommende inntekter utelater nå bookinger etter utsjekk. Før publisering korrigerte brukeren eier-ID-en i Netlify til én ID uten JSON-innpakning. Sjekk i PROD at inntektskortet viser forventet beløp, at Pushvarsler vises på iPhone og at manuelt testvarsel mottas. Automatisk utsending står av inntil manuelt pushvarsel er verifisert. Homey testes separat i PROD.
