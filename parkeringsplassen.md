@@ -1,3 +1,8 @@
+# HANDLELISTE – KOPIER TIL UTKLIPPSTAVLE
+
+Neste TEST-release: kopi-ikon øverst til høyre på Handleliste. Kopier alle gjenstående varer, både automatiske og manuelle, med aktuelt antall som ren tekst, én vare per linje i format `6 × Kvikk Lunsj`, egnet for Google Keep, Notater og SMS. Vis kort bekreftelse «Handleliste kopiert» ved vellykket kopiering. Ingen deploy nå.
+
+---
 # NESTE TEST-RELEASE – HANDLELISTE OG ENKLERE PRIVATLAGER
 
 Bruker ønsker tredje fane Handleliste under Lager ved siden av Utleie og Privat. Utleievarer under minimum skal automatisk vises på handlelisten; foreslått antall er minimum minus beholdning, med manuell justering. Manuelle handlevarer via permanent åpent tekstfelt nederst, standard antall 1, justerbart. Forslag: avhuking som handlet øker utleiebeholdning for automatisk koblede varer, manuelle varer fjernes uten lagerendring; unngå duplikater og behold automatisk restbehov dersom innkjøp ikke dekker minimum. Privat: erstatt Ny vare-knapp med tilsvarende åpent felt nederst, standard antall 1; plassering valgfritt via blyant etter opprettelse, behold eksisterende plasseringer. Behold eksisterende visuell stil. Samles i neste TEST-release; ingen deploy nå.
