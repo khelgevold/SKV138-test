@@ -184,10 +184,10 @@ html{-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{font-size:15px;l
 #innstillinger .v16-settings-accordion .row:has(input[type=time])>label{width:100%;min-width:0}
 }
 </style><style id="v1611-overview">
-#oversikt #metrics .metric,#oversikt #v15YtdMetrics .metric{min-height:72px!important;padding:12px 13px!important;gap:10px;justify-content:space-between}
+#oversikt #skvConfirmedMetrics .metric,#oversikt #metrics .metric,#oversikt #v15YtdMetrics .metric{min-height:72px!important;padding:12px 13px!important;gap:10px;justify-content:space-between}
 #oversikt #metrics .metric b,#oversikt #v15YtdMetrics .metric b{font-size:clamp(19px,4.8vw,26px)!important;line-height:1.15;margin-top:0!important;letter-spacing:-.02em}
 #oversikt #metrics .metric small,#oversikt #v15YtdMetrics .metric small{font-size:clamp(12px,3.3vw,15px)!important;line-height:1.3}
-#oversikt #v15YtdMetrics .metric:last-child{min-height:64px!important}
+#oversikt #skvConfirmedMetrics .metric:last-child,#oversikt #v15YtdMetrics .metric:last-child{min-height:64px!important}
 </style><style>
 /* V16.12 */
 #calendarGrid .calendar-cell:not(.is-empty){cursor:pointer;touch-action:manipulation;position:relative;z-index:1}
@@ -313,7 +313,7 @@ html{-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{font-size:15px;l
   #nav.nav { position:fixed; bottom:0; left:0; right:0; width:100%; max-width:790px; margin:0 auto; z-index:50; border:1px solid var(--line); border-radius:15px 15px 0 0; box-shadow:0 -6px 22px rgba(0,0,0,.08); }
   main { padding-bottom:110px; }
 }
-</style><style id="skv-next-ui">.skv-private-platform{background:#26734b!important;color:#fff!important;border-color:#26734b!important}.skv-next-booking-meta{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0}.skv-next-booking-meta .tag{font-size:11px}.skv-forecast-frame{padding:14px;margin:12px 0}.skv-forecast-frame #metrics{margin-top:12px}</style></head><body><header><div><h1>⌂ SKV138</h1><div style="opacity:.8;font-size:13px">V16 · Lokal testprototype</div></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
+</style><style id="skv-next-ui">.skv-private-platform{background:#26734b!important;color:#fff!important;border-color:#26734b!important}.skv-next-booking-meta{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0}.skv-next-booking-meta .tag{font-size:11px}.skv-forecast-frame{padding:14px;margin:12px 0}.skv-forecast-frame #metrics{margin-top:12px}</style><style>#oversikt #skvConfirmedMetrics{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}#oversikt #skvConfirmedMetrics .metric{display:flex;flex-direction:column}</style></head><body><header><div><h1>⌂ SKV138</h1><div style="opacity:.8;font-size:13px">V16 · Lokal testprototype</div></div></header><div id="v151StorageWarning" hidden role="status" style="max-width:760px;margin:12px auto 0;padding:12px 16px;border:1px solid #d7a557;border-radius:12px;background:#fff4dc;color:#513800;font-size:13px">⚠️ Denne filvisningen tillater ikke varig lagring. Appen kan testes, men endringer forsvinner når filen lukkes. Åpne appen i en vanlig nettleser med lagring for å beholde data.</div><main>
 <section id="oversikt" class="active"><div class="row"><button onclick="changeYear(-1)">‹</button><span class="year" id="yearTitle"></span><button onclick="changeYear(1)">›</button></div><div class="grid" id="metrics"></div><div class="card"><h2>Utbetalinger og skatt hittil i år</h2><div class="grid" id="v15YtdMetrics"></div></div><div class="card"><div class="row"><h2>Neste oppgaver</h2><button onclick="show('oppgaver')">Se alle</button></div><div id="nextTasks"></div></div></section>
 <section id="bookinger"><div class="row"><h2>Bookinger</h2><div class="booking-create"><button class="primary" onclick="newBooking()">+ Ny booking</button><button onclick="newPrivateStay()">+ Privat booking</button></div></div><div class="segmented triple" id="bookingTypeFilters"><button onclick="setBookingTypeFilter('all')">Alle</button><button onclick="setBookingTypeFilter('rental')">Utleie</button><button onclick="setBookingTypeFilter('private')">Privat</button></div><div id="bookingList"></div><div id="bookingDetail"></div></section>
 <section id="kalender"><div class="row"><h2>Kalender</h2></div><div class="card"><div class="row"><button onclick="moveCalendar(-1)" aria-label="Forrige måned">‹</button><h2 id="calendarTitle"></h2><button onclick="moveCalendar(1)" aria-label="Neste måned">›</button></div><div class="calendar-legend"><span><i class="dot finn"></i>FINN</span><span><i class="dot airbnb"></i>Airbnb</span><span><i class="dot booking"></i>Booking.com</span><span><i class="dot direkte"></i>Direkte</span><span><i class="dot private"></i>Privat</span></div><div class="calendar-grid" id="calendarGrid"></div><p class="hint">Datoer viser overnattinger. Ved bytte av gjest samme dag kan du åpne datoen for å se både utsjekk og innsjekk. Trykk på en ledig dato for å legge til opphold.</p></div><div id="calendarDay"></div><div id="privateEditor"></div></section>
@@ -978,7 +978,7 @@ renderBookings=function(){
   <p class="sub">${fmt(b.start)} ${esc(b.checkin)} – ${fmt(b.end)} ${esc(b.checkout)}</p>
   <div class="row"><span class="status ${b.cancelled?'cancelled':''}">${bookingStatus(b)}</span><strong>${money(bookingAmounts(b).net)}</strong></div>
  </div>`:
- `<div class="card booking-card v16-booking-card" role="button" tabindex="0" onclick="v16OpenPrivate(${JSON.stringify(String(b.id))})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();v16OpenPrivate(${JSON.stringify(String(b.id))})}">
+ `<div class="card booking-card v16-booking-card" role="button" tabindex="0" onclick="v16OpenPrivate(${esc(JSON.stringify(String(b.id)))})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();v16OpenPrivate(${esc(JSON.stringify(String(b.id)))})}">
  <div class="row"><strong>${esc(b.name||'Privat')}</strong><span class="platform">Privat</span></div>
  <p class="sub">${fmt(b.start)} ${esc(b.checkin)} – ${fmt(b.end)} ${esc(b.checkout)}</p>
  </div>`).join('')||'<div class="empty">Ingen opphold i valgt filter.</div>';
@@ -1846,7 +1846,7 @@ renderSettings=function(){
  const byName=new Map(cards.map(el=>[label(el),el]));
  for(const name of desired){const card=byName.get(name);if(card)root.appendChild(card)}
  const places=byName.get('Plasseringer');
- if(places){places.classList.add('v16-settings-accordion','skv-places-accordion')}
+ if(places){places.classList.add('v16-settings-accordion','skv-places-accordion');if(places.querySelector('summary'))for(const h of places.querySelectorAll('h2,h3'))if(h.textContent.trim()==='Plasseringer')h.style.display='none';}
 };
 const skvNextOverviewBase=renderOverview;
 renderOverview=function(){
@@ -1933,6 +1933,7 @@ bookingForm=function(b){
  const fee=$('bf'),gross=$('bg'),platform=$('bp');if(!fee||!gross||!platform)return;
  fee.closest('label').insertAdjacentHTML('beforebegin','<label>Bookingdato<input id="bookingDate" type="date"></label><label class="check"><input id="feeManual" type="checkbox"> Overstyr plattformgebyr manuelt</label>');
  const day=$('bookingDate'),manual=$('feeManual');
+ const grossLabel=gross.closest('label'),dayLabel=day.closest('label');const pair=document.createElement('div');pair.className='field-grid';grossLabel.before(pair);pair.append(grossLabel,dayLabel);
  day.value=b?(b.bookingDate||''):new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Oslo'});
  manual.checked=b?b.feeManual!==false:false;
  const sync=()=>{const amount=bookingFeeFor(platform.value,day.value,Number(gross.value)||0);fee.readOnly=!manual.checked&&amount!==null;if(fee.readOnly){const unchanged=b&&b.feeManual===false&&day.value===(b.bookingDate||'')&&platform.value===b.platform&&Number(gross.value)===Number(b.gross);fee.value=unchanged?b.fee:amount;}};
