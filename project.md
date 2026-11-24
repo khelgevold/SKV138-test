@@ -1,3 +1,7 @@
+## Status 24.11.2026 – Automatisk push i PROD
+
+Manuelt pushvarsel er bekreftet på iPhone. Brukeren har satt automatisk utsending til true i Netlify PROD og godkjent deploy. Etter publisering gjenstår automatisk push-test med lukket iPhone-app og Homey-test.
+
 ## Status 24.11.2026 – Manuell push bekreftet i PROD
 
 Brukeren bekreftet mottak av manuelt pushvarsel på iPhone etter oppdatering av abonnementet. PROD-deploy `d95d2f1` tok i bruk det nye VAPID-nøkkelparet. Automatisk utsending står fortsatt av. Neste steg er aktivering og én automatisk PROD-test med helt lukket app. Homey gjenstår.
