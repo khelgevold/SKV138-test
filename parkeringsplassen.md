@@ -1,3 +1,8 @@
+# AVTALT NESTE TEST-RELEASE – BETINGEDE OPPGAVEREGLER
+
+Legg til Betingelse på eksisterende oppgaveregler: Alltid (standard for eksisterende regler), Stamp, Sengetøy/håndklær, Hund, Elbillading. Oppgaver genereres kun ved samsvar med bookingens avhuking og øvrige regelvilkår. Behold navn, plattform, frist før/etter innsjekk/utsjekk og pushinnstillinger. Fjernes avhuking, forsvinner ufullført oppgave; bevar fullført historikk. Bruk samme betingelseslogikk i klient og automatisk push-sender, slik at irrelevante varsler ikke sendes. Samles i neste TEST-release; ingen deploy nå.
+
+---
 # OVERSIKT SOM REN ØKONOMISIDE – 24.11.2026
 
 Bruker ønsker i neste TEST-release: øverst på Oversikt/Hjem bekreftede kommende inntekter med horisontalt stolpediagram fordelt på plattform. Deretter utbetalte inntekter, deretter prognose. Fjern oppgavevisning fra Hjem; behold Oppgaver-fanen og pushfunksjonalitet. Forslag til beregningsprinsipp: estimert ikke-refunderbar nettoinntekt som ikke er utbetalt, faktisk registrerte utbetalinger, prognose uten dobbelttelling. Oppdater beregning etter avbestillingsfrister. Behold eksisterende årsvalg og øvrige relevante økonomifunksjoner; avklar detaljvisning ved behov. Ingen deploy nå.
