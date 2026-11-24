@@ -2031,6 +2031,31 @@ tasks=function(){return skvConditionalTasksBase().filter(t=>{
  return !!stay?.[condition]||done(t);
 });};
 
+/* Shopping list: derive shortages from stock; persist manual items and quantity overrides. */
+function shoppingState(){return state.shoppingList??={manual:[],quantities:{}};}
+function shoppingItems(){const sh=shoppingState();return [...state.stock.filter(x=>x.kind==='Utleie'&&Number(x.qty)<Number(x.min)).map(x=>({key:'s'+x.id,name:x.name,qty:sh.quantities['s'+x.id]??(Number(x.min)-Number(x.qty)),stockId:x.id})),...sh.manual];}
+function shoppingQty(key,value){const n=Math.max(1,Math.floor(Number(value)||1)),sh=shoppingState();const item=sh.manual.find(x=>x.key===key);if(item)item.qty=n;else sh.quantities[key]=n;save();}
+function shoppingBought(key){const item=shoppingItems().find(x=>x.key===key);if(!item)return;const sh=shoppingState();if(item.stockId!=null){const stock=state.stock.find(x=>x.id===item.stockId);if(stock)stock.qty=Number(stock.qty)+Number(item.qty);delete sh.quantities[key];}else sh.manual=sh.manual.filter(x=>x.key!==key);save();renderStock();}
+function shoppingAdd(){const name=$('shoppingName').value.trim(),qty=Math.max(1,Math.floor(Number($('shoppingNewQty').value)||1));if(!name)return;const sh=shoppingState();const existing=sh.manual.find(x=>x.name.toLowerCase()===name.toLowerCase());if(existing)existing.qty+=qty;else sh.manual.push({key:'m'+Date.now(),name,qty});save();renderStock();}
+async function shoppingCopy(){try{await navigator.clipboard.writeText(shoppingItems().map(x=>x.qty+' × '+x.name).join('\n'));$('shoppingCopyStatus').textContent='Handleliste kopiert';}catch{alert('Kunne ikke kopiere handlelisten.');}}
+const skvShoppingStockBase=renderStock;
+renderStock=function(){
+ const shopping=stockKind==='Handleliste';
+ if(shopping)stockKind='Utleie';
+ skvShoppingStockBase();
+ if(shopping)stockKind='Handleliste';
+ const card=$('stockAddCard')||$('v1619StockAdd');
+ if(card)card.style.display=shopping?'none':'';
+ if(!$('stockShopping'))$('stockPrivat').insertAdjacentHTML('afterend','<button id="stockShopping" onclick="stockKind=\'Handleliste\';renderStock()">Handleliste</button>');
+ $('stockShopping').classList.toggle('selected',shopping);
+ if(shopping){
+ $('stockUtleie').classList.remove('selected');$('stockPrivat').classList.remove('selected');
+ $('stockList').innerHTML='<div class="row"><h2>Handleliste</h2><button aria-label="Kopier handleliste" onclick="shoppingCopy()">▢ Kopier</button></div><small id="shoppingCopyStatus"></small>'+ (shoppingItems().map(x=>'<div class="row stock-item"><input type="checkbox" aria-label="Kjøpt" style="width:22px;accent-color:#466b59" onchange="shoppingBought('+esc(JSON.stringify(x.key))+')"><strong style="flex:1">'+esc(x.name)+'</strong><input aria-label="Antall" type="number" min="1" step="1" style="width:70px" value="'+Number(x.qty)+'" onchange="shoppingQty('+esc(JSON.stringify(x.key))+',this.value)"></div>').join('')||'<p class="sub">Ingen varer på handlelisten.</p>')+'<div class="row" style="margin-top:16px"><input id="shoppingName" placeholder="Legg til vare"><input id="shoppingNewQty" aria-label="Antall" type="number" min="1" value="1" style="width:65px"><button class="primary" onclick="shoppingAdd()">+</button></div>';
+ }else if(stockKind==='Privat'&&card){card.dataset.open='true';const host=$('v16AddLocationHost');if(host)host.style.display='none';}
+};
+const skvShoppingAddStockBase=addStock;
+addStock=function(){if(stockKind!=='Privat')return skvShoppingAddStockBase();const name=$('stockName').value.trim(),qty=Number($('stockQty').value);if(!name||!Number.isInteger(qty)||qty<0){alert('Oppgi navn og antall.');return;}state.stock.push({id:Math.max(0,...state.stock.map(x=>Number(x.id)||0))+1,name,qty,min:0,fixed:false,kind:'Privat',location:''});save();$('stockName').value='';$('stockQty').value='1';renderStock();};
+
 render();
 // Restore the last main tab after a refresh; sessionStorage contains UI state only.
 try { const previousTab=window.sessionStorage.getItem('skv138-test-active-tab'); if(['bookinger','oppgaver','lager','mer'].includes(previousTab)) show(previousTab); } catch {}
