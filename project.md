@@ -1,3 +1,14 @@
+## Status 24.11.2026 – Samlet PROD-release under klargjøring
+
+PROD-kandidaten ligger på `prep/skv138-prod-2026-11-24` med utgangspunkt i publisert PROD-gren `release/skv138-prod` ved `3173833`. Den overfører godkjente TEST-endringer for bookinger, gebyrer, økonomikort, oppgaver, handleliste, iCal og push. Eksisterende PROD-byggekommando, Netlify-konfigurasjon, Neon Auth-proxy, PWA-manifest og ikon er beholdt. Ingen TEST-data overføres. PROD-grenen og PROD-databasen er foreløpig urørt.
+
+TEST er funksjonelt brukergodkjent, inklusive Bookingdato og automatisk push med 0 og 1 times ledetid med lukket iPhone-app. PROD-autentiseringspakken er bygget lokalt med en fiktiv Neon Auth-adresse. Build sjekket generert redirect og at TEST-adressen ikke er med. Syntakskontroll og fem push-planleggingstester besto, og de tre nye Netlify-funksjonsmodulene kunne lastes lokalt. Dette verifiserer ikke faktiske Netlify-innstillinger, Neon-tilgang eller mottak i PROD.
+
+Før publisering:
+1. Kjør den additive migreringen `backend-draft/push-migration-prod.sql` i eksisterende SKV138 PROD som databaseeier. Den oppretter to pushtabeller og gir den dokumenterte runtime-rollen `skv138_app` de nødvendige rettighetene. Ingen bookingdata kopieres.
+2. Konfigurer PROD-spesifikke verdier for `SKV138_PUSH_OWNER_USER_ID` (PROD Neon Auth-sub), `SKV138_VAPID_PUBLIC_KEY`, `SKV138_VAPID_PRIVATE_KEY`, `SKV138_VAPID_SUBJECT` (mailto) og `SKV138_ICAL_TOKEN` (tilfeldig og minst 32 tegn). Hold `SKV138_PUSH_SENDING_ENABLED=false` inntil manuelt PROD-varsel er verifisert. Kalenderadressen gis kun til den autoriserte eierkontoen, og funksjonen krever gyldig token.
+3. Innhent eksplisitt klarsignal før PROD-grenen oppdateres eller det publiseres. Ved behov kan forrige PROD-deploy gjenpubliseres fra Netlify. Etter publisering kontrolleres eksisterende bookingdata, iPhone-innlogging, push på PROD-domenet og iCal i Homey. Eksisterende Homey-kalender beholdes som reserve under testen.
+
 # Neste utviklingsrunde – 19.11.2026
 
 PROD-runden er avsluttet. Brukeren tester videre med ekte data. Følgende punkter er meldt før videre live-erfaring og står åpne.
