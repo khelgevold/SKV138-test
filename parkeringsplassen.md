@@ -1,3 +1,8 @@
+# OVERSIKT SOM REN ØKONOMISIDE – 24.11.2026
+
+Bruker ønsker i neste TEST-release: øverst på Oversikt/Hjem bekreftede kommende inntekter med horisontalt stolpediagram fordelt på plattform. Deretter utbetalte inntekter, deretter prognose. Fjern oppgavevisning fra Hjem; behold Oppgaver-fanen og pushfunksjonalitet. Forslag til beregningsprinsipp: estimert ikke-refunderbar nettoinntekt som ikke er utbetalt, faktisk registrerte utbetalinger, prognose uten dobbelttelling. Oppdater beregning etter avbestillingsfrister. Behold eksisterende årsvalg og øvrige relevante økonomifunksjoner; avklar detaljvisning ved behov. Ingen deploy nå.
+
+---
 # NESTE TEST-RELEASE – BEKREFTEDE INNTEKTER – 24.11.2026
 
 Bruker ønsker bekreftede inntekter basert på avbestillingsregler. Plassering og fremstilling avklares senere av bruker. Skjermbilder: antatt Booking.com: gratis inntil 30 døgn før innsjekk, totalpris ved avbestilling innen 30 døgn; Airbnb Begrensede, kortvarige opphold under 28 netter: full refusjon minst 30 dager før innsjekkingstidspunkt, 50 % refusjon 7–30 dager før, ingen deretter; antatt FINN Moderat: full refusjon mer enn 30 dager før innsjekksdato, 50 % 14–30 dager før, ingen under 14 dager. Bekreft plattformtilordning for første og tredje bilde samt eksakte grensevilkår før implementasjon. Forslag: historiske regelperioder basert på bookingdato, skille estimert ikke-refunderbar nettoinntekt fra faktisk utbetalt, hensynta gebyrer og eventuelle unntak. Ikke implementer visning før bruker har avklart hvor/hvordan. Samles med push, privatopphold åpning og automatisk plattformgebyr i neste TEST-release.
