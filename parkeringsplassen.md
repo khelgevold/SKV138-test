@@ -1,3 +1,8 @@
+# AVTALT NESTE TEST-RELEASE – LEVENDE ICAL FOR HOMEY
+
+Erstatt manuell iCal-eksport med permanent HTTPS .ics-feed generert ved forespørsel fra Neon via Netlify. Én hemmelig, tilbakekallbar kalenderadresse med kopi-ikon under Innstillinger. Alle aktive utleiebookinger og privatopphold, eksakte innsjekk-/utsjekktider (Europe/Oslo), stabile UID-er, kun plattformnavn som tittel, ingen person- eller økonomidata. Kansellerte opphold utelates. Ingen import/eksport mot Airbnb, Booking.com eller FINN, ingen periodisk jobb på vår side. Bruker har fungerende Homey iCal-integrasjon med manuelt vedlikeholdt Google-kalender; hensikten er å erstatte denne og unngå dobbeltregistrering. Test feed, oppdateringsfrekvens og kompatibilitet med eksisterende Homey-flows før Google-kalender kobles fra. TEST/PROD må ha separate nøkler og data. Samles i neste TEST-release; ingen deploy nå.
+
+---
 # AVKLARING – PLATTFORMGEBYR FRA 01.01.2027
 
 Bruker ønsker første automatiske gebyrperiode fra 01.01.2027, basert på bookingdato (ikke innsjekk). Bookingdato før dette: manuelt gebyr. Fra datoen: automatisk beregning fra historisk gyldig gebyrperiode, med manuell overstyring. Airbnb og Booking.com bruker registrerte satser; FINN skal også omfattes med startsats 0 %. Gjør løsningen plattformuavhengig, Direkte kan ha 0 % som standard. Behold eksisterende lagrede gebyrer uten retroaktiv omberegning. Neste samlede TEST-release.
