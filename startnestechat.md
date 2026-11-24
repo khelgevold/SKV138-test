@@ -1,3 +1,7 @@
+## Status 24.11.2026 – MESK Økonomi i SKV138
+
+Brukeren godkjente implementering og publisering i PROD. Under Mer ligger MESK Økonomi med årsvisning for hyttekonto, resultat og estimert skatt, dekning av åremål, faktiske og planlagte poster, og to redigerbare lån. Planlagte poster kan bekreftes med faktisk dato og beløp. Faste planer kan kopieres til neste år. Heden-lånet har snarvei for avdrag 1. januar og forslag til justert åremål basert på rentebesparelse. Forslaget må bekreftes av brukeren. Første oppsett skjer i appen: faktiske tall og låneopplysninger er ikke forhåndslastet. Funksjonen lagres som et eget felt i eksisterende Neon-payload; ingen SQL-migrering. Lokal test av UI, lagring, prognose, skatt og avdrag besto med fiktive data. Kontroll med faktiske tall i den innloggede PROD-appen gjenstår.
+
 ## Status 24.11.2026 – Samlet PROD-release for innstillinger og statistikk
 
 Commit `5e63f32` utløste publisering. PROD-domenet leverte samme HTML som besto lokal DOM-kontroll. Kontroll på fysisk iPhone gjenstår.
