@@ -1,3 +1,8 @@
+# NESTE TEST-RELEASE – HANDLELISTE OG ENKLERE PRIVATLAGER
+
+Bruker ønsker tredje fane Handleliste under Lager ved siden av Utleie og Privat. Utleievarer under minimum skal automatisk vises på handlelisten; foreslått antall er minimum minus beholdning, med manuell justering. Manuelle handlevarer via permanent åpent tekstfelt nederst, standard antall 1, justerbart. Forslag: avhuking som handlet øker utleiebeholdning for automatisk koblede varer, manuelle varer fjernes uten lagerendring; unngå duplikater og behold automatisk restbehov dersom innkjøp ikke dekker minimum. Privat: erstatt Ny vare-knapp med tilsvarende åpent felt nederst, standard antall 1; plassering valgfritt via blyant etter opprettelse, behold eksisterende plasseringer. Behold eksisterende visuell stil. Samles i neste TEST-release; ingen deploy nå.
+
+---
 # AVTALT NESTE TEST-RELEASE – BETINGEDE OPPGAVEREGLER
 
 Legg til Betingelse på eksisterende oppgaveregler: Alltid (standard for eksisterende regler), Stamp, Sengetøy/håndklær, Hund, Elbillading. Oppgaver genereres kun ved samsvar med bookingens avhuking og øvrige regelvilkår. Behold navn, plattform, frist før/etter innsjekk/utsjekk og pushinnstillinger. Fjernes avhuking, forsvinner ufullført oppgave; bevar fullført historikk. Bruk samme betingelseslogikk i klient og automatisk push-sender, slik at irrelevante varsler ikke sendes. Samles i neste TEST-release; ingen deploy nå.
