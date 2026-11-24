@@ -1,3 +1,8 @@
+# AVKLARING – GYLDIGHET AV AVBESTILLINGSREGLER
+
+Bruker godkjenner at dagens avbestillingsregler også gjelder eksisterende bookinger, inkludert bookinger uten registrert bookingdato. Fremtidige regelendringer får egne gyldighetsdatoer basert på bookingdato. Dette er uavhengig av gebyrberegningens startdato 01.01.2027.
+
+---
 # AVKLARING – AVBESTILLINGSREGLER
 
 Bruker bekrefter tidligere gjennomgåtte regler for Airbnb, Booking.com og FINN: Airbnb 0/50/100 % ved 30 og 7 dagers grenser, Booking.com 0/100 % ved 30 dager, FINN 0/50/100 % ved 30 og 14 dager. Prosent angir beholdt brutto ved avbestilling. Bruk opprinnelige vilkårsbeskrivelser for eksakte grenseverdier og tidspunkt. Historiske regelsett basert på bookingdato. Direkte og første gyldighetsdato gjenstår å avklare.
