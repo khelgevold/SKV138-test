@@ -1,3 +1,7 @@
+## Status 24.11.2026 – PROD-deploy med nytt VAPID-nøkkelpar
+
+Eier-ID er verifisert i PROD. Pushfunksjonen kom videre til VAPID-validering, der den gamle privatnøkkelen feilet på lengde. Brukeren har lagret et nytt nøkkelpar i riktig format i Netlify PROD og godkjent ny deploy. Neste kontroll er å oppdatere pushabonnementet på iPhone og bekrefte manuelt varsel. Automatisk utsending står av.
+
 ## Status 24.11.2026 – Ny PROD-deploy for push
 
 Inntektsrettelsen er godkjent i PROD. Brukeren har oppdatert eier-ID-en i Netlify til ID-en fra den aktive PROD-sesjonen, og godkjent en ny deploy. Etter publisering verifiseres Pushvarsler og manuelt testvarsel på iPhone. Automatisk utsending står av.
