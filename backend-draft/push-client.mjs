@@ -22,6 +22,9 @@ export async function initializePushSettings({authClient,container}){
   window.__SKV138_CALENDAR_URL__=config.calendarUrl||null;
   if(!('serviceWorker' in navigator)||!('PushManager' in window)||!('Notification' in window))return;
   container.hidden=false;
+  const frame=document.querySelector('#app-frame');
+  const attach=()=>{const card=frame?.contentDocument?.getElementById('skvPushCard');if(card){card.hidden=false;container.style.display='block';card.appendChild(container);}};
+  frame?.addEventListener('load',attach);attach();
   const status=container.querySelector('[data-push-status]');
   const button=container.querySelector('[data-push-enable]');
   const testButton=container.querySelector('[data-push-test]');
@@ -45,7 +48,11 @@ export async function initializePushSettings({authClient,container}){
       const permission=await Notification.requestPermission();
       if(permission!=='granted')throw new Error('Varslingstillatelse ble ikke gitt.');
       const worker=await navigator.serviceWorker.register('/push-sw.js',{scope:'/'});
-      const subscription=await worker.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:keyBytes(config.publicKey)});
+      await navigator.serviceWorker.ready;
+      let subscription=await worker.pushManager.getSubscription();
+      const desired=keyBytes(config.publicKey);
+      if(subscription){const current=new Uint8Array(subscription.options.applicationServerKey||new ArrayBuffer(0));if(current.length!==desired.length||current.some((v,i)=>v!==desired[i])){await subscription.unsubscribe();subscription=null;}}
+      if(!subscription)subscription=await worker.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:desired});
       await api(authClient,'POST',{subscription:subscription.toJSON()});
       status.textContent='Pushabonnement registrert for denne enheten.';
       testButton.hidden=false;
