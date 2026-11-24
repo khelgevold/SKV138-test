@@ -1,3 +1,6 @@
+## 2026-11-24 – Samlet TEST-release
+Kode lagt inn for private bookingdetaljer, datostyrte gebyrer, avbestillingsberegning, økonomikort, betingede oppgaver, handleliste, levende Homey-kalender og eierstyrt push. Ikke publisert eller funksjonstestet. Push-migrasjon bekreftet utført av bruker. Før deploy: verifiser VAPID-nøkkelpar, legg til SKV138_ICAL_TOKEN (minst 32 tilfeldige tegn), behold SKV138_PUSH_SENDING_ENABLED=false. PROD urørt. Test alle funksjoner på iPhone før eventuell PROD-release. Syntakskontroll og integrasjonstest gjenstår.
+
 # PUSH TEST AKTIVERING – 22.11.2026
 
 TEST scheduled sender commit `2ea2871` krever eksplisitt `SKV138_PUSH_SENDING_ENABLED=true`; standard er av. Vinduet er 20 minutter for cron hvert 15. minutt. Netlify-dokumentasjon bekrefter Scheduled Functions på alle planer, cron UTC, kun automatisk på publiserte deploys og maks 30 sekunders kjøring. Netlify config ligger fortsatt bare som inaktiv `backend-draft/netlify.template.toml`; må avklare faktisk TEST-site build/function-directory før aktivering. `backend-draft/push-migration.sql` er klar for Neon TEST, ikke kjørt. Ingen VAPID, TEST deploy eller PROD-endring.
