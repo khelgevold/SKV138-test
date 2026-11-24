@@ -2058,6 +2058,17 @@ addStock=function(){if(stockKind!=='Privat')return skvShoppingAddStockBase();con
 
 async function copyHomeyCalendar(){const url=window.parent.__SKV138_CALENDAR_URL__;const status=$('homeyCalendarStatus');if(!url){status.textContent='Kalenderadresse er ikke tilgjengelig for denne kontoen ennå.';return;}try{await navigator.clipboard.writeText(url);status.textContent='Kalenderadresse kopiert';}catch{status.textContent=url;}}
 
+const skvPushSettingsBase=renderSettings;
+renderSettings=function(){
+ skvPushSettingsBase();
+ const root=$('innstillinger');if(!root)return;
+ let card=$('skvPushCard');
+ if(!card){card=document.createElement('div');card.className='card';card.id='skvPushCard';card.innerHTML='<h2>Pushvarsler</h2><p class="hint">Aktiver varsler på denne enheten. Varslingstid velges under Oppgaveregler.</p>';root.appendChild(card);}
+ const controls=window.parent.document.getElementById('skv-push-settings');
+ if(controls&&!controls.hidden){controls.style.display='block';card.appendChild(controls);card.hidden=false;}
+ else if(!card.querySelector('#skv-push-settings'))card.hidden=true;
+};
+
 render();
 // Restore the last main tab after a refresh; sessionStorage contains UI state only.
 try { const previousTab=window.sessionStorage.getItem('skv138-test-active-tab'); if(['bookinger','oppgaver','lager','mer'].includes(previousTab)) show(previousTab); } catch {}
