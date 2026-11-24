@@ -35,6 +35,7 @@ export function pendingPushTasks(state,now=Date.now(),windowMinutes=15){
       if(stay.kind==='private'?rule.platform!=='Privat booking':!(rule.platform==='Alle plattformer'||rule.platform===stay.platform))continue;
       const id=String(stay.id)+'-'+rule.id;
       if(complete(state,stay,rule,id))continue;
+      if(rule.condition&&rule.condition!=='always'&&!stay[rule.condition])continue;
       const base=rule.anchor==='checkout'?[stay.end,stay.checkout]:[stay.start,stay.checkin];
       const due=localMillis(base[0],base[1]||'12:00',Number(rule.offset)||0);
       const lead=Number(rule.pushLeadHours);
