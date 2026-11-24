@@ -4,7 +4,11 @@ Brukeren opprettet en ny TEST-booking med innsjekk 25 timer og 45 minutter frem 
 
 Testen bekrefter mottak med 1 times ledetid i den publiserte TEST-versjonen. Varsling ved oppgavens tidspunkt (0 timer) er planlagt for neste release og inngikk ikke i testen. Eksakt publisert commit og loggen fra forrige mislykkede forsøk er fortsatt uverifisert. Ved nytt avvik, sjekk `skv138-push-scheduled` i Netlify TEST rundt planlagt varslingstid.
 
-Neste steg: kosmetisk sluttkontroll av økonomikort, bookingdato/brutto og dobbel Plasseringer-tittel. Homey-import og oppdatering av iCal-feeden testes av brukeren i PROD etter godkjent publisering. Homey-testen er ikke et krav før releasen. Eksisterende kalenderoppsett er reserve mens feeden verifiseres. PROD krever eksplisitt godkjenning.
+Kosmetisk iPhone-kontroll: Oversikt og Plasseringer er godkjent. Bookingdato var smalere og venstrejustert. Commit `121e9bb` på TEST-grenen bruker samme feltoppsett og datoformat som Ankomst og Avreise. Endringen avventer samlet TEST-deploy og iPhone-kontroll.
+
+Plattformgebyr: Skjermbildet viser bookingdato 24.11.2026. Første standardperiode starter 01.01.2027, og før første gyldige periode brukes manuelt gebyr. Kodekontroll bekreftet manuell før grensen, automatisk fra grensen og riktig valg av en nyere periode. Neste kontroll i TEST: bruk en bookingdato innenfor en aktiv periode med en sats for Airbnb.
+
+ Homey-import og oppdatering av iCal-feeden testes av brukeren i PROD etter godkjent publisering. Homey-testen er ikke et krav før releasen. Eksisterende kalenderoppsett er reserve mens feeden verifiseres. PROD krever eksplisitt godkjenning.
 
 ## Status 24.11.2026 kl. 16:01 – TEST
 Samlet TEST-release og kosmetiske oppfølgingsreleaser publisert. Funksjonstest godkjent: innlogging, privat booking, automatiske plattformgebyrer, historiske gebyrperioder, kansellering/bekreftet inntekt, betingede oppgaver, handleliste, iCal-nedlasting. Kosmetisk sluttkontroll gjenstår (økonomikort, bookingdato/brutto, dobbel Plasseringer-tittel). Homey-import/refresh ikke testet. PROD urørt.
