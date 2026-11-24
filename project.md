@@ -6,7 +6,7 @@ TEST er funksjonelt brukergodkjent, inklusive Bookingdato og automatisk push med
 
 Før publisering:
 1. Fullført: `backend-draft/push-migration-prod.sql` er kjørt i SKV138 PROD ifølge brukeren. Migreringen oppretter to pushtabeller og gir den dokumenterte runtime-rollen `skv138_app` de nødvendige rettighetene. Brukeren har lagt inn eierens PROD-ID som `SKV138_PUSH_OWNER_USER_ID` og satt `SKV138_PUSH_SENDING_ENABLED=false` i Netlify PROD.
-2. Konfigurer PROD-spesifikke verdier for `SKV138_VAPID_PUBLIC_KEY`, `SKV138_VAPID_PRIVATE_KEY`, `SKV138_VAPID_SUBJECT` (mailto) og `SKV138_ICAL_TOKEN` (tilfeldig og minst 32 tegn). Hold `SKV138_PUSH_SENDING_ENABLED=false` inntil manuelt PROD-varsel er verifisert. Kalenderadressen gis kun til den autoriserte eierkontoen, og funksjonen krever gyldig token.
+2. Fullført ifølge brukeren: PROD-verdier for VAPID og iCal er lagt inn i Netlify, og database-URL, privat VAPID-nøkkel og iCal-token er merket som hemmelige. `SKV138_PUSH_SENDING_ENABLED=false` inntil manuelt PROD-varsel er verifisert. Kalenderadressen gis kun til den autoriserte eierkontoen, og funksjonen krever gyldig token.
 3. Innhent eksplisitt klarsignal før PROD-grenen oppdateres eller det publiseres. Ved behov kan forrige PROD-deploy gjenpubliseres fra Netlify. Etter publisering kontrolleres eksisterende bookingdata, iPhone-innlogging, push på PROD-domenet og iCal i Homey. Eksisterende Homey-kalender beholdes som reserve under testen.
 
 # Neste utviklingsrunde – 19.11.2026
