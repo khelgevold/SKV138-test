@@ -1992,6 +1992,28 @@ bookingForm=function(b){
  const sync=()=>{$('incomeConfirmedRow').style.display=p.value==='Direkte'?'':'none';};p.addEventListener('change',sync);sync();
 };
 
+/* Finance-only overview: actual payouts, confirmed unpaid income and annual forecast. */
+function skvAnnualTax(gross){return Math.max(0,gross-15000)*0.85*0.22;}
+function skvFinanceMetrics(gross,fees,tax){return [['Bruttoinntekt',gross],['Plattformgebyrer',fees],['Estimert skatt',tax],['Netto etter skatt',gross-fees-tax]].map(([label,value])=>'<div class="metric"><small>'+label+'</small><b>'+money(value)+'</b></div>').join('');}
+const skvFinanceOverviewBase=renderOverview;
+renderOverview=function(){
+ skvFinanceOverviewBase();
+ const actual=$('v15YtdMetrics'),forecast=$('skvForecastFrame'),metrics=$('metrics');
+ if(!actual||!forecast||!metrics)return;
+ const paidBookings=state.bookings.filter(b=>b.paid&&b.paidDate&&Number(b.paidDate.slice(0,4))===year&&b.paidAmount!=null&&Number.isFinite(Number(b.paidAmount)));
+ const paid=paidBookings.reduce((a,b)=>a+Number(b.paidAmount),0),fees=paidBookings.reduce((a,b)=>a+bookingAmounts(b).fee,0),gross=paid+fees,tax=skvAnnualTax(gross);
+ actual.innerHTML=skvFinanceMetrics(gross,fees,tax);
+ const c=confirmedIncome(year),ctax=skvAnnualTax(gross+c.gross)-tax;
+ let card=$('skvConfirmedFrame');
+ if(!card){card=document.createElement('div');card.id='skvConfirmedFrame';card.className='card';card.innerHTML='<h2>Bekreftede kommende inntekter</h2><div class="grid" id="skvConfirmedMetrics"></div>';}
+ $('nextTasks')?.closest('.card')?.setAttribute('hidden','');
+ actual.parentElement.before(card);
+ $('skvConfirmedMetrics').innerHTML=skvFinanceMetrics(c.gross,c.fees,ctax);
+ forecast.querySelector('h2').textContent='Prognose';
+ const f=yearIncome(year);
+ metrics.innerHTML=skvFinanceMetrics(f.gross,f.fees,skvAnnualTax(f.gross));
+};
+
 render();
 // Restore the last main tab after a refresh; sessionStorage contains UI state only.
 try { const previousTab=window.sessionStorage.getItem('skv138-test-active-tab'); if(['bookinger','oppgaver','lager','mer'].includes(previousTab)) show(previousTab); } catch {}
