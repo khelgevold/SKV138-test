@@ -1940,6 +1940,25 @@ bookingForm=function(b){
  sync();
 };
 
+function renderBookingFeePeriods(){
+ const anchor=$('priceFeePanels');if(!anchor)return;
+ let el=$('bookingFeePeriodPanel');if(!el){el=document.createElement('div');el.id='bookingFeePeriodPanel';anchor.after(el);}
+ const periods=bookingFeePeriods().slice().sort((a,b)=>b.from.localeCompare(a.from));
+ el.innerHTML='<h3>Automatiske bookinggebyrer</h3><p class="sub">Alle prosentgebyrer beregnes av samlet brutto inkludert vask.</p><label>Ny periode – gjeldende fra<input type="date" id="newFeePeriodDate" min="2027-01-01"></label><button onclick="addBookingFeePeriod()">Opprett periode</button>'+periods.map(p=>`<details class="card"><summary>Gjeldende fra ${esc(p.from)}</summary>${['Finn.no','Airbnb','Booking.com','Direkte'].map(platform=>`<h3>${esc(platform)}</h3>${(p.fees[platform]||[]).map((f,i)=>`<div class="field-grid"><label>Navn<input value="${esc(f.name)}" onchange="changeBookingFeePeriod('${p.from}',${esc(JSON.stringify(platform))},${i},'name',this.value)"></label><label>Type<select onchange="changeBookingFeePeriod('${p.from}',${esc(JSON.stringify(platform))},${i},'kind',this.value)"><option value="percent" ${f.kind==='percent'?'selected':''}>%</option><option value="fixed" ${f.kind==='fixed'?'selected':''}>kr</option></select></label><label>Verdi<input type="number" min="0" step="0.01" value="${Number(f.value)||0}" onchange="changeBookingFeePeriod('${p.from}',${esc(JSON.stringify(platform))},${i},'value',this.value)"></label><button onclick="removeBookingFeePeriodRule('${p.from}',${esc(JSON.stringify(platform))},${i})">Slett gebyr</button></div>`).join('')}<button onclick="addBookingFeePeriodRule('${p.from}',${esc(JSON.stringify(platform))})">+ Gebyr</button>`).join('')}</details>`).join('');
+}
+function addBookingFeePeriod(){
+ const day=$('newFeePeriodDate').value,periods=bookingFeePeriods();
+ if(!day||day<'2027-01-01'||periods.some(p=>p.from===day)){alert('Velg en ny gyldig dato.');return;}
+ const prior=periods.filter(p=>p.from<day).sort((a,b)=>b.from.localeCompare(a.from))[0];
+ periods.push({from:day,fees:JSON.parse(JSON.stringify(prior?.fees||{}))});save();renderBookingFeePeriods();
+}
+function bookingFeePeriodRules(day,platform){const p=bookingFeePeriods().find(p=>p.from===day);return p?(p.fees[platform]??=[]):null;}
+function changeBookingFeePeriod(day,platform,i,key,value){const f=bookingFeePeriodRules(day,platform)?.[i];if(!f)return;f[key]=key==='value'?Math.max(0,Number(value)||0):value;save();}
+function addBookingFeePeriodRule(day,platform){bookingFeePeriodRules(day,platform)?.push({name:'Nytt gebyr',kind:'percent',base:'total',value:0});save();renderBookingFeePeriods();}
+function removeBookingFeePeriodRule(day,platform,i){bookingFeePeriodRules(day,platform)?.splice(i,1);save();renderBookingFeePeriods();}
+const renderPricePanelsFeeBase=renderPricePanels;
+renderPricePanels=function(){renderPricePanelsFeeBase();renderBookingFeePeriods();};
+
 render();
 // Restore the last main tab after a refresh; sessionStorage contains UI state only.
 try { const previousTab=window.sessionStorage.getItem('skv138-test-active-tab'); if(['bookinger','oppgaver','lager','mer'].includes(previousTab)) show(previousTab); } catch {}
