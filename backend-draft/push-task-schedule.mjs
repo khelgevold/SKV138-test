@@ -18,7 +18,7 @@ function localMillis(day,time,offsetHours){
   return utc+offsetHours*3600000;
 }
 function complete(state,booking,rule,taskId){
-  if(rule.platform==='Privat booking'||rule.type!=='check')return !!state.completed?.[taskId];
+  if(booking.kind==='private'||rule.type!=='check')return !!state.completed?.[taskId];
   const key=rule.id==='before'?'before':rule.id==='after'?'after':null;
   if(!key)return !!state.completed?.[taskId];
   const templates=state.templates?.[key]||[];
@@ -32,7 +32,7 @@ export function pendingPushTasks(state,now=Date.now(),windowMinutes=15){
   for(const stay of stays){
     for(const rule of state.taskRules){
       if(!rule.active||rule.pushEnabled!==true)continue;
-      if(stay.kind==='private'?rule.platform!=='Privat booking':!(rule.platform==='Alle plattformer'||rule.platform===stay.platform))continue;
+      if(rule.platform!=='Alle inkl. privat'&&(stay.kind==='private'?rule.platform!=='Privat booking':!(rule.platform==='Alle plattformer'||rule.platform===stay.platform)))continue;
       const id=String(stay.id)+'-'+rule.id;
       if(complete(state,stay,rule,id))continue;
       if(rule.condition&&rule.condition!=='always'&&!stay[rule.condition])continue;
