@@ -1,3 +1,9 @@
+## Status 24.11.2026 – Funksjonell sluttkontroll bestått i TEST
+
+Brukeren bekreftet at Bookingdato-feltet fungerer etter siste TEST-publisering, og at automatisk push ved oppgavens tidspunkt (0 timers ledetid) kom med iPhone-appen helt lukket. Automatisk push med 1 times ledetid var allerede bekreftet. Oversikt, Plasseringer og øvrig Booking var godkjent fra før.
+
+Neste steg er å klargjøre samlet PROD-release med PROD-spesifikk autentisering, push og kalenderfeed. TEST og PROD har ulike grenendringer, så den godkjente funksjonaliteten må overføres med de eksisterende PROD-tilpasningene intakt. Publisering krever eksplisitt godkjenning fra brukeren. Homey-import og oppdatering testes i PROD etter publisering, med eksisterende kalender som reserve.
+
 ## Status 24.11.2026 – Automatisk push bekreftet i TEST
 
 Brukeren opprettet en ny TEST-booking med innsjekk 25 timer og 45 minutter frem i tid. Varmeoppgaven forfalt 24 timer før innsjekk, og push var satt til 1 time før oppgaven. Brukeren bekreftet mottak av automatisk push på iPhone mens appen var helt lukket.
