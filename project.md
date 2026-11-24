@@ -1,3 +1,7 @@
+## Status 24.11.2026 – Manuell push bekreftet i PROD
+
+Brukeren bekreftet mottak av manuelt pushvarsel på iPhone etter oppdatering av abonnementet. PROD-deploy `d95d2f1` tok i bruk det nye VAPID-nøkkelparet. Automatisk utsending står fortsatt av. Neste steg er aktivering og én automatisk PROD-test med helt lukket app. Homey gjenstår.
+
 ## Status 24.11.2026 – PROD-deploy med nytt VAPID-nøkkelpar
 
 Eier-ID er verifisert i PROD. Pushfunksjonen kom videre til VAPID-validering, der den gamle privatnøkkelen feilet på lengde. Brukeren har lagret et nytt nøkkelpar i riktig format i Netlify PROD og godkjent ny deploy. Neste kontroll er å oppdatere pushabonnementet på iPhone og bekrefte manuelt varsel. Automatisk utsending står av.
