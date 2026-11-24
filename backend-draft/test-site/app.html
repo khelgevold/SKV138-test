@@ -1935,7 +1935,7 @@ bookingForm=function(b){
  const day=$('bookingDate'),manual=$('feeManual');
  day.value=b?(b.bookingDate||''):new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Oslo'});
  manual.checked=b?b.feeManual!==false:false;
- const sync=()=>{const amount=bookingFeeFor(platform.value,day.value,Number(gross.value)||0);fee.readOnly=!manual.checked&&amount!==null;if(fee.readOnly)fee.value=amount;};
+ const sync=()=>{const amount=bookingFeeFor(platform.value,day.value,Number(gross.value)||0);fee.readOnly=!manual.checked&&amount!==null;if(fee.readOnly){const unchanged=b&&b.feeManual===false&&day.value===(b.bookingDate||'')&&platform.value===b.platform&&Number(gross.value)===Number(b.gross);fee.value=unchanged?b.fee:amount;}};
  [day,manual,platform,gross].forEach(el=>el.addEventListener('input',sync));
  sync();
 };
@@ -1969,7 +1969,8 @@ function confirmedFraction(b,now=new Date()){
  const get=k=>parts.find(p=>p.type===k)?.value;
  const today=get('year')+'-'+get('month')+'-'+get('day'),clock=get('hour')+':'+get('minute');
  const days=(Date.parse(b.start+'T00:00:00Z')-Date.parse(today+'T00:00:00Z'))/86400000;
- const exact=days+((Number(b.checkin.slice(0,2))*60+Number(b.checkin.slice(3,5)))-(Number(clock.slice(0,2))*60+Number(clock.slice(3,5))))/1440;
+ const checkin=b.checkin||state.settings.checkin||'15:00';
+ const exact=days+((Number(checkin.slice(0,2))*60+Number(checkin.slice(3,5)))-(Number(clock.slice(0,2))*60+Number(clock.slice(3,5))))/1440;
  if(exact<=0)return 1;
  if(b.platform==='Direkte')return b.incomeConfirmed?1:0;
  const periods=cancellationPeriods().slice().sort((a,b)=>a.from.localeCompare(b.from));
@@ -2006,7 +2007,7 @@ renderOverview=function(){
  const c=confirmedIncome(year),ctax=skvAnnualTax(gross+c.gross)-tax;
  let card=$('skvConfirmedFrame');
  if(!card){card=document.createElement('div');card.id='skvConfirmedFrame';card.className='card';card.innerHTML='<h2>Bekreftede kommende inntekter</h2><div class="grid" id="skvConfirmedMetrics"></div>';}
- $('nextTasks')?.closest('.card')?.setAttribute('hidden','');
+ const taskCard=$('nextTasks')?.closest('.card');if(taskCard)taskCard.style.display='none';
  actual.parentElement.before(card);
  $('skvConfirmedMetrics').innerHTML=skvFinanceMetrics(c.gross,c.fees,ctax);
  forecast.querySelector('h2').textContent='Prognose';
@@ -2045,13 +2046,13 @@ renderStock=function(){
  skvShoppingStockBase();
  if(shopping)stockKind='Handleliste';
  const card=$('stockAddCard')||$('v1619StockAdd');
- if(card)card.style.display=shopping?'none':'';
+ if(card)card.style.display=shopping||stockKind==='Utleie'?'none':'';
  if(!$('stockShopping'))$('stockPrivat').insertAdjacentHTML('afterend','<button id="stockShopping" onclick="stockKind=\'Handleliste\';renderStock()">Handleliste</button>');
  $('stockShopping').classList.toggle('selected',shopping);
  if(shopping){
  $('stockUtleie').classList.remove('selected');$('stockPrivat').classList.remove('selected');
  $('stockList').innerHTML='<div class="row"><h2>Handleliste</h2><button aria-label="Kopier handleliste" onclick="shoppingCopy()">▢ Kopier</button></div><small id="shoppingCopyStatus"></small>'+ (shoppingItems().map(x=>'<div class="row stock-item"><input type="checkbox" aria-label="Kjøpt" style="width:22px;accent-color:#466b59" onchange="shoppingBought('+esc(JSON.stringify(x.key))+')"><strong style="flex:1">'+esc(x.name)+'</strong><input aria-label="Antall" type="number" min="1" step="1" style="width:70px" value="'+Number(x.qty)+'" onchange="shoppingQty('+esc(JSON.stringify(x.key))+',this.value)"></div>').join('')||'<p class="sub">Ingen varer på handlelisten.</p>')+'<div class="row" style="margin-top:16px"><input id="shoppingName" placeholder="Legg til vare"><input id="shoppingNewQty" aria-label="Antall" type="number" min="1" value="1" style="width:65px"><button class="primary" onclick="shoppingAdd()">+</button></div>';
- }else if(stockKind==='Privat'&&card){card.dataset.open='true';const host=$('v16AddLocationHost');if(host)host.style.display='none';}
+ }else if(stockKind==='Privat'&&card){card.dataset.open='true';for(const el of card.querySelectorAll('[hidden]')){if(el.querySelector('#stockName'))el.hidden=false;}const host=$('v16AddLocationHost');if(host)host.style.display='none';}
 };
 const skvShoppingAddStockBase=addStock;
 addStock=function(){if(stockKind!=='Privat')return skvShoppingAddStockBase();const name=$('stockName').value.trim(),qty=Number($('stockQty').value);if(!name||!Number.isInteger(qty)||qty<0){alert('Oppgi navn og antall.');return;}state.stock.push({id:Math.max(0,...state.stock.map(x=>Number(x.id)||0))+1,name,qty,min:0,fixed:false,kind:'Privat',location:''});save();$('stockName').value='';$('stockQty').value='1';renderStock();};
