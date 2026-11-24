@@ -1,3 +1,6 @@
+## 2026-11-24 – Samlet TEST-release
+Kode lagt inn for private bookingdetaljer, datostyrte gebyrer, avbestillingsberegning, økonomikort, betingede oppgaver, handleliste, levende Homey-kalender og eierstyrt push. Ikke publisert eller funksjonstestet. Push-migrasjon bekreftet utført av bruker. Før deploy: verifiser VAPID-nøkkelpar, legg til SKV138_ICAL_TOKEN (minst 32 tilfeldige tegn), behold SKV138_PUSH_SENDING_ENABLED=false. PROD urørt. Test alle funksjoner på iPhone før eventuell PROD-release. Syntakskontroll og integrasjonstest gjenstår.
+
 # AVKLARING – ICAL EMNEFELT
 
 Godkjent: SUMMARY for utleie er «Utleie – Airbnb», «Utleie – Booking.com», «Utleie – FINN» eller «Utleie – Direkte», og «Privat» for privatopphold. Homey-flows reagerer på emnefelt; bruker kan enkelt tilpasse disse etter at feeden er klar. Punkt 4 ferdig avklart.
