@@ -1,3 +1,8 @@
+# AVKLARING – ØKONOMISK FORSIDE
+
+Godkjent: tre visuelt like kort med eksisterende 2x2-oppsett: Bekreftede kommende inntekter øverst, Utbetalt hittil i år, Prognose. Brutto, plattformgebyrer, estimert skatt og netto etter skatt. På bekreftet-kortet brukes estimert tilleggsskatt = eksisterende skattefunksjon på utbetalt + bekreftet minus skatt på utbetalt alene, slik at skattefritt beløp ikke dobbelttelles. Tidligere foreslåtte grafer utgår. Oppgaver fjernes fra Oversikt. Punkt 2 ferdig avklart.
+
+---
 # AVKLARING – DIREKTE BOOKINGER
 
 Godkjent: Direkte utleiebookinger har 0 % bekreftet inntekt før innsjekk som standard, med manuell avkryssing «Bekreft inntekten» per booking for 100 %. Automatisk 100 % ved innsjekk. Hele forventede nettoinntekten inngår i prognosen uansett. Private opphold holdes utenfor. Avbestillingsregler ferdig avklart.
