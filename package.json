@@ -9,7 +9,8 @@
   "dependencies": {
     "@neondatabase/auth": "0.4.0-beta",
     "jose": "^6.0.0",
-    "pg": "^8.13.0"
+    "pg": "^8.13.0",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "esbuild": "^0.25.0"
