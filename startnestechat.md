@@ -1,3 +1,7 @@
+## Status 24.11.2026 – Manuell push bekreftet i PROD
+
+Brukeren bekreftet mottak av manuelt pushvarsel på iPhone etter oppdatering av abonnementet. PROD-deploy `d95d2f1` tok i bruk det nye VAPID-nøkkelparet. Automatisk utsending står fortsatt av. Neste steg er aktivering og én automatisk PROD-test med helt lukket app. Homey gjenstår.
+
 ## Status 24.11.2026 – Oppfølgingsrelease publisert i PROD
 
 Commit `a8a0111` er publisert ifølge brukeren og bekreftet levert på PROD-domenet. Bekreftede kommende inntekter utelater nå bookinger etter utsjekk. Før publisering korrigerte brukeren eier-ID-en i Netlify til én ID uten JSON-innpakning. Sjekk i PROD at inntektskortet viser forventet beløp, at Pushvarsler vises på iPhone og at manuelt testvarsel mottas. Automatisk utsending står av inntil manuelt pushvarsel er verifisert. Homey testes separat i PROD.
