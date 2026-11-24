@@ -1,3 +1,8 @@
+# AVKLARING – PLATTFORMGEBYR FRA 01.01.2027
+
+Bruker ønsker første automatiske gebyrperiode fra 01.01.2027, basert på bookingdato (ikke innsjekk). Bookingdato før dette: manuelt gebyr. Fra datoen: automatisk beregning fra historisk gyldig gebyrperiode, med manuell overstyring. Airbnb og Booking.com bruker registrerte satser; FINN skal også omfattes med startsats 0 %. Gjør løsningen plattformuavhengig, Direkte kan ha 0 % som standard. Behold eksisterende lagrede gebyrer uten retroaktiv omberegning. Neste samlede TEST-release.
+
+---
 # HANDLELISTE – KOPIER TIL UTKLIPPSTAVLE
 
 Neste TEST-release: kopi-ikon øverst til høyre på Handleliste. Kopier alle gjenstående varer, både automatiske og manuelle, med aktuelt antall som ren tekst, én vare per linje i format `6 × Kvikk Lunsj`, egnet for Google Keep, Notater og SMS. Vis kort bekreftelse «Handleliste kopiert» ved vellykket kopiering. Ingen deploy nå.
