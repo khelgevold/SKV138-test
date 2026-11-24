@@ -1,3 +1,7 @@
+## Status 24.11.2026 – Oppfølgingsrelease publisert i PROD
+
+Commit `a8a0111` er publisert ifølge brukeren og bekreftet levert på PROD-domenet. Bekreftede kommende inntekter utelater nå bookinger etter utsjekk. Før publisering korrigerte brukeren eier-ID-en i Netlify til én ID uten JSON-innpakning. Sjekk i PROD at inntektskortet viser forventet beløp, at Pushvarsler vises på iPhone og at manuelt testvarsel mottas. Automatisk utsending står av inntil manuelt pushvarsel er verifisert. Homey testes separat i PROD.
+
 ## Status 24.11.2026 – Samlet release publisert i PROD
 
 PROD-kandidaten ligger på `prep/skv138-prod-2026-11-24` med utgangspunkt i publisert PROD-gren `release/skv138-prod` ved `3173833`. Den overfører godkjente TEST-endringer for bookinger, gebyrer, økonomikort, oppgaver, handleliste, iCal og push. Eksisterende PROD-byggekommando, Netlify-konfigurasjon, Neon Auth-proxy, PWA-manifest og ikon er beholdt. Ingen TEST-data overføres. Netlify bekreftet Published kl. 19.30 for `dfb1247`, deploy `6b05d7de7eec04d1c419b4fa`. Live på `skv138.helgevold.no`: ny app og service worker svarte 200, og push-endepunkt uten innlogging svarte 401 som forventet. Innlogging, eksisterende bookinger, manuelt pushvarsel på iPhone og Homey gjenstår å bekrefte som innlogget bruker. Brukeren bekreftet at den additive pushmigreringen i Neon PROD ble kjørt med suksess.
