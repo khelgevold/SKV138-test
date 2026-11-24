@@ -17,9 +17,10 @@ async function api(authClient,method='GET',data){
 function keyBytes(key){const base64=key.replace(/-/g,'+').replace(/_/g,'/');const binary=atob(base64.padEnd(Math.ceil(base64.length/4)*4,'='));return Uint8Array.from(binary,c=>c.charCodeAt(0))}
 export async function initializePushSettings({authClient,container}){
   if(!container||!authClient)return;
-  if(!('serviceWorker' in navigator)||!('PushManager' in window)||!('Notification' in window))return;
   let config;try{config=await api(authClient)}catch{return}
   if(config.notOwner)return;
+  window.__SKV138_CALENDAR_URL__=config.calendarUrl||null;
+  if(!('serviceWorker' in navigator)||!('PushManager' in window)||!('Notification' in window))return;
   container.hidden=false;
   const status=container.querySelector('[data-push-status]');
   const button=container.querySelector('[data-push-enable]');
