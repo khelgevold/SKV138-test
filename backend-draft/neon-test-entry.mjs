@@ -68,3 +68,5 @@ export function createNeonTestLoginController() { return createNeonTestLogin(SKV
 export function createNeonTestSession() { return createNeonTestLogin(SKV138_TEST_AUTH_URL); }
 
 export { createV1623StateBridge } from './v1623-state-bridge.mjs';
+
+export { initializePushSettings } from './push-client.mjs';
