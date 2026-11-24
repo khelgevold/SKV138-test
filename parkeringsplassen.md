@@ -1,3 +1,8 @@
+# AVKLARING – DIREKTE BOOKINGER
+
+Godkjent: Direkte utleiebookinger har 0 % bekreftet inntekt før innsjekk som standard, med manuell avkryssing «Bekreft inntekten» per booking for 100 %. Automatisk 100 % ved innsjekk. Hele forventede nettoinntekten inngår i prognosen uansett. Private opphold holdes utenfor. Avbestillingsregler ferdig avklart.
+
+---
 # AVKLARING – GYLDIGHET AV AVBESTILLINGSREGLER
 
 Bruker godkjenner at dagens avbestillingsregler også gjelder eksisterende bookinger, inkludert bookinger uten registrert bookingdato. Fremtidige regelendringer får egne gyldighetsdatoer basert på bookingdato. Dette er uavhengig av gebyrberegningens startdato 01.01.2027.
