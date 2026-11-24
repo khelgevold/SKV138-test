@@ -1984,7 +1984,8 @@ function confirmedFraction(b,now=new Date()){
 }
 function confirmedIncome(y){
  let gross=0,fees=0;
- for(const b of state.bookings){if(b.paid)continue;const a=bookingAmounts(b),fraction=confirmedFraction(b),annual=b.cancelled?Number((b.cancelDate||b.start).slice(0,4))===y?1:0:share(b,y);gross+=a.gross*fraction*annual;fees+=a.fee*fraction*annual;}
+ const now=new Date();
+ for(const b of state.bookings){if(b.paid||!(now<stamp(b.end,b.checkout||state.settings.checkout||'12:00')))continue;const a=bookingAmounts(b),fraction=confirmedFraction(b,now),annual=b.cancelled?Number((b.cancelDate||b.start).slice(0,4))===y?1:0:share(b,y);gross+=a.gross*fraction*annual;fees+=a.fee*fraction*annual;}
  return {gross,fees};
 }
 const bookingFormConfirmBase=bookingForm;
