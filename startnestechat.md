@@ -1,3 +1,6 @@
+## 2026-11-24 – Samlet TEST-release
+Kode lagt inn for private bookingdetaljer, datostyrte gebyrer, avbestillingsberegning, økonomikort, betingede oppgaver, handleliste, levende Homey-kalender og eierstyrt push. Ikke publisert eller funksjonstestet. Push-migrasjon bekreftet utført av bruker. Før deploy: verifiser VAPID-nøkkelpar, legg til SKV138_ICAL_TOKEN (minst 32 tilfeldige tegn), behold SKV138_PUSH_SENDING_ENABLED=false. PROD urørt. Test alle funksjoner på iPhone før eventuell PROD-release. Syntakskontroll og integrasjonstest gjenstår.
+
 # PUSH – NEON TEST SQL BEKREFTET 22.11.2026
 
 Brukeren bekreftet `Statement executed successfully` etter å ha kjørt `backend-draft/push-migration.sql` i Neon TEST. To push-tabeller og indeks er dermed opprettet ifølge bruker. Ingen endringer i PROD. Neste: VAPID-konfigurasjon i Netlify TEST og verifisering av eierens Neon Auth user ID, med én brukerhandling om gangen. `SKV138_PUSH_SENDING_ENABLED` skal være av til testen er godkjent.
