@@ -318,8 +318,10 @@
   }
 
   function entryList(data, figures, planned) {
-    const entries = [...(planned ? figures.planned : figures.actual)].sort((a, b) =>
-      (a.date || yearEnd(a.year)).localeCompare(b.date || yearEnd(b.year)) || a.kind.localeCompare(b.kind));
+    const entries = planned
+      ? [...figures.planned].sort((a, b) =>
+        (a.date || yearEnd(a.year)).localeCompare(b.date || yearEnd(b.year)) || a.kind.localeCompare(b.kind))
+      : [...figures.actual].reverse().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
     const draw = editor?.kind === 'entry' ? rowForm(editor.item) : '';
     const action = planned ? 'Ny planlagt post' : 'Ny postering';
     const rows = entries.map(e => {
