@@ -41,10 +41,20 @@
 
   function persist(data, message) {
     state.meskFinance = data;
-    save();
+    const queued = save();
     editor = null;
-    notice = message;
+    const pending = 'Lagrer …';
+    const failure = 'Lagringen er stoppet. Last ned ulagrede data fra varselet.';
+    notice = queued ? pending : failure;
     renderMesk();
+    if (!queued) return;
+
+    void skv138TestBridge.whenIdle().then(() => {
+      if (notice !== pending) return;
+      const status = skv138TestBridge.getStatus();
+      notice = status.blocked ? failure : message;
+      host.querySelector('[data-mesk-notice]').textContent = notice;
+    });
   }
 
   function escape(value) {
