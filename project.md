@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Bruk beregnet åremål uten ekstra knapp
+
+«Rediger avtalt åremål» er fjernet. Beregnet åremål brukes som standard. Dersom et avtalt beløp allerede er lagret, beholdes det og kan nullstilles via «Bruk beregnet åremål». Testet med tidligere avtalt beløp og overgang til automatisk beregning. Klargjort på `prep/skv138-mesk-coverage`.
+
 ## Status 25.11.2026 – Forenklet dekning av åremålet
 
 Den nederste boksen «Gjenstår å betale til MESK» er fjernet fra Dekning av åremålet. Åremål, faktisk betalt beløp og de to restfeltene for privat utleie vises fortsatt. Klargjort på `prep/skv138-mesk-coverage`.
