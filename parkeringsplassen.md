@@ -1,3 +1,7 @@
+## Gjeldende beslutning 25.11.2026 kl. 16:01 – Kun PROD
+
+Brukeren bekrefter at siste release fungerer fint. Innlogget sluttkontroll av siste MESK-/Pushvarsler-release (5d1f25c) anses godkjent av brukeren. Aktiv løsning: https://skv138.helgevold.no/ (GitHub khelgevold/SKV138-test, release/skv138-prod). Fra nå av brukes ikke separat TEST-miljø. Tidligere TEST-instrukser nedenfor er historikk og overstyres av denne beslutningen. TEST-gren, database og Netlify-site slettes ikke uten særskilt godkjenning. Bruk midlertidig prep-gren for kode og målrettede kontroller med syntetiske data før samlet PROD-release; ikke et nytt permanent miljø. Behold PROD-data, autentisering, miljøvariabler og eksisterende ID-er. SQL-endringer skal være bakoverkompatible og risikovurderes; backup/rollback ved behov. Ingen PROD-publisering uten eksplisitt godkjenning. Dokumentasjonsendringer alene skal ikke kreve deploy. Homey-import/oppdatering er ikke særskilt bekreftet i denne meldingen; ikke anta at den er testet. Ingen ny funksjonell release avtalt.
+
 # Parkeringsplassen – SKV138
 Opprettet: 2026-11-18.
 
@@ -5,8 +9,8 @@ Her registreres utviklingsønsker som er diskutert og avtalt utsatt. Dette er ik
 
 | Ønske | Status | Kommentar |
 |---|---|---|
-| Pushvarsler | Utsatt / prioritet 1 | Først etter at øvrig Neon TEST er funksjonelt og visuelt godkjent. |
-| Dynamisk iCal-abonnementsfeed for Homey | Utsatt / prioritet 2 | Gjenbruk eksisterende Homey-app som leser iCal; omfatte utleie og privat bruk. Ingen manuell ICS-eksport er avtalt; dynamisk iCal vurderes senere. |
+| Pushvarsler | Gjennomført | Publisert i PROD; siste panelendring godkjent. |
+| Dynamisk iCal-abonnementsfeed for Homey | Implementert; Homey-verifisering ikke særskilt bekreftet | Kontroller kun ved behov. |
 
 ## Neste utviklingsrunde
 
