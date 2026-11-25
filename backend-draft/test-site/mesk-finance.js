@@ -348,9 +348,7 @@
     const remaining = value => coverageRent === null ? '–' : amount(Math.max(0, coverageRent - value));
     const proposal = rentProposal(data, figures);
     const proposalActions = '<div class="row mesk-entry-actions">' +
-      toggleEditor('rent-basis', 'Rediger grunnlag') +
-      (proposal.total !== null && proposal.total !== rent && !proposal.missingRates.length
-        ? toggleEditor('accept-rent', 'Bruk som avtalt åremål') : '') + '</div>';
+      toggleEditor('rent-basis', 'Rediger grunnlag') + '</div>';
     const proposalNote = proposal.missingRates.length
       ? '<p class="sub">Legg inn rente eller en rentepost for ' + escape(proposal.missingRates.join(' og ')) + '.</p>'
       : '<p class="sub">Forslaget bruker kostnadene som er valgt for åremålet, samt beregnede renter som ennå ikke er registrert.</p>';
@@ -763,14 +761,6 @@
       case 'new':
         editEntry({status:activeTab === 'planned' ? 'planned' : 'actual',date:activeTab === 'entries' && dateYear(today()) === currentYear ? today() : ''},'new');
         return;
-      case 'accept-rent': {
-        const config = yearSettings(data,currentYear);
-        const proposal = annualPlan(data, currentYear, dateYear(today()))?.proposal ?? rentProposal(data, yearFigures(data, currentYear));
-        if (proposal.total == null || proposal.missingRates.length) return;
-        data.years[currentYear] = {...config, rent:proposal.total};
-        persist(data,'Avtalt åremål er oppdatert.');
-        return;
-      }
       case 'edit':
         if (entry) editEntry({...asRentPosting(entry)},'edit');
         return;
