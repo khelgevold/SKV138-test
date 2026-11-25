@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Feil ved lagring av låneopptak som postering
+
+Brukeren fikk lagringsvarsel ved registrering av låneopptak i MESK. Årsaken til serverens avvisning er foreløpig ukjent. På `prep/skv138-mesk-save-status` venter MESK på svar fra lagringskøen før den viser at posten er lagret. Ved avvist forespørsel vises HTTP-status når den er tilgjengelig. Ulagrede data kan som før lastes ned. Testet med låneopptak som postering og simulerte svar for både bekreftet lagring og HTTP 503. Klargjort for publisering, med innlogget feilsøking i PROD utestående.
+
 ## Status 25.11.2026 – MESK-oppdatering publisert i PROD
 
 Commit `fb46109` samler beregnet åremål, flerårig simulering av ekstra avdrag til Heden i trinn på 50 000 kr og avhuking for hva som inngår i åremålet. Produksjonsdomenet `skv138.helgevold.no` leverer versjonen fra committen. Appens HTML laster modulen. Testet med fiktive data før publisering. Innlogget funksjonstest i PROD gjenstår. Ingen databasemigrering.
