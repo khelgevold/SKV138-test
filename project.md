@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Valg av kostnader i åremålet
+
+På klargjøringsgrenen `prep/skv138-mesk-annual-rent` har faktiske og planlagte drifts- og renteposter valget «Inngår i beregning av åremål». Valget er på som standard, også for eldre poster. Det endrer bare beregnet åremål. Under Lån kan simulerte rentevirkninger tas med i åremålet eller holdes utenfor mens restgjeld og rentebesparelse fortsatt vises. Beregningstestene er bestått. Publisering og innlogget funksjonstest gjenstår.
+
 ## Status 25.11.2026 – Simulering av ekstra avdrag til Heden
 
 Under MESK Økonomi → Lån kan brukeren simulere ekstra avdrag i inntil ti år. Årsrammen rundes ned til trinn på 50 000 kr innenfor restgjelden og med plass til allerede registrerte eller planlagte avdrag. Simuleringen tar utgangspunkt i 1. januar og viser avdrag, restgjeld, renter, rentebesparelse mot registrert plan og beregnet åremål per år. Simuleringen lagrer ingen posteringer eller endringer i avtalt åremål. Rente ved registrert avdrag beregnes etter registrert betalingsdato. Beregningene er testet med fiktive data. Klargjort på `prep/skv138-mesk-annual-rent`, publisering og innlogget funksjonstest gjenstår.
