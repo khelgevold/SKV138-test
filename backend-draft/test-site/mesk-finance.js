@@ -25,7 +25,7 @@
   let notice = '';
   let loanScenario = null;
   const principalStep = 5000000;
-  const amount = n => money(n / 100);
+  const amount = n => money(n === 0 ? 0 : n / 100);
   const numeric = n => n === null || n === undefined ? '' : n / 100;
   const datestamp = day => Date.parse(day + 'T00:00:00Z');
   const dateYear = date => Number(date.slice(0, 4));
@@ -218,6 +218,14 @@
       '</div><div class="row">' + '<button class="primary" type="submit">Lagre årsinnstillinger</button>' + toggleEditor('close', 'Avbryt') + '</div></form>';
   }
 
+  function resultPostingsNote(actual, year) {
+    if (actual.some(entry => resultValue(entry) !== 0)) return '';
+    const hint = actual.length
+      ? 'Posteringene for ' + year + ' gir ingen registrert inntekt eller kostnad i resultatet. Sjekk feltet Type under Posteringer.'
+      : 'Ingen faktiske posteringer for ' + year + '. Sjekk datoene under Posteringer og om postene ligger under Planlagt.';
+    return '<p class="sub">' + escape(hint) + '</p>';
+  }
+
   function oversikt(data, config, figures) {
     const opening = openingBalances(data, currentYear);
     const privateIncome = privateCoverage(currentYear);
@@ -254,7 +262,7 @@
         metric('Prognose for udekket åremål', remaining(privateIncome.forecast)),
         metric('Gjenstår å betale til MESK', remaining(figures.rentPaid))
       ]) +
-      card('Resultat og skatt for hytta', [
+      card('Resultat og skatt for hytta · ' + currentYear, [
         metric('Registrert inntekt', amount(sum(figures.actual.filter(e => resultValue(e) > 0), resultValue))),
         metric('Registrerte kostnader og renter', amount(-sum(figures.actual.filter(e => resultValue(e) < 0), resultValue))),
         metric('Registrert resultat før skatt', amount(figures.actualResult)),
@@ -264,7 +272,7 @@
         metric('Årsprognose etter estimert skatt', amount(figures.forecastResult - figures.forecastTax)),
         metric('Betalt forskuddsskatt for året', amount(figures.taxPaid)),
         metric('Gjenstår å sette av', amount(Math.max(0, figures.forecastTax - figures.taxPaid)))
-      ], '<p class="sub">Skatteestimatet gjelder hytteeierskapet. Før forventet skattebetaling under Planlagt for å ta den med i saldoen.</p>');
+      ], resultPostingsNote(figures.actual, currentYear) + '<p class="sub">Skatteestimatet gjelder hytteeierskapet. Før forventet skattebetaling under Planlagt for å ta den med i saldoen.</p>');
   }
 
   function rowForm(item) {
@@ -303,7 +311,7 @@
     const action = planned ? 'Ny planlagt post' : 'Ny postering';
     const rows = entries.map(e => {
       const id = escape(e.id);
-      const info = [e.date ? fmt(e.date) : String(e.year), e.party, e.loan && loans[e.loan], e.treatment === 'review' && 'Til avklaring', rentCostKinds.has(e.kind) && e.includeInRent === false && 'Holdt utenfor åremål', e.voucher && 'Bilag ' + e.voucher, e.note].filter(Boolean);
+      const info = [e.date ? fmt(e.date) : String(e.year), e.category && kinds[e.kind], e.party, e.loan && loans[e.loan], e.treatment === 'review' && 'Til avklaring', rentCostKinds.has(e.kind) && e.includeInRent === false && 'Holdt utenfor åremål', e.voucher && 'Bilag ' + e.voucher, e.note].filter(Boolean);
       return '<div class="mesk-entry"><div class="mesk-entry-head"><strong>' + escape(e.category || kinds[e.kind]) +
         '</strong><strong>' + amount(balanceChange(e)) + '</strong></div><div class="sub">' + info.map(escape).join(' · ') +
         '</div><div class="row mesk-entry-actions"><button data-mesk-action="edit" data-id="' + id + '">Rediger</button>' +
