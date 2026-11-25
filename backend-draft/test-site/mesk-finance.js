@@ -116,26 +116,29 @@
     const config = yearSettings(data, y);
     const actual = data.entries.filter(e => e.year === y && e.status === 'actual');
     const planned = data.entries.filter(e => e.year === y && e.status === 'planned');
+    const settledInterest = config.settledInterest ?? {};
+    const forecastEntries = [...actual, ...planned.filter(e => e.kind !== 'interest' || !settledInterest[e.loan])];
     const rentPaid = sum(actual.filter(e => e.kind === 'rent'), e => e.amount);
     const remainingRent = Math.max(0, (config.rent ?? 0) - rentPaid);
     const projectedLoans = Object.fromEntries(Object.keys(loans).map(key => [key, calculateLoan(data, key, y, true)]));
     const remainingInterest = sum(Object.keys(loans), key => {
+      if (settledInterest[key]) return 0;
       const loan = projectedLoans[key];
-      const alreadyIncluded = sum([...actual, ...planned].filter(e => e.kind === 'interest' && e.loan === key), e => e.amount);
+      const alreadyIncluded = sum(forecastEntries.filter(e => e.kind === 'interest' && e.loan === key), e => e.amount);
       return Math.max(0, (loan?.interest ?? 0) - alreadyIncluded);
     });
     const adjustment = config.taxAdjustment || 0;
     const taxRate = config.taxRate ?? 22;
     const actualResult = sum(actual, resultValue);
-    const forecastResult = actualResult + sum(planned, resultValue) + remainingRent - remainingInterest;
+    const forecastResult = sum(forecastEntries, resultValue) + remainingRent - remainingInterest;
     const tax = base => Math.round(Math.max(0, base) * taxRate / 100);
     const taxPaid = sum(data.entries.filter(e => e.kind === 'tax' && e.status === 'actual' && e.taxYear === y), e => e.amount);
     return {
-      actual, planned, rentPaid, remainingRent, actualResult, forecastResult, projectedLoans, remainingInterest, taxPaid,
+      actual, planned, forecastEntries, settledInterest, rentPaid, remainingRent, actualResult, forecastResult, projectedLoans, remainingInterest, taxPaid,
       actualTax: tax(sum(actual, taxValue) + adjustment),
-      forecastTax: tax(sum([...actual, ...planned], taxValue) + remainingRent - remainingInterest + adjustment),
+      forecastTax: tax(sum(forecastEntries, taxValue) + remainingRent - remainingInterest + adjustment),
       actualCash: sum(actual, balanceChange),
-      forecastCash: sum([...actual, ...planned], balanceChange) + remainingRent - remainingInterest
+      forecastCash: sum(forecastEntries, balanceChange) + remainingRent - remainingInterest
     };
   }
 
@@ -188,13 +191,13 @@
   function rentProposal(data, figures) {
     const equity = data.rentBasis?.equity;
     const rate = data.rentBasis?.rate ?? 4.8;
-    const entries = [...figures.actual, ...figures.planned];
+    const entries = figures.forecastEntries;
     const includedCosts = entries.filter(e => e.includeInRent !== false);
     const operatingCosts = sum(includedCosts.filter(e => e.kind === 'expense' && e.treatment !== 'review'), e => e.amount);
     const interest = figures.remainingInterest + sum(includedCosts.filter(e => e.kind === 'interest'), e => e.amount);
     const equityReturn = equity == null ? null : Math.round(equity * rate / 100);
     const missingRates = Object.entries(figures.projectedLoans)
-      .filter(([key, loan]) => loan && loan.interest == null && !entries.some(e => e.kind === 'interest' && e.loan === key))
+      .filter(([key, loan]) => !figures.settledInterest[key] && loan && loan.interest == null && !entries.some(e => e.kind === 'interest' && e.loan === key))
       .map(([key]) => loans[key]);
     return {
       rate, operatingCosts, interest, equityReturn, missingRates,
@@ -311,7 +314,7 @@
     const action = planned ? 'Ny planlagt post' : 'Ny postering';
     const rows = entries.map(e => {
       const id = escape(e.id);
-      const info = [e.date ? fmt(e.date) : String(e.year), e.category && kinds[e.kind], e.party, e.loan && loans[e.loan], e.treatment === 'review' && 'Til avklaring', rentCostKinds.has(e.kind) && e.includeInRent === false && 'Holdt utenfor åremål', e.voucher && 'Bilag ' + e.voucher, e.note].filter(Boolean);
+      const info = [e.date ? fmt(e.date) : String(e.year), e.category && kinds[e.kind], planned && e.kind === 'interest' && figures.settledInterest[e.loan] && 'Årets renter er oppgjort. Posten er holdt utenfor prognosen.', e.party, e.loan && loans[e.loan], e.treatment === 'review' && 'Til avklaring', rentCostKinds.has(e.kind) && e.includeInRent === false && 'Holdt utenfor åremål', e.voucher && 'Bilag ' + e.voucher, e.note].filter(Boolean);
       return '<div class="mesk-entry"><div class="mesk-entry-head"><strong>' + escape(e.category || kinds[e.kind]) +
         '</strong><strong>' + amount(balanceChange(e)) + '</strong></div><div class="sub">' + info.map(escape).join(' · ') +
         '</div><div class="row mesk-entry-actions"><button data-mesk-action="edit" data-id="' + id + '">Rediger</button>' +
@@ -331,7 +334,9 @@
       field('Opprinnelig lånebeløp (kr)', 'name="amount" type="number" min="0.01" step="0.01" required', numeric(loan.amount)) +
       field('Startdato', 'name="start" type="date" required', loan.start) +
       field('Rente for ' + currentYear + ' (%)', 'name="rate" type="number" min="0" max="100" step="0.01" placeholder="Bruk sist registrerte rente"', config.rates?.[key]) +
-      '</div><div class="row"><button class="primary" type="submit">Lagre låneopplysninger</button>' + toggleEditor('close','Avbryt') + '</div></form>';
+      '</div><label class="check"><input type="checkbox" name="settledInterest"' +
+      (config.settledInterest?.[key] ? ' checked' : '') + '> Renter ferdig oppgjort for ' + currentYear + '</label>' +
+      '<div class="row"><button class="primary" type="submit">Lagre låneopplysninger</button>' + toggleEditor('close','Avbryt') + '</div></form>';
   }
 
   function firstSimulationYear(data, selectedYear, date) {
@@ -402,6 +407,8 @@
       const loan = data.loans[key];
       const rate = rateFor(data,key,currentYear);
       const projected = figures.projectedLoans[key];
+      const settled = figures.settledInterest[key];
+      const paidInterest = sum(figures.actual.filter(e => e.kind === 'interest' && e.loan === key), e => e.amount);
       const original = calculateLoan(data, key, currentYear, true, true);
       const saving = original?.interest != null && projected?.interest != null ? Math.max(0, original.interest - projected.interest) : null;
       const edit = '<div class="row mesk-entry-actions"><button data-mesk-action="loan" data-id="' + key + '">' + (loan ? 'Rediger lån og årets rente' : 'Sett opp lån') + '</button>' +
@@ -410,7 +417,9 @@
         metric('Opprinnelig lånebeløp', loan ? amount(loan.amount) : '–'),
         metric('Rente for ' + currentYear, rate == null ? '–' : rate.toLocaleString('nb-NO') + ' %'),
         metric('Forventet restgjeld ved årsslutt', projected ? amount(projected.balance) : '–'),
-        metric('Forventede renter for året', projected?.interest == null ? '–' : amount(projected.interest)),
+        settled
+          ? metric('Oppgjorte renter for ' + currentYear, amount(paidInterest))
+          : metric('Forventede renter for året', projected?.interest == null ? '–' : amount(projected.interest)),
         ...(key === 'heden' ? [
           metric('Rentebesparelse fra årets avdrag', saving === null ? '–' : amount(saving))
         ] : [])
@@ -549,7 +558,11 @@
         return;
       }
       data.loans[key] = {amount, start};
-      data.years[currentYear] = {...settings, rates:{...settings.rates,[key]:rate === '' ? null : Number(rate)}};
+      data.years[currentYear] = {
+        ...settings,
+        rates:{...settings.rates,[key]:rate === '' ? null : Number(rate)},
+        settledInterest:{...settings.settledInterest,[key]:values.has('settledInterest')}
+      };
       persist(data,'Låneopplysningene er lagret.');
     } else if (kind === 'entry') {
       const entry = readEntry(form, data);
