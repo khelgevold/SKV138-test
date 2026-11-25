@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Skatteoverføring som siste planlagte post
+
+Beregnet skatteoverføring per 31. desember vises som siste linje i Planlagt med beløp, retning og estimert saldo. Når beløpet er større enn null, kan det registreres som faktisk via trepunktsmenyen. Restbeløpet beregnes etter lagring. Testet fra beregnet linje til faktisk post og avregning. Klargjort på `prep/skv138-mesk-entry-menu`.
+
 ## Status 25.11.2026 – Handlingsmeny for MESK-poster
 
 På `prep/skv138-mesk-entry-menu` ligger Rediger, Registrer faktisk og Slett i en meny ved beløp og saldo. Beregnede linjer, inkludert skatteoverføring, kan registreres med faktisk dato og beløp. Rediger og Slett er deaktivert på beregnede linjer. Ved lagring opprettes en faktisk post og prognosen regner på nytt. Testet fra meny til opprettet og avregnet åremål. Klargjort for neste publisering.
