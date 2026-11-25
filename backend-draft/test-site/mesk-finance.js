@@ -321,10 +321,12 @@
     return confirmed - directPayment - figures.taxReserved + figures.taxBenefitReceived;
   }
 
-  function taxTransferCard(config, figures) {
+  function taxTransferCard(config, figures, plan) {
     const confirmed = config.confirmedTaxEffect;
-    const pending = confirmed == null ? null : taxTransferBalance(confirmed, figures);
-    const direction = pending > 0 ? 'Til hovedkonto' : pending < 0 ? 'Til hyttekonto' : 'Gjenstår å overføre';
+    const pending = confirmed == null ? plan?.taxTransfer ?? null : taxTransferBalance(confirmed, figures);
+    const direction = confirmed == null
+      ? 'Estimert rest ' + (pending < 0 ? 'til hyttekonto' : pending > 0 ? 'til hovedkonto' : 'å overføre')
+      : pending > 0 ? 'Til hovedkonto' : pending < 0 ? 'Til hyttekonto' : 'Gjenstår å overføre';
     return card('Skatteoverføring for ' + currentYear, [
       metric(figures.actualTaxEffect < 0 ? 'Beregnet mulig skattebesparelse' : 'Beregnet skatt på registrerte poster', amount(Math.abs(figures.actualTaxEffect))),
       metric(confirmed < 0 ? 'Bekreftet brukt skattebesparelse' : 'Bekreftet skatt', confirmed == null ? '–' : amount(Math.abs(confirmed))),
@@ -384,7 +386,7 @@
         metric('Årsprognose etter estimert skatt', amount(figures.forecastResult - figures.forecastTax)),
         metric('Betalt skatt for året', amount(figures.taxPaid))
       ], resultPostingsNote(figures.actual, currentYear) + '<p class="sub">Skatteestimatet gjelder hytteeierskapet. Under Planlagt ser du beregnet skatteoverføring ved årsslutt.</p>') +
-      taxTransferCard(config, figures);
+      taxTransferCard(config, figures, plan);
   }
 
   function recurringCost(entry) {
