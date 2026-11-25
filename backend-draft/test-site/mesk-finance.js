@@ -11,7 +11,7 @@
     income: 'Inntekt', rent: 'Betalt åremål', expense: 'Driftskostnad',
     interest: 'Betalte lånerenter', principal: 'Avdrag', borrowing: 'Låneopptak',
     investment: 'Kjøp og investering', transfer: 'Intern overføring',
-    refund: 'Refusjon', taxReserve: 'Skatteavsetning til hovedkonto', tax: 'Betalt skatt'
+    refund: 'Refusjon', taxReserve: 'Skatteavsetning til hovedkonto', taxBenefit: 'Skattebesparelse til hyttekonto', tax: 'Betalt skatt'
   };
   const categories = [
     'Forsikring', 'Strøm og nettleie', 'Vann og avløp', 'Renovasjon', 'Vedlikehold',
@@ -31,11 +31,12 @@
   const dateYear = date => Number(date.slice(0, 4));
   const yearStart = y => y + '-01-01';
   const yearEnd = y => yearStart(y + 1);
-  const cashIn = new Set(['income', 'rent', 'borrowing', 'refund']);
+  const cashIn = new Set(['income', 'rent', 'borrowing', 'refund', 'taxBenefit']);
   const loanEntry = new Set(['interest', 'principal', 'borrowing']);
   const rentCostKinds = new Set(['expense', 'interest']);
   const model = () => state.meskFinance || {years:{}, loans:{}, entries:[]};
   const yearSettings = (data, y) => data.years[y] || {};
+  const taxKinds = new Set(['tax', 'taxReserve', 'taxBenefit']);
   const taxFromMain = e => e.kind === 'tax' && e.taxAccount === 'main';
   const balanceChange = e => taxFromMain(e) ? 0 :
     (cashIn.has(e.kind) || (e.kind === 'transfer' && e.direction === 'in') ? 1 : -1) * e.amount;
@@ -133,16 +134,18 @@
     const taxRate = config.taxRate ?? 22;
     const actualResult = sum(actual, resultValue);
     const forecastResult = sum(forecastEntries, resultValue) + remainingRent - remainingInterest;
-    const tax = base => Math.round(Math.max(0, base) * taxRate / 100);
+    const taxEffect = base => Math.sign(base) * Math.round(Math.abs(base) * taxRate / 100);
+    const actualTaxEffect = taxEffect(sum(actual, taxValue) + adjustment);
     const actualTaxEntries = data.entries.filter(e => e.status === 'actual' && e.taxYear === y);
     const taxPaid = sum(actualTaxEntries.filter(e => e.kind === 'tax'), e => e.amount);
     const taxPaidFromMain = sum(actualTaxEntries.filter(taxFromMain), e => e.amount);
     const taxReserved = sum(actualTaxEntries.filter(e => e.kind === 'taxReserve'), e => e.amount);
-    const taxCovered = taxPaid - taxPaidFromMain + Math.max(taxPaidFromMain, taxReserved);
+    const taxBenefitReceived = sum(actualTaxEntries.filter(e => e.kind === 'taxBenefit'), e => e.amount);
+    const taxPaidFromCabin = taxPaid - taxPaidFromMain;
     return {
-      actual, planned, forecastEntries, settledInterest, rentPaid, remainingRent, actualResult, forecastResult, projectedLoans, remainingInterest, taxPaid, taxReserved, taxCovered,
-      actualTax: tax(sum(actual, taxValue) + adjustment),
-      forecastTax: tax(sum(forecastEntries, taxValue) + remainingRent - remainingInterest + adjustment),
+      actual, planned, forecastEntries, settledInterest, rentPaid, remainingRent, actualResult, forecastResult, projectedLoans, remainingInterest, taxPaid, taxReserved, taxBenefitReceived, taxPaidFromCabin, actualTaxEffect,
+      actualTax: Math.max(0, actualTaxEffect),
+      forecastTax: Math.max(0, taxEffect(sum(forecastEntries, taxValue) + remainingRent - remainingInterest + adjustment)),
       actualCash: sum(actual, balanceChange),
       forecastCash: sum(forecastEntries, balanceChange) + remainingRent - remainingInterest
     };
@@ -224,6 +227,7 @@
       field('Inngående saldo (kr)', 'name="opening" type="number" step="0.01" placeholder="Bruk saldo fra forrige år"', numeric(config.opening)) +
       field('Skattesats (%)', 'name="taxRate" type="number" min="0" max="100" step="0.01" required', config.taxRate ?? 22) +
       field('Skattemessig justering (kr)', 'name="taxAdjustment" type="number" step="0.01"', numeric(config.taxAdjustment)) +
+      field('Bekreftet skatt (+) eller brukt skattebesparelse (−), kr', 'name="confirmedTaxEffect" type="number" step="0.01"', numeric(config.confirmedTaxEffect)) +
       '</div><div class="row">' + '<button class="primary" type="submit">Lagre årsinnstillinger</button>' + toggleEditor('close', 'Avbryt') + '</div></form>';
   }
 
@@ -233,6 +237,27 @@
       ? 'Posteringene for ' + year + ' gir ingen registrert inntekt eller kostnad i resultatet. Sjekk feltet Type under Posteringer.'
       : 'Ingen faktiske posteringer for ' + year + '. Sjekk datoene under Posteringer og om postene ligger under Planlagt.';
     return '<p class="sub">' + escape(hint) + '</p>';
+  }
+
+  function taxTransferBalance(confirmed, figures) {
+    const directPayment = Math.min(Math.max(0, confirmed), figures.taxPaidFromCabin);
+    return confirmed - directPayment - figures.taxReserved + figures.taxBenefitReceived;
+  }
+
+  function taxTransferCard(config, figures) {
+    const confirmed = config.confirmedTaxEffect;
+    const pending = confirmed == null ? null : taxTransferBalance(confirmed, figures);
+    const direction = pending > 0 ? 'Til hovedkonto' : pending < 0 ? 'Til hyttekonto' : 'Gjenstår å overføre';
+    return card('Skatteoverføring for ' + currentYear, [
+      metric(figures.actualTaxEffect < 0 ? 'Beregnet mulig skattebesparelse' : 'Beregnet skatt på registrerte poster', amount(Math.abs(figures.actualTaxEffect))),
+      metric(confirmed < 0 ? 'Bekreftet brukt skattebesparelse' : 'Bekreftet skatt', confirmed == null ? '–' : amount(Math.abs(confirmed))),
+      metric('Overført til hovedkonto', amount(figures.taxReserved)),
+      metric('Overført til hyttekonto', amount(figures.taxBenefitReceived)),
+      metric('Betalt direkte fra hyttekonto', amount(figures.taxPaidFromCabin)),
+      metric(direction, pending == null ? '–' : amount(Math.abs(pending)))
+    ], confirmed == null
+      ? '<p class="sub">Legg inn bekreftet skatt eller skattebesparelsen MESK faktisk har brukt, under Årsinnstillinger.</p>'
+      : '');
   }
 
   function oversikt(data, config, figures) {
@@ -279,10 +304,9 @@
         metric('Estimert skatt på registrerte poster', amount(figures.actualTax)),
         metric('Estimert skatt for året', amount(figures.forecastTax)),
         metric('Årsprognose etter estimert skatt', amount(figures.forecastResult - figures.forecastTax)),
-        metric('Overført til hovedkonto for skatteåret', amount(figures.taxReserved)),
-        metric('Betalt skatt for året', amount(figures.taxPaid)),
-        metric('Gjenstår å sette av', amount(Math.max(0, figures.forecastTax - figures.taxCovered)))
-      ], resultPostingsNote(figures.actual, currentYear) + '<p class="sub">Skatteestimatet gjelder hytteeierskapet. Legg forventet overføring til hovedkontoen under Planlagt for å ta den med i saldoprognosen.</p>');
+        metric('Betalt skatt for året', amount(figures.taxPaid))
+      ], resultPostingsNote(figures.actual, currentYear) + '<p class="sub">Skatteestimatet gjelder hytteeierskapet. Legg forventet overføring til hovedkontoen under Planlagt for å ta den med i saldoprognosen.</p>') +
+      taxTransferCard(config, figures);
   }
 
   function rowForm(item) {
@@ -468,7 +492,7 @@
     const kind = form.elements.kind.value;
     const date = form.elements.date;
     const planned = editor.item.status === 'planned';
-    const fields = {loan:loanEntry.has(kind), direction:kind==='transfer', taxYear:kind==='tax' || kind==='taxReserve', taxAccount:kind==='tax', includeInRent:rentCostKinds.has(kind), treatment:['income','expense','refund'].includes(kind)};
+    const fields = {loan:loanEntry.has(kind), direction:kind==='transfer', taxYear:taxKinds.has(kind), taxAccount:kind==='tax', includeInRent:rentCostKinds.has(kind), treatment:['income','expense','refund'].includes(kind)};
     for (const [name, show] of Object.entries(fields)) {
       form.querySelector('[data-mesk-field="' + name + '"]').hidden = !show;
     }
@@ -503,7 +527,7 @@
     const value = readMoney(values,'amount');
     const year = date ? dateYear(date) : currentYear;
     const loan = loanEntry.has(kind) ? String(values.get('loan')) : '';
-    const taxYear = kind === 'tax' || kind === 'taxReserve' ? Number(values.get('taxYear')) : null;
+    const taxYear = taxKinds.has(kind) ? Number(values.get('taxYear')) : null;
     if (!Object.hasOwn(kinds, kind) || !Number.isSafeInteger(value) || value <= 0 ||
         year < 2000 || year > 2100 || (taxYear !== null && (!Number.isInteger(taxYear) || taxYear < 2000 || taxYear > 2100)) || (loanEntry.has(kind) && !Object.hasOwn(loans, loan))) {
       alert('Kontroller dato, beløp og lånevalg.');
@@ -552,7 +576,8 @@
       renderMesk();
     } else if (kind === 'year') {
       data.years[currentYear] = {...settings, rent:readMoney(values,'rent'), opening:readMoney(values,'opening'),
-        taxRate:Number(values.get('taxRate')), taxAdjustment:readMoney(values,'taxAdjustment') ?? 0};
+        taxRate:Number(values.get('taxRate')), taxAdjustment:readMoney(values,'taxAdjustment') ?? 0,
+        confirmedTaxEffect:readMoney(values,'confirmedTaxEffect')};
       persist(data,'Årsinnstillingene er lagret.');
     } else if (kind === 'rent-basis') {
       const equity = readMoney(values,'equity');
@@ -590,7 +615,7 @@
   });
 
   function copyPlanned(data) {
-    const candidates = data.entries.filter(e => e.status==='planned' && e.year===currentYear && !['principal','tax','taxReserve','borrowing','transfer','investment'].includes(e.kind));
+    const candidates = data.entries.filter(e => e.status==='planned' && e.year===currentYear && !['principal','tax','taxReserve','taxBenefit','borrowing','transfer','investment'].includes(e.kind));
     const next = currentYear + 1;
     const rows = candidates.filter(e => !data.entries.some(other => other.year===next && (other.copiedFrom===e.id ||
       (other.kind===e.kind && other.category===e.category && other.party===e.party && other.note===e.note && other.loan===e.loan))));
