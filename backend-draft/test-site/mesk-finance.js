@@ -547,8 +547,7 @@
       const paidInterest = sum(figures.actual.filter(e => e.kind === 'interest' && e.loan === key), e => e.amount);
       const original = calculateLoan(data, key, currentYear, true, true);
       const saving = original?.interest != null && projected?.interest != null ? Math.max(0, original.interest - projected.interest) : null;
-      const edit = '<div class="row mesk-entry-actions"><button data-mesk-action="loan" data-id="' + key + '">' + (loan ? 'Rediger lån og årets rente' : 'Sett opp lån') + '</button>' +
-        (key === 'heden' && loan ? toggleEditor('principal', 'Planlegg avdrag 1. januar') : '') + '</div>';
+      const edit = '<div class="row mesk-entry-actions"><button data-mesk-action="loan" data-id="' + key + '">' + (loan ? 'Rediger lån og årets rente' : 'Sett opp lån') + '</button></div>';
       return card(label, [
         metric('Opprinnelig lånebeløp', loan ? amount(loan.amount) : '–'),
         metric('Rente for ' + currentYear, rate == null ? '–' : rate.toLocaleString('nb-NO') + ' %'),
@@ -761,10 +760,6 @@
         persist(data,'Avtalt åremål er oppdatert.');
         return;
       }
-      case 'principal':
-        activeTab='planned';
-        editEntry({status:'planned',kind:'principal',loan:'heden',date:yearStart(currentYear)},'new');
-        return;
       case 'edit':
         if (entry) editEntry({...asRentPosting(entry)},'edit');
         return;
