@@ -1,3 +1,7 @@
+## Status 25.11.2026 – MESK-resultat per år
+
+Brukeren meldte at registrerte inntekter og kostnader viser null selv om postene er registrert. År, datoer og posttyper i PROD er ikke bekreftet. På `prep/skv138-mesk-posting-results` viser resultatkortet valgt år og en forklaring når årets faktiske poster gir null registrert inntekt og kostnad. Postlisten viser posttypen også når en egen kategori er satt. Kontrollert med fiktive data for tre år og ulike posttyper. Beregningen og lagrede data er uendret. Endringen er klargjort for en senere publisering.
+
 ## Status 25.11.2026 – MESK-rettelser og eget PROD-domene
 
 Commit `7677d78` er publisert. `skv138.helgevold.no` leverer nytt MESK-skjema og viser «lagret» etter bekreftelse fra serveren. Skjemaet skiller skattegrunnlag fra valget om å ta med kostnaden i åremålsforslaget. Brukeren satte `SKV138_APP_ORIGIN` til `https://skv138.helgevold.no` før deploy. Produksjonsbygget er verifisert med Auth på dette domenet. Det forrige `Origin denied`-avviket ble omgått ved å registrere posteringene via Netlify-adressen, og brukeren bekreftet at de vises på begge adresser. Innlogget lagring og kontroll etter ny innlasting på eget domene gjenstår etter denne deployen. Ingen SQL-migrering.
