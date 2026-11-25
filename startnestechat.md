@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Årsoversikt for skatteoverføring
+
+På `prep/skv138-mesk-posting-results` viser Skatteoverføring beregnet skatt eller mulig skattebesparelse fra registrerte poster. Brukeren registrerer faktisk bekreftet skatt som positivt beløp eller faktisk brukt skattebesparelse som negativt beløp per skatteår. Kortet viser restbeløpet og retningen etter registrerte skatteoverføringer og eventuell skatt betalt direkte fra hyttekontoen. Ny posttype «Skattebesparelse til hyttekonto» dekker innbetaling fra hovedkonto. Oppgjøret knyttes til skatteåret, mens saldo følger bokføringsdato. Testet med underskudd, overskudd, deloppgjør og betaling året etter. Klargjort for neste publisering.
+
 ## Status 25.11.2026 – Nyeste MESK-postering øverst
 
 På `prep/skv138-mesk-posting-results` sorteres faktiske posteringer med nyeste dato øverst. På samme dato vises sist registrerte post først. Planlagte poster vises fortsatt etter forfall, med udaterte poster sist. Sorteringen er testet og klargjort for neste publisering.
