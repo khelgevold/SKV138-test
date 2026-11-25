@@ -357,8 +357,8 @@
     return card('Hyttekonto', [
         metric(upcoming ? 'Beregnet inngående saldo' : 'Faktisk saldo', amount(upcoming ? plan.opening : opening.actual + figures.actualCash)),
         metric('Prognose ved årsslutt', amount(plan?.closing ?? opening.forecast + figures.forecastCash))
-      ], overviewSetting('opening-settings', 'Juster inngående saldo',
-        field('Inngående saldo (kr)', 'name="opening" type="number" step="0.01" placeholder="Bruk saldo fra forrige år"', numeric(config.opening)))) +
+      ], config.opening == null ? '' : '<div class="row mesk-entry-actions">' +
+        toggleEditor('use-carried-opening', 'Bruk saldo fra forrige år') + '</div>') +
       card('Beregnet åremål for ' + currentYear, [
         metric('Avkastningskrav på egenkapital (' + proposal.rate.toLocaleString('nb-NO') + ' %)', proposal.equityReturn === null ? '–' : amount(proposal.equityReturn)),
         metric('Lånerenter', amount(proposal.interest)),
@@ -675,10 +675,7 @@
     const data = model();
     const values = new FormData(form);
     const settings = yearSettings(data, currentYear);
-    if (kind === 'opening-settings') {
-      data.years[currentYear] = {...settings, opening:readMoney(values,'opening')};
-      persist(data,'Inngående saldo er lagret.');
-    } else if (kind === 'tax-settings') {
+    if (kind === 'tax-settings') {
       data.years[currentYear] = {...settings, taxRate:Number(values.get('taxRate')),
         taxAdjustment:readMoney(values,'taxAdjustment') ?? 0, confirmedTaxEffect:readMoney(values,'confirmedTaxEffect')};
       persist(data,'Skatteopplysningene er lagret.');
@@ -753,7 +750,10 @@
         data.years[currentYear] = {...yearSettings(data, currentYear), rent:null};
         persist(data,'Årsplanen bruker beregnet åremål.');
         return;
-      case 'opening-settings':
+      case 'use-carried-opening':
+        data.years[currentYear] = {...yearSettings(data, currentYear), opening:null};
+        persist(data,'Inngående saldo beregnes fra posteringene.');
+        return;
       case 'tax-settings':
         editor={kind:action};
         break;
