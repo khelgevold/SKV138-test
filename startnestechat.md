@@ -1,3 +1,27 @@
+## Status 25.11.2026 – Forenkle årsplankortet
+
+«Vis beregning» er fjernet fra årsplankortet. Nøkkeltall og informasjon ved manglende årsgrunnlag vises fortsatt. Klargjort på `prep/skv138-mesk-coverage`.
+
+## Status 25.11.2026 – Avrundede menyvalg under Mer
+
+Statistikk, MESK Økonomi og Innstillinger har avrundede hjørner og jevn avstand under Mer. De tre navigasjonsmålene er kontrollert. Klargjort på `prep/skv138-mesk-coverage`.
+
+## Status 25.11.2026 – Samle skatteopplysningene i MESK
+
+Den separate skatteoverføringsrammen i Oversikt er fjernet. Resultat og skatt for hytta viser skattegrunnlaget, eventuelt bekreftet beløp og redigering av skatteopplysninger. Skatteoverføringen ligger som før på siste linje under Planlagt, med beløp og retning. For eldre år uten årsplan vises en eventuell bekreftet rest i resultatkortet. Testet fra visning via lagring av bekreftet beløp til oppdatert planpost. Klargjort på `prep/skv138-mesk-coverage`.
+
+## Status 25.11.2026 – Fjern manuell justering av inngående saldo
+
+Hyttekonto viser automatisk inngående saldo fra foregående år. Knappen «Juster inngående saldo» er fjernet. For år med et tidligere lagret saldobeløp kan «Bruk saldo fra forrige år» fjerne overstyringen. Overgangen fra lagret verdi til automatisk saldo er testet. Klargjort på `prep/skv138-mesk-coverage`.
+
+## Status 25.11.2026 – Bruk beregnet åremål uten ekstra knapp
+
+«Rediger avtalt åremål» er fjernet. Beregnet åremål brukes som standard. Dersom et avtalt beløp allerede er lagret, beholdes det og kan nullstilles via «Bruk beregnet åremål». Testet med tidligere avtalt beløp og overgang til automatisk beregning. Klargjort på `prep/skv138-mesk-coverage`.
+
+## Status 25.11.2026 – Forenklet dekning av åremålet
+
+Den nederste boksen «Gjenstår å betale til MESK» er fjernet fra Dekning av åremålet. Åremål, faktisk betalt beløp og de to restfeltene for privat utleie vises fortsatt. Klargjort på `prep/skv138-mesk-coverage`.
+
 ## Status 25.11.2026 – Estimert rest i skatteoverføringskortet
 
 Uten bekreftet skatt viser kortet estimert restoverføring fra samme årsplan som Planlagt, etter faktiske og allerede planlagte overføringer. Med bekreftet skatt viser kortet rest etter faktisk bokførte overføringer og betalinger. Bekreftet skatt beholder eget felt. Testet med estimat, delbeløp og bekreftet skatt. Klargjort på `prep/skv138-mesk-entry-menu`.
