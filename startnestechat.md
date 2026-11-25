@@ -1,6 +1,6 @@
 ## Status 25.11.2026 – Feil ved lagring av låneopptak som postering
 
-Brukeren fikk lagringsvarsel ved registrering av låneopptak i MESK. Årsaken til serverens avvisning er foreløpig ukjent. På `prep/skv138-mesk-save-status` venter MESK på svar fra lagringskøen før den viser at posten er lagret. Ved avvist forespørsel vises HTTP-status når den er tilgjengelig. Ulagrede data kan som før lastes ned. Testet med låneopptak som postering og simulerte svar for både bekreftet lagring og HTTP 503. Klargjort for publisering, med innlogget feilsøking i PROD utestående.
+Et lagringsforsøk på `skv138.helgevold.no` ble avvist med HTTP 403 `Origin denied`. Den publiserte appen er bygd med `https://skv138-prod.netlify.app` som origin. Brukeren registrerte posteringene på Netlify-adressen og bekreftet at de deretter vises på begge adressene. Bruk Netlify-adressen ved registrering inntil PROD-origin eventuelt legges om. Ingen SQL-endring var nødvendig. På `prep/skv138-mesk-save-status` venter MESK på svar fra lagringskøen før den viser at posten er lagret. Ved avvist forespørsel vises HTTP-status når den er tilgjengelig. Ulagrede data kan som før lastes ned. Testet med låneopptak som postering og simulerte svar for både bekreftet lagring og HTTP 503. Rettelsen av lagringsmeldingen er klargjort for publisering.
 
 ## Status 25.11.2026 – MESK-oppdatering publisert i PROD
 
