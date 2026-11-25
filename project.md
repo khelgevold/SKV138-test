@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Kompakt MESK og lukkbart Pushvarsler-panel publisert
+
+Commit `5d1f25c` er publisert i PROD. Produksjonsdomenet `skv138.helgevold.no` leverer verifisert HTML og MESK-modul samt ny montering av pushkontrollene i appbygget. Posteringer viser faktisk saldo etter hver post. Pushvarsler ligger sist i Innstillinger og kontrollene er plassert i panelets sammenleggbare innhold. Testet med eksempeldata før deploy. Innlogget visuell kontroll gjenstår. Ingen SQL-migrering.
+
 ## Status 25.11.2026 – Pushvarsler kan skjules og ligger sist
 
 Pushvarsler bruker samme åpne- og lukkepanel som øvrige innstillinger og ligger sist i Innstillinger. Pushkontrollene monteres inne i panelets innholdsdel. Plassering, skjuleregel og montering ved lasting er kontrollert med testdata. Klargjort sammen med MESK-endringene på `prep/skv138-mesk-compact-cards`.
