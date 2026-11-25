@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Skatteavsetning til hovedkonto
+
+På `prep/skv138-mesk-posting-results` kan overføring fra hyttekonto til hovedkonto registreres med eget skatteår, som faktisk eller planlagt post. Betalt skatt kan registreres med hyttekonto eller hovedkonto som betalingskonto. Betaling fra hovedkonto påvirker betalt skatt for inntektsåret, mens hyttekontoens kontantstrøm fanger opp overføringen. Resultatet før skatt og skatteestimatet bygger på de samme inntektene og kostnadene som før. Eldre skattebetalinger behandles som trekk på hyttekontoen. Verifisert med fiktive poster og betaling i etterfølgende kalenderår. Klargjort for neste publisering.
+
 ## Status 25.11.2026 – Oppgjorte renter per lån og år
 
 På `prep/skv138-mesk-posting-results` kan årets renter markeres som ferdig oppgjort separat for privatlånet og Heden Holding. Saldo-, resultat- og skatteprognose samt åremålsforslag bruker da registrerte renter for lånet i det året. Eventuelle planlagte renteposter beholdes og merkes som holdt utenfor prognosen. Innstillingen påvirker bare valgt lån og år. Testet med avviket på 154 kr og scenarier for begge lån og påfølgende år. Klargjort for neste publisering.
