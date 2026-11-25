@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Pushvarsler kan skjules og ligger sist
+
+Pushvarsler bruker samme åpne- og lukkepanel som øvrige innstillinger og ligger sist i Innstillinger. Pushkontrollene monteres inne i panelets innholdsdel. Plassering, skjuleregel og montering ved lasting er kontrollert med testdata. Klargjort sammen med MESK-endringene på `prep/skv138-mesk-compact-cards`.
+
 ## Status 25.11.2026 – Kompakte MESK-kort og saldo etter postering
 
 Hyttekonto, Beregnet åremål og Dekning av åremålet har mindre luft. Avkastningsgrunnlaget redigeres med blyant i nøkkeltallet, og prosentsatsen vises i redigeringsfeltet. Knappen for å bruke beregnet åremål og den generelle forklaringsteksten er fjernet. Eksisterende avtalte åremålsbeløp beholdes. Skatteopplysninger åpnes med blyant ved Estimert skatt slik at bekreftet skatt og justering fortsatt kan registreres. Posteringer viser faktisk hyttekontosaldo etter hver post med nyeste dato først. Beregning og skjemaer er kontrollert med eksempeldata. Klargjort på `prep/skv138-mesk-compact-cards`.
