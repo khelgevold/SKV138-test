@@ -24,6 +24,7 @@
   let editor = null;
   let notice = '';
   let loanScenario = null;
+  const calculatedEntries = [];
   const principalStep = 5000000;
   const lastPlanningYear = 2033;
   const lastVisibleYear = () => Math.max(lastPlanningYear, dateYear(today()));
@@ -393,7 +394,7 @@
       '<div class="field-grid"><label>Type<select name="kind">' +
       Object.entries(kinds).map(([key, label]) => option(key, planned && key === 'rent' ? 'Innbetaling av åremål' : label, currentKind)).join('') +
       '</select></label>' +
-      field(planned ? 'Forfallsdato (valgfri)' : 'Faktisk dato', 'name="date" type="date"' + (planned ? '' : ' required'), item.date || (planned ? '' : today())) +
+      field(planned ? 'Forfallsdato (valgfri)' : 'Faktisk dato', 'name="date" type="date"' + (planned ? '' : ' required'), item.date || (planned || item.generated || item.autoPrincipal ? '' : today())) +
       field('Beløp (kr)', 'name="amount" type="number" min="0.01" step="0.01" required', numeric(item.amount)) +
       field('Kategori', 'name="category" list="meskCategories" maxlength="80"', item.category) +
       '</div><datalist id="meskCategories">' + categories.map(c => option(c, c)).join('') + '</datalist>' +
@@ -454,6 +455,25 @@
     });
   }
 
+  function entryMenu(entry, planned) {
+    const generated = entry.generated || entry.autoPrincipal;
+    const id = generated ? '' : escape(entry.id);
+    if (generated && entry.amount <= 0) {
+      return '<span class="mesk-menu-trigger mesk-menu-disabled" aria-hidden="true">⋯</span>';
+    }
+    const action = (name, label, disabled = false) =>
+      '<button type="button" data-mesk-action="' + name + '" data-id="' + id + '"' +
+      (disabled ? ' disabled' : '') + '>' + label + '</button>';
+    const confirm = generated
+      ? '<button type="button" data-mesk-action="confirm-calculated" data-id="' +
+        (calculatedEntries.push(entry) - 1) + '">Registrer faktisk</button>'
+      : action('confirm', 'Registrer faktisk');
+    return '<details class="mesk-entry-menu"><summary class="mesk-menu-trigger" aria-label="Handlinger for ' +
+      escape(entry.category || kinds[entry.kind]) + '">⋯</summary><div class="mesk-menu-options">' +
+      action('edit', 'Rediger', generated) + (planned ? confirm : '') + action('remove', 'Slett', generated) +
+      '</div></details>';
+  }
+
   function entryList(data, figures, planned, plan) {
     const entries = planned
       ? plannedBalances(figures, plan?.opening ?? openingBalances(data, currentYear).forecast, currentYear)
@@ -462,23 +482,25 @@
     const action = planned ? 'Ny planlagt post' : 'Ny postering';
     const rows = entries.map(({entry:e,balance}) => {
       const generated = e.generated || e.autoPrincipal;
-      const id = escape(e.id);
       const info = [e.date ? fmt(e.date) : String(e.year), generated && 'Beregnet', e.category && kinds[e.kind], isCostRefund(e) && 'Reduserer kostnaden', e.taxYear && 'Skatteår ' + e.taxYear, taxFromMain(e) && 'Hovedkonto', planned && e.kind === 'interest' && figures.settledInterest[e.loan] && 'Årets renter er oppgjort. Posten er holdt utenfor prognosen.', e.party, e.loan && loans[e.loan], e.treatment === 'review' && 'Til avklaring', rentCostKinds.has(e.kind) && e.includeInRent === false && 'Holdt utenfor åremål', e.voucher && 'Bilag ' + e.voucher, e.note].filter(Boolean);
       return '<div class="mesk-entry"><div class="mesk-entry-head"><strong>' + escape(e.category || kinds[e.kind]) +
         '</strong><div style="text-align:right"><strong>' + amount(taxFromMain(e) ? e.amount : balanceChange(e)) + '</strong>' +
-        (planned ? '<div class="sub">Estimert saldo · ' + escape(amount(balance)) + '</div>' : '') + '</div></div><div class="sub">' + info.map(escape).join(' · ') +
-        '</div>' + (generated ? '' : '<div class="row mesk-entry-actions"><button data-mesk-action="edit" data-id="' + id + '">Rediger</button>' +
-        (planned ? '<button data-mesk-action="confirm" data-id="' + id + '">Registrer faktisk</button>' : '') +
-        '<button data-mesk-action="remove" data-id="' + id + '">Slett</button></div>') + '</div>';
+        (planned ? '<div class="sub">Estimert saldo · ' + escape(amount(balance)) + '</div>' : '') + '</div>' + entryMenu(e, planned) +
+        '</div><div class="sub">' + info.map(escape).join(' · ') + '</div></div>';
     }).join('') || '<p class="sub">Ingen ' + (planned ? 'planlagte poster' : 'posteringer') + ' for året.</p>';
+    const tax = planned && plan ? {
+      generated:true, kind:plan.taxTransfer < 0 ? 'taxBenefit' : 'taxReserve', taxYear:currentYear,
+      date:currentYear + '-12-31', amount:Math.abs(plan.taxTransfer)
+    } : null;
     return '<div class="mesk-toolbar">' + toggleEditor('new', action) +
       (planned && figures.planned.some(e => !e.autoPrincipal) && currentYear < lastPlanningYear ? toggleEditor('copy', 'Kopier til neste år') : '') + '</div>' + draw +
       (planned ? annualPlanSummary(plan) : '') +
       '<div class="card mesk-entries">' + rows + '</div>' +
-      (planned && plan ? card('Skatteoverføring ved årsslutt', [
+      (tax ? card('Skatteoverføring ved årsslutt', [
         metric(fmt(currentYear + '-12-31') + (plan.taxTransfer < 0 ? ' · Til hyttekonto' : ' · Til hovedkonto'), amount(Math.abs(plan.taxTransfer))),
         metric('Saldo etter skatteoverføring', amount(plan.closing))
-      ], '<p class="sub">Beregnet rest etter registrerte og planlagte skattebetalinger og overføringer for skatteåret.</p>') : '');
+      ], '<p class="sub">Beregnet rest etter registrerte og planlagte skattebetalinger og overføringer for skatteåret.</p>' +
+        '<div class="mesk-tax-actions">' + entryMenu(tax, true) + '</div>') : '');
   }
 
   function loanForm(data, key, config) {
@@ -595,6 +617,7 @@
       '<button type="button" data-mesk-action="tab" data-id="' + key + '" aria-pressed="' + (key === activeTab) + '" class="' +
       (key === activeTab ? 'selected' : '') + '">' + label + '</button>').join('');
     host.querySelector('[data-mesk-notice]').textContent = notice;
+    calculatedEntries.length = 0;
     panels.innerHTML = activeTab === 'overview' ? oversikt(data, settings, figures, plan) :
       activeTab === 'loans' ? loanPanel(plan?.scenario ?? data, settings, figures) : entryList(data, figures, activeTab === 'planned', plan);
     const form = panels.querySelector('[data-mesk-form="entry"]');
@@ -788,6 +811,12 @@
       case 'edit':
         if (entry) editEntry({...asRentPosting(entry)},'edit');
         return;
+      case 'confirm-calculated': {
+        const calculated = calculatedEntries[Number(id)];
+        if (calculated) editEntry({...calculated, status:'actual', category:'',
+          date:dateYear(today()) === currentYear ? today() : ''}, 'confirm');
+        return;
+      }
       case 'confirm':
         if (entry?.status==='planned') editEntry({...asRentPosting(entry),status:'actual',date:dateYear(today())===entry.year?today():''},'confirm');
         return;
@@ -801,6 +830,21 @@
       default: return;
     }
     renderMesk();
+  });
+
+  document.addEventListener('click', event => {
+    const active = event.target.closest('.mesk-entry-menu');
+    for (const menu of host.querySelectorAll('.mesk-entry-menu[open]')) {
+      if (menu !== active) menu.open = false;
+    }
+  });
+
+  host.addEventListener('keydown', event => {
+    const menu = event.target.closest('.mesk-entry-menu[open]');
+    if (event.key === 'Escape' && menu) {
+      menu.open = false;
+      menu.querySelector('summary').focus();
+    }
   });
 
   const showBase = show;
