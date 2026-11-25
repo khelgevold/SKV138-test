@@ -23,7 +23,14 @@ export async function initializePushSettings({authClient,container}){
   if(!('serviceWorker' in navigator)||!('PushManager' in window)||!('Notification' in window))return;
   container.hidden=false;
   const frame=document.querySelector('#app-frame');
-  const attach=()=>{const card=frame?.contentDocument?.getElementById('skvPushCard');if(card){card.hidden=false;container.style.display='block';card.appendChild(container);}};
+  const attach=()=>{
+    const card=frame?.contentDocument?.getElementById('skvPushCard');
+    const slot=card?.querySelector('[data-push-controls]');
+    if(!slot)return;
+    container.style.display='block';
+    slot.appendChild(container);
+    card.hidden=false;
+  };
   frame?.addEventListener('load',attach);attach();
   const status=container.querySelector('[data-push-status]');
   const button=container.querySelector('[data-push-enable]');
