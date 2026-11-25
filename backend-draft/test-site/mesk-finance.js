@@ -118,22 +118,29 @@
     return resultValue(entry);
   }
 
+  function asRentPosting(entry) {
+    return entry.kind === 'income' && /^innbetaling av åremål$/i.test(entry.note?.trim() ?? '')
+      ? {...entry, kind:'rent'}
+      : entry;
+  }
+
   function yearFigures(data, y, estimatedRent = null, annualPlan = false) {
     const config = yearSettings(data, y);
-    const actual = data.entries.filter(e => e.year === y && e.status === 'actual');
-    const planned = data.entries.filter(e => e.year === y && e.status === 'planned');
+    const actual = data.entries.filter(e => e.year === y && e.status === 'actual').map(asRentPosting);
+    const planned = data.entries.filter(e => e.year === y && e.status === 'planned').map(asRentPosting);
     const settledInterest = config.settledInterest ?? {};
     const forecastEntries = [...actual, ...planned.filter(e => e.kind !== 'interest' || !settledInterest[e.loan])];
     const rentPaid = sum(actual.filter(e => e.kind === 'rent'), e => e.amount);
-    const remainingRent = Math.max(0, (config.rent ?? estimatedRent ?? 0) - rentPaid);
+    const plannedRent = sum(planned.filter(e => e.kind === 'rent'), e => e.amount);
+    const remainingRent = Math.max(0, (config.rent ?? (plannedRent || estimatedRent) ?? 0) - rentPaid - plannedRent);
     const projectedLoans = Object.fromEntries(Object.keys(loans).map(key => [key, calculateLoan(data, key, y, true)]));
-    const remainingInterest = sum(Object.keys(loans), key => {
-      if (settledInterest[key]) return 0;
-      if (annualPlan && key === 'heden' && planned.some(e => e.kind === 'interest' && e.loan === key)) return 0;
+    const interestByLoan = Object.fromEntries(Object.keys(loans).map(key => {
+      if (settledInterest[key] || (annualPlan && key === 'heden' && planned.some(e => e.kind === 'interest' && e.loan === key))) return [key, 0];
       const loan = projectedLoans[key];
       const alreadyIncluded = sum(forecastEntries.filter(e => e.kind === 'interest' && e.loan === key), e => e.amount);
-      return Math.max(0, (loan?.interest ?? 0) - alreadyIncluded);
-    });
+      return [key, Math.max(0, (loan?.interest ?? 0) - alreadyIncluded)];
+    }));
+    const remainingInterest = sum(Object.values(interestByLoan), n => n);
     const adjustment = config.taxAdjustment || 0;
     const taxRate = config.taxRate ?? 22;
     const actualResult = sum(actual, resultValue);
@@ -147,7 +154,7 @@
     const taxBenefitReceived = sum(actualTaxEntries.filter(e => e.kind === 'taxBenefit'), e => e.amount);
     const taxPaidFromCabin = taxPaid - taxPaidFromMain;
     return {
-      actual, planned, forecastEntries, settledInterest, rentPaid, remainingRent, actualResult, forecastResult, projectedLoans, remainingInterest, taxPaid, taxReserved, taxBenefitReceived, taxPaidFromCabin, actualTaxEffect,
+      actual, planned, forecastEntries, settledInterest, rentPaid, plannedRent, remainingRent, actualResult, forecastResult, projectedLoans, remainingInterest, interestByLoan, taxPaid, taxReserved, taxBenefitReceived, taxPaidFromCabin, actualTaxEffect,
       actualTax: Math.max(0, actualTaxEffect),
       forecastTax: Math.max(0, taxEffect(sum(forecastEntries, taxValue) + remainingRent - remainingInterest + adjustment)),
       actualCash: sum(actual, balanceChange),
@@ -162,7 +169,7 @@
     }]} : data;
     const base = yearFigures(scenario, y, null, future);
     const proposal = rentProposal(scenario, base);
-    const rent = config.rent ?? (!future || proposal.missingRates.length ? null : proposal.total);
+    const rent = config.rent ?? (base.plannedRent || (!future || proposal.missingRates.length ? null : proposal.total));
     const figures = config.rent == null && rent !== null ? yearFigures(scenario, y, rent, true) : base;
     const plannedTax = sum(figures.planned.filter(e => e.taxYear === y &&
       (e.kind === 'taxReserve' || (e.kind === 'tax' && !taxFromMain(e)))), e => e.amount);
@@ -382,7 +389,7 @@
     const currentKind = item.kind || (planned ? 'expense' : 'income');
     return '<form class="card" data-mesk-form="entry"><h3>' + (editor.mode === 'confirm' ? 'Registrer faktisk post' : item.id ? 'Rediger post' : 'Ny post') + '</h3>' +
       '<div class="field-grid"><label>Type<select name="kind">' +
-      Object.entries(kinds).filter(([key]) => !planned || key !== 'rent').map(([key, label]) => option(key, label, currentKind)).join('') +
+      Object.entries(kinds).map(([key, label]) => option(key, planned && key === 'rent' ? 'Innbetaling av åremål' : label, currentKind)).join('') +
       '</select></label>' +
       field(planned ? 'Forfallsdato (valgfri)' : 'Faktisk dato', 'name="date" type="date"' + (planned ? '' : ' required'), item.date || (planned ? '' : today())) +
       field('Beløp (kr)', 'name="amount" type="number" min="0.01" step="0.01" required', numeric(item.amount)) +
@@ -415,7 +422,7 @@
     const value = n => n === null ? '–' : amount(n);
     const january = fmt(yearStart(currentYear));
     return card('Årsplan for ' + currentYear, [
-      metric(january + ' · Forventet innbetaling av åremål', plan.rent === null ? '–' : amount(plan.figures.remainingRent)),
+      metric(january + ' · Forventet innbetaling av åremål', plan.rent === null ? '–' : amount(plan.figures.plannedRent + plan.figures.remainingRent)),
       metric(january + ' · Avdrag til Heden Holding', value(plan.principal)),
       metric(january + ' · ' + (plan.manualInterest ? 'Registrerte Heden-renter for året' : 'Beregnede Heden-renter for året'), value(plan.interest)),
       metric('Saldo ved årsslutt etter skatt', value(plan.closing))
@@ -425,28 +432,50 @@
       '. ' + (plan.extra ? 'Avdraget er et beregnet forslag.' : 'Registrert avdrag eller 0 kr er lagt til grunn.') + '</p></details>');
   }
 
+  function plannedBalances(figures, opening, year) {
+    const entries = [...figures.planned];
+    if (figures.remainingRent > 0) entries.push({
+      generated:true, kind:'rent', date:yearStart(year), amount:figures.remainingRent, category:'Beregnet gjenstående åremål'
+    });
+    for (const [loan, amount] of Object.entries(figures.interestByLoan)) {
+      if (amount > 0) entries.push({
+        generated:true, kind:'interest', loan, date:yearStart(year), amount, category:'Beregnet gjenstående rente'
+      });
+    }
+    const sorted = entries.sort((a, b) =>
+      (a.date || yearEnd(year)).localeCompare(b.date || yearEnd(year)) ||
+      Number(balanceChange(b) > 0) - Number(balanceChange(a) > 0));
+    let balance = opening + figures.actualCash;
+    return sorted.map(entry => {
+      if (entry.kind !== 'interest' || !figures.settledInterest[entry.loan]) balance += balanceChange(entry);
+      return {entry,balance};
+    });
+  }
+
   function entryList(data, figures, planned, plan) {
     const entries = planned
-      ? figures.planned.filter(e => !e.autoPrincipal).sort((a, b) =>
-        (a.date || yearEnd(a.year)).localeCompare(b.date || yearEnd(b.year)) || a.kind.localeCompare(b.kind))
-      : [...figures.actual].reverse().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+      ? plannedBalances(figures, plan?.opening ?? openingBalances(data, currentYear).forecast, currentYear)
+      : [...figures.actual].reverse().sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(entry => ({entry}));
     const draw = editor?.kind === 'entry' ? rowForm(editor.item) : '';
     const action = planned ? 'Ny planlagt post' : 'Ny postering';
-    const rows = entries.map(e => {
+    const rows = entries.map(({entry:e,balance}) => {
+      const generated = e.generated || e.autoPrincipal;
       const id = escape(e.id);
-      const info = [e.date ? fmt(e.date) : String(e.year), e.category && kinds[e.kind], isCostRefund(e) && 'Reduserer kostnaden', e.taxYear && 'Skatteår ' + e.taxYear, taxFromMain(e) && 'Hovedkonto', planned && e.kind === 'interest' && figures.settledInterest[e.loan] && 'Årets renter er oppgjort. Posten er holdt utenfor prognosen.', e.party, e.loan && loans[e.loan], e.treatment === 'review' && 'Til avklaring', rentCostKinds.has(e.kind) && e.includeInRent === false && 'Holdt utenfor åremål', e.voucher && 'Bilag ' + e.voucher, e.note].filter(Boolean);
+      const info = [e.date ? fmt(e.date) : String(e.year), generated && 'Beregnet', e.category && kinds[e.kind], isCostRefund(e) && 'Reduserer kostnaden', e.taxYear && 'Skatteår ' + e.taxYear, taxFromMain(e) && 'Hovedkonto', planned && e.kind === 'interest' && figures.settledInterest[e.loan] && 'Årets renter er oppgjort. Posten er holdt utenfor prognosen.', e.party, e.loan && loans[e.loan], e.treatment === 'review' && 'Til avklaring', rentCostKinds.has(e.kind) && e.includeInRent === false && 'Holdt utenfor åremål', e.voucher && 'Bilag ' + e.voucher, e.note].filter(Boolean);
       return '<div class="mesk-entry"><div class="mesk-entry-head"><strong>' + escape(e.category || kinds[e.kind]) +
-        '</strong><strong>' + amount(taxFromMain(e) ? e.amount : balanceChange(e)) + '</strong></div><div class="sub">' + info.map(escape).join(' · ') +
-        '</div><div class="row mesk-entry-actions"><button data-mesk-action="edit" data-id="' + id + '">Rediger</button>' +
+        '</strong><div style="text-align:right"><strong>' + amount(taxFromMain(e) ? e.amount : balanceChange(e)) + '</strong>' +
+        (planned ? '<div class="sub">Estimert saldo · ' + escape(amount(balance)) + '</div>' : '') + '</div></div><div class="sub">' + info.map(escape).join(' · ') +
+        '</div>' + (generated ? '' : '<div class="row mesk-entry-actions"><button data-mesk-action="edit" data-id="' + id + '">Rediger</button>' +
         (planned ? '<button data-mesk-action="confirm" data-id="' + id + '">Registrer faktisk</button>' : '') +
-        '<button data-mesk-action="remove" data-id="' + id + '">Slett</button></div></div>';
+        '<button data-mesk-action="remove" data-id="' + id + '">Slett</button></div>') + '</div>';
     }).join('') || '<p class="sub">Ingen ' + (planned ? 'planlagte poster' : 'posteringer') + ' for året.</p>';
     return '<div class="mesk-toolbar">' + toggleEditor('new', action) +
-      (planned && entries.length && currentYear < 2100 ? toggleEditor('copy', 'Kopier til neste år') : '') + '</div>' + draw +
+      (planned && figures.planned.some(e => !e.autoPrincipal) && currentYear < 2100 ? toggleEditor('copy', 'Kopier til neste år') : '') + '</div>' + draw +
       (planned ? annualPlanSummary(plan) : '') +
       '<div class="card mesk-entries">' + rows + '</div>' +
       (planned && plan ? card('Skatteoverføring ved årsslutt', [
-        metric(fmt(currentYear + '-12-31') + (plan.taxTransfer < 0 ? ' · Til hyttekonto' : ' · Til hovedkonto'), amount(Math.abs(plan.taxTransfer)))
+        metric(fmt(currentYear + '-12-31') + (plan.taxTransfer < 0 ? ' · Til hyttekonto' : ' · Til hovedkonto'), amount(Math.abs(plan.taxTransfer))),
+        metric('Saldo etter skatteoverføring', amount(plan.closing))
       ], '<p class="sub">Beregnet rest etter registrerte og planlagte skattebetalinger og overføringer for skatteåret.</p>') : '');
   }
 
@@ -704,7 +733,7 @@
   });
 
   function copyPlanned(data) {
-    const candidates = data.entries.filter(e => e.status==='planned' && e.year===currentYear && !['principal','tax','taxReserve','taxBenefit','borrowing','transfer','investment'].includes(e.kind));
+    const candidates = data.entries.filter(e => e.status==='planned' && e.year===currentYear && !['rent','principal','tax','taxReserve','taxBenefit','borrowing','transfer','investment'].includes(asRentPosting(e).kind));
     const next = currentYear + 1;
     const rows = candidates.filter(e => !data.entries.some(other => other.year===next && (other.copiedFrom===e.id ||
       (other.kind===e.kind && other.category===e.category && other.party===e.party && other.note===e.note && other.loan===e.loan))));
@@ -749,10 +778,10 @@
         editEntry({status:'planned',kind:'principal',loan:'heden',date:yearStart(currentYear)},'new');
         return;
       case 'edit':
-        if (entry) editEntry({...entry},'edit');
+        if (entry) editEntry({...asRentPosting(entry)},'edit');
         return;
       case 'confirm':
-        if (entry?.status==='planned') editEntry({...entry,status:'actual',date:dateYear(today())===entry.year?today():''},'confirm');
+        if (entry?.status==='planned') editEntry({...asRentPosting(entry),status:'actual',date:dateYear(today())===entry.year?today():''},'confirm');
         return;
       case 'remove':
         if (entry && confirm('Slette denne posten fra MESK Økonomi?')) {
