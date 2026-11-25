@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Beregnet åremål for MESK
+
+På klargjøringsgrenen `prep/skv138-mesk-annual-rent` beregnes forslag til åremål fra egenkapital brukt ved kjøpet × årlig avkastningskrav (standard 4,8 %), pluss renter og driftskostnader for valgt år. Brukeren registrerer egenkapitalen i appen. Avdrag inngår i kontantstrøm og reduserer renteberegningen fra betalingsdatoen. Åremålet som er avtalt, oppdateres ved eget valg. Beregningen er testet lokalt. Publisering og innlogget funksjonstest gjenstår.
+
 ## Status 24.11.2026 – MESK Økonomi i SKV138
 
 Brukeren godkjente implementering og publisering i PROD. Under Mer ligger MESK Økonomi med årsvisning for hyttekonto, resultat og estimert skatt, dekning av åremål, faktiske og planlagte poster, og to redigerbare lån. Planlagte poster kan bekreftes med faktisk dato og beløp. Faste planer kan kopieres til neste år. Heden-lånet har snarvei for avdrag 1. januar og forslag til justert åremål basert på rentebesparelse. Forslaget må bekreftes av brukeren. Første oppsett skjer i appen: faktiske tall og låneopplysninger er ikke forhåndslastet. Funksjonen lagres som et eget felt i eksisterende Neon-payload; ingen SQL-migrering. Lokal test av UI, lagring, prognose, skatt og avdrag besto med fiktive data. Kontroll med faktiske tall i den innloggede PROD-appen gjenstår.
