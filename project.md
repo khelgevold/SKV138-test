@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Kreditnota som kostnadsreduksjon i MESK
+
+På `prep/skv138-mesk-cost-refund` kan en refusjon registreres med valget «Refusjon reduserer kostnaden». Beløpet vises som innbetaling på hyttekontoen, reduserer registrerte kostnader og inngår i resultat og skatteestimat. Eksisterende refusjoner beholder sin valgte behandling. Kontrollert med kreditnota på driftskostnad og separat refusjon fra kjøpsoppgjør. Klargjort for neste publisering.
+
 ## Status 25.11.2026 – MESK-renter og skatteoverføring publisert i PROD
 
 Commit `e9657e2` er publisert på `skv138.helgevold.no`. Produksjonsdomenet leverer den verifiserte MESK-modulen med nyeste postering først, tydeligere årsresultat, oppgjorte renter per lån og årsoversikt for skatteoverføring i begge retninger. Beregningene og sorteringen er testet med eksempeldata. Innlogget funksjonstest av de nye valgene gjenstår. Ingen SQL-migrering.
