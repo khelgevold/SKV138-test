@@ -33,6 +33,7 @@
   const yearEnd = y => yearStart(y + 1);
   const cashIn = new Set(['income', 'rent', 'borrowing', 'refund']);
   const loanEntry = new Set(['interest', 'principal', 'borrowing']);
+  const rentCostKinds = new Set(['expense', 'interest']);
   const model = () => state.meskFinance || {years:{}, loans:{}, entries:[]};
   const yearSettings = (data, y) => data.years[y] || {};
   const balanceChange = e => (cashIn.has(e.kind) || (e.kind === 'transfer' && e.direction === 'in') ? 1 : -1) * e.amount;
@@ -178,8 +179,9 @@
     const equity = data.rentBasis?.equity;
     const rate = data.rentBasis?.rate ?? 4.8;
     const entries = [...figures.actual, ...figures.planned];
-    const operatingCosts = sum(entries.filter(e => e.kind === 'expense' && e.treatment !== 'review'), e => e.amount);
-    const interest = figures.remainingInterest + sum(entries.filter(e => e.kind === 'interest'), e => e.amount);
+    const includedCosts = entries.filter(e => e.includeInRent !== false);
+    const operatingCosts = sum(includedCosts.filter(e => e.kind === 'expense' && e.treatment !== 'review'), e => e.amount);
+    const interest = figures.remainingInterest + sum(includedCosts.filter(e => e.kind === 'interest'), e => e.amount);
     const equityReturn = equity == null ? null : Math.round(equity * rate / 100);
     const missingRates = Object.entries(figures.projectedLoans)
       .filter(([key, loan]) => loan && loan.interest == null && !entries.some(e => e.kind === 'interest' && e.loan === key))
@@ -220,7 +222,7 @@
         ? toggleEditor('accept-rent', 'Bruk som avtalt åremål') : '') + '</div>';
     const proposalNote = proposal.missingRates.length
       ? '<p class="sub">Legg inn rente eller en rentepost for ' + escape(proposal.missingRates.join(' og ')) + '.</p>'
-      : '<p class="sub">Forslaget bruker registrerte og planlagte kostnader for valgt år.</p>';
+      : '<p class="sub">Forslaget bruker kostnadene som er valgt for åremålet, samt beregnede renter som ennå ikke er registrert.</p>';
     return '<div class="mesk-toolbar">' + toggleEditor('year', 'Årsinnstillinger') + '</div>' + setup +
       card('Hyttekonto', [
         metric(upcoming ? 'Beregnet inngående saldo' : 'Faktisk saldo', amount(upcoming ? opening.forecast : opening.actual + figures.actualCash)),
@@ -277,6 +279,8 @@
       option('exclude', 'Utenfor skatteestimatet', item.treatment) +
       option('review', 'Til avklaring', item.treatment) +
       option('income', 'Refusjon inngår som inntekt', item.treatment) + '</select></label></div>' +
+      '<div data-mesk-field="includeInRent"><label class="row"><input type="checkbox" name="includeInRent"' +
+      (item.includeInRent !== false ? ' checked' : '') + '> Inngår i beregning av åremål</label></div>' +
       '<div class="field-grid">' + field('Bilagsnummer', 'name="voucher" maxlength="80"', item.voucher) +
       field('Notat', 'name="note" maxlength="300"', item.note) + '</div><div class="row">' +
       '<button class="primary" type="submit">Lagre post</button>' + toggleEditor('close', 'Avbryt') + '</div></form>';
@@ -289,7 +293,7 @@
     const action = planned ? 'Ny planlagt post' : 'Ny postering';
     const rows = entries.map(e => {
       const id = escape(e.id);
-      const info = [e.date ? fmt(e.date) : String(e.year), e.party, e.loan && loans[e.loan], e.treatment === 'review' && 'Til avklaring', e.voucher && 'Bilag ' + e.voucher, e.note].filter(Boolean);
+      const info = [e.date ? fmt(e.date) : String(e.year), e.party, e.loan && loans[e.loan], e.treatment === 'review' && 'Til avklaring', rentCostKinds.has(e.kind) && e.includeInRent === false && 'Holdt utenfor åremål', e.voucher && 'Bilag ' + e.voucher, e.note].filter(Boolean);
       return '<div class="mesk-entry"><div class="mesk-entry-head"><strong>' + escape(e.category || kinds[e.kind]) +
         '</strong><strong>' + amount(balanceChange(e)) + '</strong></div><div class="sub">' + info.map(escape).join(' · ') +
         '</div><div class="row mesk-entry-actions"><button data-mesk-action="edit" data-id="' + id + '">Rediger</button>' +
@@ -319,7 +323,7 @@
     return Math.max(selectedYear, nextJanuary, firstFullLoanYear);
   }
 
-  function simulateHeden(data, startYear, years, budget) {
+  function simulateHeden(data, startYear, years, budget, includeInRent) {
     const scenario = {...data, entries:[...data.entries]};
     const rows = [];
     for (let year = startYear; year < startYear + years && year <= 2100; year++) {
@@ -335,8 +339,9 @@
       }
       const figures = yearFigures(scenario, year);
       const projected = figures.projectedLoans.heden;
-      const original = calculateLoan(data, 'heden', year, true);
-      const proposal = rentProposal(scenario, figures);
+      const baseline = yearFigures(data, year);
+      const original = baseline.projectedLoans.heden;
+      const proposal = rentProposal(data, includeInRent ? figures : baseline);
       rows.push({
         year, extra, balance:projected.balance, interest:projected.interest,
         saving:projected.interest === null ? null : original.interest - projected.interest,
@@ -355,15 +360,17 @@
     const form = '<form data-mesk-form="loan-simulation"><div class="field-grid">' +
       field('Disponibelt til ekstra avdrag per år (kr)', 'name="budget" type="number" min="0" step="1" required', numeric(loanScenario?.budget)) +
       field('Antall år fra ' + startYear, 'name="years" type="number" min="1" max="' + maximumYears + '" required', years) +
-      '</div><div class="row"><button class="primary" type="submit">Beregn scenario</button></div></form>';
-    const rows = loanScenario ? simulateHeden(data, startYear, years, loanScenario.budget) : [];
+      '</div><label class="row"><input type="checkbox" name="includeInRent"' +
+      (loanScenario?.includeInRent !== false ? ' checked' : '') + '> La simulerte avdrag påvirke åremålet</label>' +
+      '<div class="row"><button class="primary" type="submit">Beregn scenario</button></div></form>';
+    const rows = loanScenario ? simulateHeden(data, startYear, years, loanScenario.budget, loanScenario.includeInRent) : [];
     const values = value => value === null ? '–' : amount(value);
     const results = rows.map(row => card(String(row.year), [
       metric('Ekstra avdrag i januar', amount(row.extra)),
       metric('Restgjeld ved årsslutt', amount(row.balance)),
       metric('Beregnet rente til Heden', values(row.interest)),
       metric('Lavere rente mot registrert plan', values(row.saving)),
-      metric('Beregnet åremål', values(row.rent))
+      metric(loanScenario.includeInRent ? 'Beregnet åremål med ekstra avdrag' : 'Beregnet åremål fra registrert plan', values(row.rent))
     ], row.rent !== null && !row.hasOperatingCosts
       ? '<p class="sub">Årets driftskostnader er ikke lagt inn.</p>' : '')).join('');
     return '<div class="card"><h3>Simuler ekstra avdrag til Heden</h3>' +
@@ -422,7 +429,7 @@
     const kind = form.elements.kind.value;
     const date = form.elements.date;
     const planned = editor.item.status === 'planned';
-    const fields = {loan:loanEntry.has(kind), direction:kind==='transfer', taxYear:kind==='tax', treatment:['income','expense','refund'].includes(kind)};
+    const fields = {loan:loanEntry.has(kind), direction:kind==='transfer', taxYear:kind==='tax', includeInRent:rentCostKinds.has(kind), treatment:['income','expense','refund'].includes(kind)};
     for (const [name, show] of Object.entries(fields)) {
       form.querySelector('[data-mesk-field="' + name + '"]').hidden = !show;
     }
@@ -477,6 +484,7 @@
     }
     return {
       id:existing.id || crypto.randomUUID(), kind, date, year, amount:value, loan, taxYear, status:existing.status,
+      includeInRent:rentCostKinds.has(kind) ? values.has('includeInRent') : undefined,
       copiedFrom:existing.copiedFrom, category:String(values.get('category')).trim(), party:String(values.get('party')).trim(),
       note:String(values.get('note')).trim(), voucher:String(values.get('voucher')).trim(),
       direction:kind === 'transfer' ? values.get('direction') : '',
@@ -500,7 +508,7 @@
       const budget = readMoney(values,'budget');
       const years = Number(values.get('years'));
       if (!Number.isSafeInteger(budget) || budget < 0 || !Number.isInteger(years) || years < 1 || years > 10) return;
-      loanScenario = {budget, years};
+      loanScenario = {budget, years, includeInRent:values.has('includeInRent')};
       renderMesk();
     } else if (kind === 'year') {
       data.years[currentYear] = {...settings, rent:readMoney(values,'rent'), opening:readMoney(values,'opening'),
