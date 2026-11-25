@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Forenkle årsplankortet
+
+«Vis beregning» er fjernet fra årsplankortet. Nøkkeltall og informasjon ved manglende årsgrunnlag vises fortsatt. Klargjort på `prep/skv138-mesk-coverage`.
+
 ## Status 25.11.2026 – Avrundede menyvalg under Mer
 
 Statistikk, MESK Økonomi og Innstillinger har avrundede hjørner og jevn avstand under Mer. De tre navigasjonsmålene er kontrollert. Klargjort på `prep/skv138-mesk-coverage`.
