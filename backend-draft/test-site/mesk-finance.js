@@ -478,6 +478,14 @@
     const entries = planned
       ? plannedBalances(figures, plan?.opening ?? openingBalances(data, currentYear).forecast, currentYear)
       : [...figures.actual].reverse().sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(entry => ({entry}));
+    if (planned && plan) entries.push({
+      entry:{
+        generated:true, kind:plan.taxTransfer < 0 ? 'taxBenefit' : 'taxReserve',
+        taxYear:currentYear, date:currentYear + '-12-31', amount:Math.abs(plan.taxTransfer),
+        category:plan.taxTransfer === 0 ? 'Skatteoverføring ved årsslutt' : ''
+      },
+      balance:plan.closing
+    });
     const draw = editor?.kind === 'entry' ? rowForm(editor.item) : '';
     const action = planned ? 'Ny planlagt post' : 'Ny postering';
     const rows = entries.map(({entry:e,balance}) => {
@@ -488,19 +496,10 @@
         (planned ? '<div class="sub">Estimert saldo · ' + escape(amount(balance)) + '</div>' : '') + '</div>' + entryMenu(e, planned) +
         '</div><div class="sub">' + info.map(escape).join(' · ') + '</div></div>';
     }).join('') || '<p class="sub">Ingen ' + (planned ? 'planlagte poster' : 'posteringer') + ' for året.</p>';
-    const tax = planned && plan ? {
-      generated:true, kind:plan.taxTransfer < 0 ? 'taxBenefit' : 'taxReserve', taxYear:currentYear,
-      date:currentYear + '-12-31', amount:Math.abs(plan.taxTransfer)
-    } : null;
     return '<div class="mesk-toolbar">' + toggleEditor('new', action) +
       (planned && figures.planned.some(e => !e.autoPrincipal) && currentYear < lastPlanningYear ? toggleEditor('copy', 'Kopier til neste år') : '') + '</div>' + draw +
       (planned ? annualPlanSummary(plan) : '') +
-      '<div class="card mesk-entries">' + rows + '</div>' +
-      (tax ? card('Skatteoverføring ved årsslutt', [
-        metric(fmt(currentYear + '-12-31') + (plan.taxTransfer < 0 ? ' · Til hyttekonto' : ' · Til hovedkonto'), amount(Math.abs(plan.taxTransfer))),
-        metric('Saldo etter skatteoverføring', amount(plan.closing))
-      ], '<p class="sub">Beregnet rest etter registrerte og planlagte skattebetalinger og overføringer for skatteåret.</p>' +
-        '<div class="mesk-tax-actions">' + entryMenu(tax, true) + '</div>') : '');
+      '<div class="card mesk-entries">' + rows + '</div>';
   }
 
   function loanForm(data, key, config) {
