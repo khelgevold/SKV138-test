@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Avrundede menyvalg under Mer
+
+Statistikk, MESK Økonomi og Innstillinger har avrundede hjørner og jevn avstand under Mer. De tre navigasjonsmålene er kontrollert. Klargjort på `prep/skv138-mesk-coverage`.
+
 ## Status 25.11.2026 – Samle skatteopplysningene i MESK
 
 Den separate skatteoverføringsrammen i Oversikt er fjernet. Resultat og skatt for hytta viser skattegrunnlaget, eventuelt bekreftet beløp og redigering av skatteopplysninger. Skatteoverføringen ligger som før på siste linje under Planlagt, med beløp og retning. For eldre år uten årsplan vises en eventuell bekreftet rest i resultatkortet. Testet fra visning via lagring av bekreftet beløp til oppdatert planpost. Klargjort på `prep/skv138-mesk-coverage`.
