@@ -1,3 +1,19 @@
+## Status 25.11.2026 – MESK-planhorisont til og med 2033
+
+Årsvelger, årsprognose, kopiering av planlagte poster og lånesimulering stopper ved utgangen av 2033. Aktuelt kalenderår blir tilgjengelig for faktiske posteringer når det kommer. Grensen er testet for årsplan og lånesimulering. Klargjort på `prep/skv138-mesk-cost-refund`.
+
+## Status 25.11.2026 – Løpende saldo i MESK Planlagt
+
+Planlagte og beregnede poster viser estimert saldo etter hver linje. Beløpet etter skatteoverføringen ved årsslutt vises nederst. Planlagt åremål har egen posttype; eksisterende inntektsposter med notatet «Innbetaling av åremål» regnes som åremål, slik at en registrert innbetaling avregnes mot automatisk åremålsinntekt. Testet med flere poster samme dato, beregnede renter og skatteavstemming. Klargjort for neste publisering.
+
+## Status 25.11.2026 – Automatisk årsplan i MESK
+
+Planlagt viser åremål, avdrag og Heden-renter med 1. januar som beregningsdato for fremtidige år. Avtalt åremål, eksisterende avdrag og manuelt planlagte Heden-renter brukes når de finnes. Forslaget er største ekstraavdrag i trinn på 50 000 kr som gir positiv saldo etter årets driftskostnader, renter og skatt. Innlagte fremtidige avdrag respekteres. Utgående saldo føres videre som neste års inngående saldo med mindre egen inngående saldo er satt. Ufullstendig årsbudsjett gir ingen automatisk avdragsanbefaling. Nederst på Planlagt vises beregnet skatteoverføring per 31. desember, justert etter posteringer og planlagte overføringer. En bekreftet skattebesparelse kan gi motsatt retning. Beregnede linjer er prognoser og lagres ikke som posteringer. Testet med sammenhengende år, manuelt avdrag, endret kostnad og delvis skatteoverføring. Klargjort på `prep/skv138-mesk-cost-refund`.
+
+## Status 25.11.2026 – Kreditnota som kostnadsreduksjon i MESK
+
+På `prep/skv138-mesk-cost-refund` kan en refusjon registreres med valget «Refusjon reduserer kostnaden». Beløpet vises som innbetaling på hyttekontoen, reduserer registrerte kostnader og inngår i resultat og skatteestimat. Eksisterende refusjoner beholder sin valgte behandling. Kontrollert med kreditnota på driftskostnad og separat refusjon fra kjøpsoppgjør. Klargjort for neste publisering.
+
 ## Status 25.11.2026 – MESK-renter og skatteoverføring publisert i PROD
 
 Commit `e9657e2` er publisert på `skv138.helgevold.no`. Produksjonsdomenet leverer den verifiserte MESK-modulen med nyeste postering først, tydeligere årsresultat, oppgjorte renter per lån og årsoversikt for skatteoverføring i begge retninger. Beregningene og sorteringen er testet med eksempeldata. Innlogget funksjonstest av de nye valgene gjenstår. Ingen SQL-migrering.
