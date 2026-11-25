@@ -1,3 +1,35 @@
+## Status 25.11.2026 – Estimert rest i skatteoverføringskortet
+
+Uten bekreftet skatt viser kortet estimert restoverføring fra samme årsplan som Planlagt, etter faktiske og allerede planlagte overføringer. Med bekreftet skatt viser kortet rest etter faktisk bokførte overføringer og betalinger. Bekreftet skatt beholder eget felt. Testet med estimat, delbeløp og bekreftet skatt. Klargjort på `prep/skv138-mesk-entry-menu`.
+
+## Status 25.11.2026 – Fjern snarvei for avtalt åremål
+
+«Bruk som avtalt åremål» er fjernet fra beregningskortet. Årsplanen bruker beregnet åremål som standard. Et beløp som faktisk er avtalt, kan fortsatt registreres under Dekning av åremålet. Begge beregningsveier er verifisert. Klargjort på `prep/skv138-mesk-entry-menu`.
+
+## Status 25.11.2026 – Flytt MESKs årsvalg til relevante kort
+
+Samlet Årsinnstillinger er erstattet av avgrensede valg. Hyttekonto har Juster inngående saldo. Dekning av åremålet har Rediger avtalt åremål og bruker beregnet årsplan når eget beløp mangler. Skatteoverføring har Rediger skatteopplysninger for sats, justering og bekreftet skatt eller skattebesparelse. Hvert skjema oppdaterer bare sine egne felt og beholder tidligere verdier i øvrige grupper. Testet med separate lagringer og automatisk åremål. Klargjort på `prep/skv138-mesk-entry-menu`.
+
+## Status 25.11.2026 – Fjern avdragssnarveien fra lånekortet
+
+«Planlegg avdrag 1. januar» er fjernet fra Heden-kortet. Automatisk avdragsforslag vises i årsplanen. Lånekortet viser fortsatt forventet restgjeld ved årsslutt. Testet med automatiske avdrag i to sammenhengende år. Klargjort på `prep/skv138-mesk-entry-menu`.
+
+## Status 25.11.2026 – Fjern manuell Heden-simulator
+
+Den manuelle simulatoren «Simuler ekstra avdrag til Heden» er fjernet fra Lån. Automatisk avdragsforslag beregnes fortsatt fra betalingsevnen i Planlagt. Testet med et årsbudsjett som gir rom for ekstra avdrag. Klargjort på `prep/skv138-mesk-entry-menu`.
+
+## Status 25.11.2026 – Oppdater planlagte faste kostnader ved registrering
+
+Når en planlagt driftskostnad i kategorien Forsikring, Vann og avløp eller Renovasjon registreres som faktisk med et annet beløp, får allerede planlagte poster i samme kategori fra og med betalingsåret det nye beløpet. Kategorien må være den samme på faktisk post. Lagrede faktiske poster og tidligere års planer beholdes. Antall terminer, datoer og øvrige opplysninger beholdes. Testet for alle tre kategorier, samme beløp og endret kategori. Klargjort på `prep/skv138-mesk-entry-menu`.
+
+## Status 25.11.2026 – Skatteoverføring som siste planlagte post
+
+Beregnet skatteoverføring per 31. desember vises som siste linje i Planlagt med beløp, retning og estimert saldo. Når beløpet er større enn null, kan det registreres som faktisk via trepunktsmenyen. Restbeløpet beregnes etter lagring. Testet fra beregnet linje til faktisk post og avregning. Klargjort på `prep/skv138-mesk-entry-menu`.
+
+## Status 25.11.2026 – Handlingsmeny for MESK-poster
+
+På `prep/skv138-mesk-entry-menu` ligger Rediger, Registrer faktisk og Slett i en meny ved beløp og saldo. Beregnede linjer, inkludert skatteoverføring, kan registreres med faktisk dato og beløp. Rediger og Slett er deaktivert på beregnede linjer. Ved lagring opprettes en faktisk post og prognosen regner på nytt. Testet fra meny til opprettet og avregnet åremål. Klargjort for neste publisering.
+
 ## Status 25.11.2026 – MESK-planhorisont til og med 2033
 
 Årsvelger, årsprognose, kopiering av planlagte poster og lånesimulering stopper ved utgangen av 2033. Aktuelt kalenderår blir tilgjengelig for faktiske posteringer når det kommer. Grensen er testet for årsplan og lånesimulering. Klargjort på `prep/skv138-mesk-cost-refund`.
