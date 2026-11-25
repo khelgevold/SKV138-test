@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Samle skatteopplysningene i MESK
+
+Den separate skatteoverføringsrammen i Oversikt er fjernet. Resultat og skatt for hytta viser skattegrunnlaget, eventuelt bekreftet beløp og redigering av skatteopplysninger. Skatteoverføringen ligger som før på siste linje under Planlagt, med beløp og retning. For eldre år uten årsplan vises en eventuell bekreftet rest i resultatkortet. Testet fra visning via lagring av bekreftet beløp til oppdatert planpost. Klargjort på `prep/skv138-mesk-coverage`.
+
 ## Status 25.11.2026 – Fjern manuell justering av inngående saldo
 
 Hyttekonto viser automatisk inngående saldo fra foregående år. Knappen «Juster inngående saldo» er fjernet. For år med et tidligere lagret saldobeløp kan «Bruk saldo fra forrige år» fjerne overstyringen. Overgangen fra lagret verdi til automatisk saldo er testet. Klargjort på `prep/skv138-mesk-coverage`.
