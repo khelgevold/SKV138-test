@@ -24,7 +24,6 @@
   let activeTab = 'overview';
   let editor = null;
   let notice = '';
-  let loanScenario = null;
   const calculatedEntries = [];
   const principalStep = 5000000;
   const lastPlanningYear = 2033;
@@ -538,68 +537,6 @@
       '<div class="row"><button class="primary" type="submit">Lagre låneopplysninger</button>' + toggleEditor('close','Avbryt') + '</div></form>';
   }
 
-  function firstSimulationYear(data, selectedYear, date) {
-    const nextJanuary = dateYear(date) + (date.slice(5) === '01-01' ? 0 : 1);
-    const start = data.loans.heden.start;
-    const firstFullLoanYear = dateYear(start) + (start.slice(5) === '01-01' ? 0 : 1);
-    return Math.max(selectedYear, nextJanuary, firstFullLoanYear);
-  }
-
-  function simulateHeden(data, startYear, years, budget, includeInRent) {
-    const scenario = {...data, entries:[...data.entries]};
-    const rows = [];
-    for (let year = startYear; year < startYear + years && year <= lastPlanningYear; year++) {
-      const withoutExtra = calculateLoan(scenario, 'heden', year, true);
-      const laterPayments = sum(data.entries.filter(e =>
-        e.kind === 'principal' && e.loan === 'heden' && e.date >= yearEnd(year) &&
-        (e.status === 'actual' || e.status === 'planned')
-      ), e => e.amount);
-      const availableBalance = Math.max(0, withoutExtra.balance - laterPayments);
-      const extra = Math.floor(Math.min(budget, availableBalance) / principalStep) * principalStep;
-      if (extra > 0) {
-        scenario.entries.push({kind:'principal', loan:'heden', year, date:yearStart(year), amount:extra, status:'planned'});
-      }
-      const figures = yearFigures(scenario, year);
-      const projected = figures.projectedLoans.heden;
-      const baseline = yearFigures(data, year);
-      const original = baseline.projectedLoans.heden;
-      const proposal = rentProposal(data, includeInRent ? figures : baseline);
-      rows.push({
-        year, extra, balance:projected.balance, interest:projected.interest,
-        saving:projected.interest === null ? null : original.interest - projected.interest,
-        rent:proposal.missingRates.length ? null : proposal.total,
-        hasOperatingCosts:[...figures.actual, ...figures.planned].some(e => e.kind === 'expense' && e.treatment !== 'review')
-      });
-    }
-    return rows;
-  }
-
-  function loanSimulation(data) {
-    const startYear = firstSimulationYear(data, currentYear, today());
-    if (startYear > lastPlanningYear) return '';
-    const maximumYears = Math.min(10, lastPlanningYear - startYear + 1);
-    const years = Math.min(loanScenario?.years ?? 5, maximumYears);
-    const form = '<form data-mesk-form="loan-simulation"><div class="field-grid">' +
-      field('Disponibelt til ekstra avdrag per år (kr)', 'name="budget" type="number" min="0" step="1" required', numeric(loanScenario?.budget)) +
-      field('Antall år fra ' + startYear, 'name="years" type="number" min="1" max="' + maximumYears + '" required', years) +
-      '</div><label class="row"><input type="checkbox" name="includeInRent"' +
-      (loanScenario?.includeInRent !== false ? ' checked' : '') + '> La simulerte avdrag påvirke åremålet</label>' +
-      '<div class="row"><button class="primary" type="submit">Beregn scenario</button></div></form>';
-    const rows = loanScenario ? simulateHeden(data, startYear, years, loanScenario.budget, loanScenario.includeInRent) : [];
-    const values = value => value === null ? '–' : amount(value);
-    const results = rows.map(row => card(String(row.year), [
-      metric('Ekstra avdrag i januar', amount(row.extra)),
-      metric('Restgjeld ved årsslutt', amount(row.balance)),
-      metric('Beregnet rente til Heden', values(row.interest)),
-      metric('Lavere rente mot registrert plan', values(row.saving)),
-      metric(loanScenario.includeInRent ? 'Beregnet åremål med ekstra avdrag' : 'Beregnet åremål fra registrert plan', values(row.rent))
-    ], row.rent !== null && !row.hasOperatingCosts
-      ? '<p class="sub">Årets driftskostnader er ikke lagt inn.</p>' : '')).join('');
-    return '<div class="card"><h3>Simuler ekstra avdrag til Heden</h3>' +
-      '<p class="sub">Beregningen bruker 1. januar som avdragsdato. Ekstra avdrag rundes ned til nærmeste 50 000 kr innenfor beløpet du oppgir og restgjelden etter avdrag som allerede er registrert eller planlagt. Renter videreføres til du legger inn en ny sats.</p>' +
-      form + '<p class="sub">Åremålet bruker avkastningsgrunnlaget, beregnede og registrerte renter og årets registrerte og planlagte driftskostnader. Simuleringen lagres ikke.</p></div>' + results;
-  }
-
   function loanPanel(data, config, figures) {
     const draw = editor?.kind === 'loan' ? loanForm(data, editor.key, config) : '';
     const entries = Object.entries(loans).map(([key, label]) => {
@@ -624,8 +561,7 @@
         ] : [])
       ], edit);
     }).join('');
-    return draw + entries + '<p class="sub">Renter beregnes fra restgjelden og datoen for avdraget. Registrer låneopptak som en egen postering hvis beløpet skal inngå i hyttekontoens saldo.</p>' +
-      (data.loans.heden ? loanSimulation(data) : '');
+    return draw + entries + '<p class="sub">Renter beregnes fra restgjelden og datoen for avdraget. Registrer låneopptak som en egen postering hvis beløpet skal inngå i hyttekontoens saldo.</p>';
   }
 
   function renderMesk() {
@@ -739,13 +675,7 @@
     const data = model();
     const values = new FormData(form);
     const settings = yearSettings(data, currentYear);
-    if (kind === 'loan-simulation') {
-      const budget = readMoney(values,'budget');
-      const years = Number(values.get('years'));
-      if (!Number.isSafeInteger(budget) || budget < 0 || !Number.isInteger(years) || years < 1 || years > 10) return;
-      loanScenario = {budget, years, includeInRent:values.has('includeInRent')};
-      renderMesk();
-    } else if (kind === 'year') {
+    if (kind === 'year') {
       data.years[currentYear] = {...settings, rent:readMoney(values,'rent'), opening:readMoney(values,'opening'),
         taxRate:Number(values.get('taxRate')), taxAdjustment:readMoney(values,'taxAdjustment') ?? 0,
         confirmedTaxEffect:readMoney(values,'confirmedTaxEffect')};
