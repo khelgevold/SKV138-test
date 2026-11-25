@@ -1,3 +1,7 @@
+## Status 25.11.2026 – MESK-planhorisont til og med 2033
+
+Årsvelger, årsprognose, kopiering av planlagte poster og lånesimulering stopper ved utgangen av 2033. Aktuelt kalenderår blir tilgjengelig for faktiske posteringer når det kommer. Grensen er testet for årsplan og lånesimulering. Klargjort på `prep/skv138-mesk-cost-refund`.
+
 ## Status 25.11.2026 – Løpende saldo i MESK Planlagt
 
 Planlagte og beregnede poster viser estimert saldo etter hver linje. Beløpet etter skatteoverføringen ved årsslutt vises nederst. Planlagt åremål har egen posttype; eksisterende inntektsposter med notatet «Innbetaling av åremål» regnes som åremål, slik at en registrert innbetaling avregnes mot automatisk åremålsinntekt. Testet med flere poster samme dato, beregnede renter og skatteavstemming. Klargjort for neste publisering.
