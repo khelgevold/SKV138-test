@@ -1,3 +1,7 @@
+## Status 25.11.2026 – MESK-renter og skatteoverføring publisert i PROD
+
+Commit `e9657e2` er publisert på `skv138.helgevold.no`. Produksjonsdomenet leverer den verifiserte MESK-modulen med nyeste postering først, tydeligere årsresultat, oppgjorte renter per lån og årsoversikt for skatteoverføring i begge retninger. Beregningene og sorteringen er testet med eksempeldata. Innlogget funksjonstest av de nye valgene gjenstår. Ingen SQL-migrering.
+
 ## Status 25.11.2026 – Årsoversikt for skatteoverføring
 
 På `prep/skv138-mesk-posting-results` viser Skatteoverføring beregnet skatt eller mulig skattebesparelse fra registrerte poster. Brukeren registrerer faktisk bekreftet skatt som positivt beløp eller faktisk brukt skattebesparelse som negativt beløp per skatteår. Kortet viser restbeløpet og retningen etter registrerte skatteoverføringer og eventuell skatt betalt direkte fra hyttekontoen. Ny posttype «Skattebesparelse til hyttekonto» dekker innbetaling fra hovedkonto. Oppgjøret knyttes til skatteåret, mens saldo følger bokføringsdato. Testet med underskudd, overskudd, deloppgjør og betaling året etter. Klargjort for neste publisering.
