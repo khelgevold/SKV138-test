@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Oppdater planlagte faste kostnader ved registrering
+
+Når en planlagt driftskostnad i kategorien Forsikring, Vann og avløp eller Renovasjon registreres som faktisk med et annet beløp, får allerede planlagte poster i samme kategori fra og med betalingsåret det nye beløpet. Kategorien må være den samme på faktisk post. Lagrede faktiske poster og tidligere års planer beholdes. Antall terminer, datoer og øvrige opplysninger beholdes. Testet for alle tre kategorier, samme beløp og endret kategori. Klargjort på `prep/skv138-mesk-entry-menu`.
+
 ## Status 25.11.2026 – Skatteoverføring som siste planlagte post
 
 Beregnet skatteoverføring per 31. desember vises som siste linje i Planlagt med beløp, retning og estimert saldo. Når beløpet er større enn null, kan det registreres som faktisk via trepunktsmenyen. Restbeløpet beregnes etter lagring. Testet fra beregnet linje til faktisk post og avregning. Klargjort på `prep/skv138-mesk-entry-menu`.
