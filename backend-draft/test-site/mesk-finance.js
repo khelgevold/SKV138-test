@@ -104,7 +104,10 @@
     return {balance, interest: rate === null ? null : Math.round(interest)};
   }
 
+  const isCostRefund = entry => entry.kind === 'refund' && entry.treatment === 'expense-credit';
+
   function resultValue(entry) {
+    if (isCostRefund(entry)) return entry.amount;
     if (entry.kind === 'income' || entry.kind === 'rent' || (entry.kind === 'refund' && entry.treatment === 'income')) return entry.amount;
     if (entry.kind === 'interest' || (entry.kind === 'expense' && entry.treatment !== 'review')) return -entry.amount;
     return 0;
@@ -297,8 +300,8 @@
         metric('Gjenstår å betale til MESK', remaining(figures.rentPaid))
       ]) +
       card('Resultat og skatt for hytta · ' + currentYear, [
-        metric('Registrert inntekt', amount(sum(figures.actual.filter(e => resultValue(e) > 0), resultValue))),
-        metric('Registrerte kostnader og renter', amount(-sum(figures.actual.filter(e => resultValue(e) < 0), resultValue))),
+        metric('Registrert inntekt', amount(sum(figures.actual.filter(e => !isCostRefund(e) && resultValue(e) > 0), resultValue))),
+        metric('Registrerte kostnader og renter', amount(-sum(figures.actual.filter(e => isCostRefund(e) || resultValue(e) < 0), resultValue))),
         metric('Registrert resultat før skatt', amount(figures.actualResult)),
         metric('Årsprognose før skatt', amount(figures.forecastResult)),
         metric('Estimert skatt på registrerte poster', amount(figures.actualTax)),
@@ -333,6 +336,7 @@
       option('normal', 'Inngår i estimert skattegrunnlag', item.treatment) +
       option('exclude', 'Utenfor skatteestimatet', item.treatment) +
       option('review', 'Til avklaring', item.treatment) +
+      option('expense-credit', 'Refusjon reduserer kostnaden', item.treatment) +
       option('income', 'Refusjon inngår som inntekt', item.treatment) + '</select></label></div>' +
       '<div data-mesk-field="includeInRent"><label class="check"><input type="checkbox" name="includeInRent"' +
       (item.includeInRent !== false ? ' checked' : '') + '> Ta med kostnaden i forslaget til åremål</label></div>' +
@@ -350,7 +354,7 @@
     const action = planned ? 'Ny planlagt post' : 'Ny postering';
     const rows = entries.map(e => {
       const id = escape(e.id);
-      const info = [e.date ? fmt(e.date) : String(e.year), e.category && kinds[e.kind], e.taxYear && 'Skatteår ' + e.taxYear, taxFromMain(e) && 'Hovedkonto', planned && e.kind === 'interest' && figures.settledInterest[e.loan] && 'Årets renter er oppgjort. Posten er holdt utenfor prognosen.', e.party, e.loan && loans[e.loan], e.treatment === 'review' && 'Til avklaring', rentCostKinds.has(e.kind) && e.includeInRent === false && 'Holdt utenfor åremål', e.voucher && 'Bilag ' + e.voucher, e.note].filter(Boolean);
+      const info = [e.date ? fmt(e.date) : String(e.year), e.category && kinds[e.kind], isCostRefund(e) && 'Reduserer kostnaden', e.taxYear && 'Skatteår ' + e.taxYear, taxFromMain(e) && 'Hovedkonto', planned && e.kind === 'interest' && figures.settledInterest[e.loan] && 'Årets renter er oppgjort. Posten er holdt utenfor prognosen.', e.party, e.loan && loans[e.loan], e.treatment === 'review' && 'Til avklaring', rentCostKinds.has(e.kind) && e.includeInRent === false && 'Holdt utenfor åremål', e.voucher && 'Bilag ' + e.voucher, e.note].filter(Boolean);
       return '<div class="mesk-entry"><div class="mesk-entry-head"><strong>' + escape(e.category || kinds[e.kind]) +
         '</strong><strong>' + amount(taxFromMain(e) ? e.amount : balanceChange(e)) + '</strong></div><div class="sub">' + info.map(escape).join(' · ') +
         '</div><div class="row mesk-entry-actions"><button data-mesk-action="edit" data-id="' + id + '">Rediger</button>' +
@@ -504,9 +508,10 @@
       ? kind === 'principal' ? 'Planlagt avdragsdato' : 'Forfallsdato (valgfri)'
       : 'Faktisk dato';
     const treatment = form.elements.treatment;
-    const refund = treatment.querySelector('[value="income"]');
-    refund.hidden = kind !== 'refund';
-    if (kind !== 'refund' && treatment.value === 'income') treatment.value = 'normal';
+    for (const value of ['income', 'expense-credit']) {
+      treatment.querySelector('[value="' + value + '"]').hidden = kind !== 'refund';
+    }
+    if (kind !== 'refund' && ['income', 'expense-credit'].includes(treatment.value)) treatment.value = 'normal';
   }
 
   function readMoney(values, name) {
