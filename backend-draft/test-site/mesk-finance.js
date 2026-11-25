@@ -17,6 +17,7 @@
     'Forsikring', 'Strøm og nettleie', 'Vann og avløp', 'Renovasjon', 'Vedlikehold',
     'Elektriker', 'Tømrer', 'Bankgebyr', 'Regnskapsføring', 'Dokumentavgift og tinglysing', 'Annet'
   ];
+  const recurringCosts = new Set(['forsikring', 'vann og avløp', 'renovasjon']);
   const tabs = [['overview', 'Oversikt'], ['entries', 'Posteringer'], ['planned', 'Planlagt'], ['loans', 'Lån']];
   const today = () => new Date().toLocaleDateString('sv-SE', {timeZone:'Europe/Oslo'});
   let currentYear = Number(today().slice(0, 4));
@@ -387,6 +388,26 @@
       taxTransferCard(config, figures);
   }
 
+  function recurringCost(entry) {
+    const category = entry?.category?.trim().toLocaleLowerCase('nb-NO');
+    return entry?.kind === 'expense' && recurringCosts.has(category) ? category : null;
+  }
+
+  function updateRecurringCosts(entries, previous, actual) {
+    const category = recurringCost(previous);
+    if (!category || previous.status !== 'planned' || actual.status !== 'actual' ||
+        category !== recurringCost(actual) || previous.amount === actual.amount) return 0;
+    let updated = 0;
+    for (const entry of entries) {
+      if (entry.status === 'planned' && entry.year >= actual.year &&
+          recurringCost(entry) === category && entry.amount !== actual.amount) {
+        entry.amount = actual.amount;
+        updated++;
+      }
+    }
+    return updated;
+  }
+
   function rowForm(item) {
     const planned = item.status === 'planned';
     const currentKind = item.kind || (planned ? 'expense' : 'income');
@@ -416,7 +437,10 @@
       '<div data-mesk-field="includeInRent"><label class="check"><input type="checkbox" name="includeInRent"' +
       (item.includeInRent !== false ? ' checked' : '') + '> Ta med kostnaden i forslaget til åremål</label></div>' +
       '<div class="field-grid">' + field('Bilagsnummer', 'name="voucher" maxlength="80"', item.voucher) +
-      field('Notat', 'name="note" maxlength="300"', item.note) + '</div><div class="row">' +
+      field('Notat', 'name="note" maxlength="300"', item.note) + '</div>' +
+      (editor.mode === 'confirm' && recurringCost(item)
+        ? '<p class="sub">Hvis beløpet endres, oppdateres også planlagte poster i samme kategori fra og med betalingsåret.</p>' : '') +
+      '<div class="row">' +
       '<button class="primary" type="submit">Lagre post</button>' + toggleEditor('close', 'Avbryt') + '</div></form>';
   }
 
@@ -753,11 +777,15 @@
       const entry = readEntry(form, data);
       if (!entry) return;
       const index = data.entries.findIndex(e => e.id === entry.id);
+      const previous = data.entries[index];
       if (index === -1) data.entries.push(entry);
       else data.entries[index] = entry;
+      const updated = updateRecurringCosts(data.entries, previous, entry);
       currentYear = entry.year;
       activeTab = entry.status === 'actual' ? 'entries' : 'planned';
-      persist(data,'Posten er lagret.');
+      const message = updated === 1 ? 'Posten er lagret. Én planlagt post ble oppdatert.' :
+        updated > 1 ? 'Posten er lagret. ' + updated + ' planlagte poster ble oppdatert.' : 'Posten er lagret.';
+      persist(data,message);
     }
   });
 
