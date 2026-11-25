@@ -30,7 +30,12 @@ export function createLegacySaveQueue({ client, onStatus = () => {} }) {
           blocked = true;
           failedSnapshot = payload;
           pending = null;
-          onStatus({ type: error?.status === 409 ? "conflict" : "error" });
+          const status = error?.status;
+          onStatus({
+            type: status === 409 && error?.stage !== "authentication" ? "conflict" : "error",
+            status: Number.isInteger(status) && status >= 400 && status <= 599 ? status : null,
+            stage: error?.stage === "authentication" ? "authentication" : "state",
+          });
         }
       }
     } finally {

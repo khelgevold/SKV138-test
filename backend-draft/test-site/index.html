@@ -104,7 +104,7 @@ try {
             document.querySelector("#app-frame").inert=true;
             document.querySelector("#save-message").textContent=event.type==="conflict"
               ?"En annen lagring har endret dataene. Lagring er stoppet."
-              :"Lagringen mislyktes. Endringer er ikke lagret.";
+              :"Lagringen kunne ikke bekreftes." + (event.status ? " (" + (event.stage === "authentication" ? "Innlogging" : "Lagring") + ", HTTP " + event.status + ")" : "");
           }
         }
       });
