@@ -1,3 +1,7 @@
+## Status 25.11.2026 – MESK-oppdatering publisert i PROD
+
+Commit `fb46109` samler beregnet åremål, flerårig simulering av ekstra avdrag til Heden i trinn på 50 000 kr og avhuking for hva som inngår i åremålet. Produksjonsdomenet `skv138.helgevold.no` leverer versjonen fra committen. Appens HTML laster modulen. Testet med fiktive data før publisering. Innlogget funksjonstest i PROD gjenstår. Ingen databasemigrering.
+
 ## Status 25.11.2026 – Valg av kostnader i åremålet
 
 På klargjøringsgrenen `prep/skv138-mesk-annual-rent` har faktiske og planlagte drifts- og renteposter valget «Inngår i beregning av åremål». Valget er på som standard, også for eldre poster. Det endrer bare beregnet åremål. Under Lån kan simulerte rentevirkninger tas med i åremålet eller holdes utenfor mens restgjeld og rentebesparelse fortsatt vises. Beregningstestene er bestått. Publisering og innlogget funksjonstest gjenstår.
