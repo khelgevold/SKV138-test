@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Nyeste MESK-postering øverst
+
+På `prep/skv138-mesk-posting-results` sorteres faktiske posteringer med nyeste dato øverst. På samme dato vises sist registrerte post først. Planlagte poster vises fortsatt etter forfall, med udaterte poster sist. Sorteringen er testet og klargjort for neste publisering.
+
 ## Status 25.11.2026 – Skatteavsetning til hovedkonto
 
 På `prep/skv138-mesk-posting-results` kan overføring fra hyttekonto til hovedkonto registreres med eget skatteår, som faktisk eller planlagt post. Betalt skatt kan registreres med hyttekonto eller hovedkonto som betalingskonto. Betaling fra hovedkonto påvirker betalt skatt for inntektsåret, mens hyttekontoens kontantstrøm fanger opp overføringen. Resultatet før skatt og skatteestimatet bygger på de samme inntektene og kostnadene som før. Eldre skattebetalinger behandles som trekk på hyttekontoen. Verifisert med fiktive poster og betaling i etterfølgende kalenderår. Klargjort for neste publisering.
