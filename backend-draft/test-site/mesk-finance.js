@@ -284,13 +284,13 @@
       '<div data-mesk-field="direction"><label>Retning<select name="direction">' +
       option('in', 'Inn på hyttekontoen', item.direction) + option('out', 'Ut fra hyttekontoen', item.direction) + '</select></label></div>' +
       '<div data-mesk-field="taxYear">' + field('Skatten gjelder inntektsåret', 'name="taxYear" type="number" min="2000" max="2100"', item.taxYear ?? currentYear) + '</div>' +
-      '<div data-mesk-field="treatment"><label>Skattebehandling<select name="treatment">' +
+      '<div data-mesk-field="treatment"><label>Skattegrunnlag for MESK<select name="treatment">' +
       option('normal', 'Inngår i estimert skattegrunnlag', item.treatment) +
       option('exclude', 'Utenfor skatteestimatet', item.treatment) +
       option('review', 'Til avklaring', item.treatment) +
       option('income', 'Refusjon inngår som inntekt', item.treatment) + '</select></label></div>' +
-      '<div data-mesk-field="includeInRent"><label class="row"><input type="checkbox" name="includeInRent"' +
-      (item.includeInRent !== false ? ' checked' : '') + '> Inngår i beregning av åremål</label></div>' +
+      '<div data-mesk-field="includeInRent"><label class="check"><input type="checkbox" name="includeInRent"' +
+      (item.includeInRent !== false ? ' checked' : '') + '> Ta med kostnaden i forslaget til åremål</label></div>' +
       '<div class="field-grid">' + field('Bilagsnummer', 'name="voucher" maxlength="80"', item.voucher) +
       field('Notat', 'name="note" maxlength="300"', item.note) + '</div><div class="row">' +
       '<button class="primary" type="submit">Lagre post</button>' + toggleEditor('close', 'Avbryt') + '</div></form>';
