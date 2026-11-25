@@ -299,14 +299,13 @@
       '</div><div class="row"><button class="primary" type="submit">Lagre grunnlag</button>' + toggleEditor('close', 'Avbryt') + '</div></form>';
   }
 
-  function yearForm(config) {
-    return '<form class="card" data-mesk-form="year"><h3>Årsinnstillinger</h3><div class="field-grid">' +
-      field('Avtalt åremål (kr)', 'name="rent" type="number" min="0" step="0.01"', numeric(config.rent)) +
-      field('Inngående saldo (kr)', 'name="opening" type="number" step="0.01" placeholder="Bruk saldo fra forrige år"', numeric(config.opening)) +
-      field('Skattesats (%)', 'name="taxRate" type="number" min="0" max="100" step="0.01" required', config.taxRate ?? 22) +
-      field('Skattemessig justering (kr)', 'name="taxAdjustment" type="number" step="0.01"', numeric(config.taxAdjustment)) +
-      field('Bekreftet skatt (+) eller brukt skattebesparelse (−), kr', 'name="confirmedTaxEffect" type="number" step="0.01"', numeric(config.confirmedTaxEffect)) +
-      '</div><div class="row">' + '<button class="primary" type="submit">Lagre årsinnstillinger</button>' + toggleEditor('close', 'Avbryt') + '</div></form>';
+  function overviewSetting(section, label, fields) {
+    if (editor?.kind !== section) {
+      return '<div class="row mesk-entry-actions">' + toggleEditor(section, label) + '</div>';
+    }
+    return '<form data-mesk-form="' + section + '"><div class="field-grid">' + fields +
+      '</div><div class="row mesk-entry-actions"><button class="primary" type="submit">Lagre</button>' +
+      toggleEditor('close', 'Avbryt') + '</div></form>';
   }
 
   function resultPostingsNote(actual, year) {
@@ -333,9 +332,11 @@
       metric('Overført til hyttekonto', amount(figures.taxBenefitReceived)),
       metric('Betalt direkte fra hyttekonto', amount(figures.taxPaidFromCabin)),
       metric(direction, pending == null ? '–' : amount(Math.abs(pending)))
-    ], confirmed == null
-      ? '<p class="sub">Legg inn bekreftet skatt eller skattebesparelsen MESK faktisk har brukt, under Årsinnstillinger.</p>'
-      : '');
+    ], overviewSetting('tax-settings', 'Rediger skatteopplysninger',
+      field('Skattesats (%)', 'name="taxRate" type="number" min="0" max="100" step="0.01" required', config.taxRate ?? 22) +
+      field('Skattemessig justering (kr)', 'name="taxAdjustment" type="number" step="0.01"', numeric(config.taxAdjustment)) +
+      field('Bekreftet skatt (+) eller brukt skattebesparelse (−), kr', 'name="confirmedTaxEffect" type="number" step="0.01"', numeric(confirmed))
+    ));
   }
 
   function oversikt(data, config, figures, plan) {
@@ -343,8 +344,8 @@
     const privateIncome = privateCoverage(currentYear);
     const upcoming = currentYear > dateYear(today());
     const rent = config.rent ?? null;
-    const remaining = value => rent === null ? '–' : amount(Math.max(0, rent - value));
-    const setup = editor?.kind === 'year' ? yearForm(config) : '';
+    const coverageRent = rent ?? plan?.rent ?? null;
+    const remaining = value => coverageRent === null ? '–' : amount(Math.max(0, coverageRent - value));
     const proposal = rentProposal(data, figures);
     const proposalActions = '<div class="row mesk-entry-actions">' +
       toggleEditor('rent-basis', 'Rediger grunnlag') +
@@ -353,11 +354,11 @@
     const proposalNote = proposal.missingRates.length
       ? '<p class="sub">Legg inn rente eller en rentepost for ' + escape(proposal.missingRates.join(' og ')) + '.</p>'
       : '<p class="sub">Forslaget bruker kostnadene som er valgt for åremålet, samt beregnede renter som ennå ikke er registrert.</p>';
-    return '<div class="mesk-toolbar">' + toggleEditor('year', 'Årsinnstillinger') + '</div>' + setup +
-      card('Hyttekonto', [
+    return card('Hyttekonto', [
         metric(upcoming ? 'Beregnet inngående saldo' : 'Faktisk saldo', amount(upcoming ? plan.opening : opening.actual + figures.actualCash)),
         metric('Prognose ved årsslutt', amount(plan?.closing ?? opening.forecast + figures.forecastCash))
-      ]) +
+      ], overviewSetting('opening-settings', 'Juster inngående saldo',
+        field('Inngående saldo (kr)', 'name="opening" type="number" step="0.01" placeholder="Bruk saldo fra forrige år"', numeric(config.opening)))) +
       card('Beregnet åremål for ' + currentYear, [
         metric('Avkastningskrav på egenkapital (' + proposal.rate.toLocaleString('nb-NO') + ' %)', proposal.equityReturn === null ? '–' : amount(proposal.equityReturn)),
         metric('Lånerenter', amount(proposal.interest)),
@@ -366,14 +367,15 @@
       ], proposalActions + proposalNote) +
       (editor?.kind === 'rent-basis' ? rentBasisForm(data.rentBasis) : '') +
       card('Dekning av åremålet', [
-        metric('Avtalt åremål', rent === null ? '–' : amount(rent)),
+        metric(rent === null ? 'Beregnet åremål i årsplanen' : 'Avtalt åremål', coverageRent === null ? '–' : amount(coverageRent)),
         metric('Betalt til MESK', amount(figures.rentPaid)),
         metric('Privat utleie, utbetalt etter estimert skatt', amount(privateIncome.actual)),
         metric('Privat utleie, prognose etter estimert skatt', amount(privateIncome.forecast)),
         metric('Gjenstår å tjene inn', remaining(privateIncome.actual)),
         metric('Prognose for udekket åremål', remaining(privateIncome.forecast)),
         metric('Gjenstår å betale til MESK', remaining(figures.rentPaid))
-      ]) +
+      ], overviewSetting('rent-settings', 'Rediger avtalt åremål',
+        field('Avtalt åremål (kr)', 'name="rent" type="number" min="0" step="0.01" placeholder="Bruk beregnet åremål i årsplanen"', numeric(rent)))) +
       card('Resultat og skatt for hytta · ' + currentYear, [
         metric('Registrert inntekt', amount(sum(figures.actual.filter(e => !isCostRefund(e) && resultValue(e) > 0), resultValue))),
         metric('Registrerte kostnader og renter', amount(-sum(figures.actual.filter(e => isCostRefund(e) || resultValue(e) < 0), resultValue))),
@@ -383,7 +385,7 @@
         metric('Estimert skatt for året', amount(figures.forecastTax)),
         metric('Årsprognose etter estimert skatt', amount(figures.forecastResult - figures.forecastTax)),
         metric('Betalt skatt for året', amount(figures.taxPaid))
-      ], resultPostingsNote(figures.actual, currentYear) + '<p class="sub">Skatteestimatet gjelder hytteeierskapet. Legg forventet overføring til hovedkontoen under Planlagt for å ta den med i saldoprognosen.</p>') +
+      ], resultPostingsNote(figures.actual, currentYear) + '<p class="sub">Skatteestimatet gjelder hytteeierskapet. Under Planlagt ser du beregnet skatteoverføring ved årsslutt.</p>') +
       taxTransferCard(config, figures);
   }
 
@@ -674,11 +676,16 @@
     const data = model();
     const values = new FormData(form);
     const settings = yearSettings(data, currentYear);
-    if (kind === 'year') {
-      data.years[currentYear] = {...settings, rent:readMoney(values,'rent'), opening:readMoney(values,'opening'),
-        taxRate:Number(values.get('taxRate')), taxAdjustment:readMoney(values,'taxAdjustment') ?? 0,
-        confirmedTaxEffect:readMoney(values,'confirmedTaxEffect')};
-      persist(data,'Årsinnstillingene er lagret.');
+    if (kind === 'rent-settings') {
+      data.years[currentYear] = {...settings, rent:readMoney(values,'rent')};
+      persist(data,'Åremålet er lagret.');
+    } else if (kind === 'opening-settings') {
+      data.years[currentYear] = {...settings, opening:readMoney(values,'opening')};
+      persist(data,'Inngående saldo er lagret.');
+    } else if (kind === 'tax-settings') {
+      data.years[currentYear] = {...settings, taxRate:Number(values.get('taxRate')),
+        taxAdjustment:readMoney(values,'taxAdjustment') ?? 0, confirmedTaxEffect:readMoney(values,'confirmedTaxEffect')};
+      persist(data,'Skatteopplysningene er lagret.');
     } else if (kind === 'rent-basis') {
       const equity = readMoney(values,'equity');
       const rate = Number(values.get('rate'));
@@ -746,7 +753,11 @@
       case 'next': currentYear = Math.min(lastVisibleYear(), currentYear + 1); editor=null; break;
       case 'tab': activeTab=id; editor=null; break;
       case 'close': editor=null; break;
-      case 'year': editor={kind:'year'}; break;
+      case 'rent-settings':
+      case 'opening-settings':
+      case 'tax-settings':
+        editor={kind:action};
+        break;
       case 'rent-basis': editor={kind:'rent-basis'}; break;
       case 'loan': editor={kind:'loan',key:id}; break;
       case 'new':
