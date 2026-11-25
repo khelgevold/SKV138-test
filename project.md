@@ -1,3 +1,23 @@
+## Status 25.11.2026 – Årsoversikt for skatteoverføring
+
+På `prep/skv138-mesk-posting-results` viser Skatteoverføring beregnet skatt eller mulig skattebesparelse fra registrerte poster. Brukeren registrerer faktisk bekreftet skatt som positivt beløp eller faktisk brukt skattebesparelse som negativt beløp per skatteår. Kortet viser restbeløpet og retningen etter registrerte skatteoverføringer og eventuell skatt betalt direkte fra hyttekontoen. Ny posttype «Skattebesparelse til hyttekonto» dekker innbetaling fra hovedkonto. Oppgjøret knyttes til skatteåret, mens saldo følger bokføringsdato. Testet med underskudd, overskudd, deloppgjør og betaling året etter. Klargjort for neste publisering.
+
+## Status 25.11.2026 – Nyeste MESK-postering øverst
+
+På `prep/skv138-mesk-posting-results` sorteres faktiske posteringer med nyeste dato øverst. På samme dato vises sist registrerte post først. Planlagte poster vises fortsatt etter forfall, med udaterte poster sist. Sorteringen er testet og klargjort for neste publisering.
+
+## Status 25.11.2026 – Skatteavsetning til hovedkonto
+
+På `prep/skv138-mesk-posting-results` kan overføring fra hyttekonto til hovedkonto registreres med eget skatteår, som faktisk eller planlagt post. Betalt skatt kan registreres med hyttekonto eller hovedkonto som betalingskonto. Betaling fra hovedkonto påvirker betalt skatt for inntektsåret, mens hyttekontoens kontantstrøm fanger opp overføringen. Resultatet før skatt og skatteestimatet bygger på de samme inntektene og kostnadene som før. Eldre skattebetalinger behandles som trekk på hyttekontoen. Verifisert med fiktive poster og betaling i etterfølgende kalenderår. Klargjort for neste publisering.
+
+## Status 25.11.2026 – Oppgjorte renter per lån og år
+
+På `prep/skv138-mesk-posting-results` kan årets renter markeres som ferdig oppgjort separat for privatlånet og Heden Holding. Saldo-, resultat- og skatteprognose samt åremålsforslag bruker da registrerte renter for lånet i det året. Eventuelle planlagte renteposter beholdes og merkes som holdt utenfor prognosen. Innstillingen påvirker bare valgt lån og år. Testet med avviket på 154 kr og scenarier for begge lån og påfølgende år. Klargjort for neste publisering.
+
+## Status 25.11.2026 – MESK-resultat per år
+
+Brukeren meldte at registrerte inntekter og kostnader viser null selv om postene er registrert. År, datoer og posttyper i PROD er ikke bekreftet. På `prep/skv138-mesk-posting-results` viser resultatkortet valgt år og en forklaring når årets faktiske poster gir null registrert inntekt og kostnad. Postlisten viser posttypen også når en egen kategori er satt. Kontrollert med fiktive data for tre år og ulike posttyper. Beregningen og lagrede data er uendret. Endringen er klargjort for en senere publisering.
+
 ## Status 25.11.2026 – MESK-rettelser og eget PROD-domene
 
 Commit `7677d78` er publisert. `skv138.helgevold.no` leverer nytt MESK-skjema og viser «lagret» etter bekreftelse fra serveren. Skjemaet skiller skattegrunnlag fra valget om å ta med kostnaden i åremålsforslaget. Brukeren satte `SKV138_APP_ORIGIN` til `https://skv138.helgevold.no` før deploy. Produksjonsbygget er verifisert med Auth på dette domenet. Det forrige `Origin denied`-avviket ble omgått ved å registrere posteringene via Netlify-adressen, og brukeren bekreftet at de vises på begge adresser. Innlogget lagring og kontroll etter ny innlasting på eget domene gjenstår etter denne deployen. Ingen SQL-migrering.
