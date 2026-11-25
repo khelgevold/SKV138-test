@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Fjern manuell justering av inngående saldo
+
+Hyttekonto viser automatisk inngående saldo fra foregående år. Knappen «Juster inngående saldo» er fjernet. For år med et tidligere lagret saldobeløp kan «Bruk saldo fra forrige år» fjerne overstyringen. Overgangen fra lagret verdi til automatisk saldo er testet. Klargjort på `prep/skv138-mesk-coverage`.
+
 ## Status 25.11.2026 – Bruk beregnet åremål uten ekstra knapp
 
 «Rediger avtalt åremål» er fjernet. Beregnet åremål brukes som standard. Dersom et avtalt beløp allerede er lagret, beholdes det og kan nullstilles via «Bruk beregnet åremål». Testet med tidligere avtalt beløp og overgang til automatisk beregning. Klargjort på `prep/skv138-mesk-coverage`.
