@@ -158,7 +158,6 @@
     const taxPaidFromCabin = taxPaid - taxPaidFromMain;
     return {
       actual, planned, forecastEntries, settledInterest, rentPaid, plannedRent, remainingRent, actualResult, forecastResult, projectedLoans, remainingInterest, interestByLoan, taxPaid, taxReserved, taxBenefitReceived, taxPaidFromCabin, actualTaxEffect,
-      actualTax: Math.max(0, actualTaxEffect),
       forecastTax: Math.max(0, taxEffect(sum(forecastEntries, taxValue) + remainingRent - remainingInterest + adjustment)),
       actualCash: sum(actual, balanceChange),
       forecastCash: sum(forecastEntries, balanceChange) + remainingRent - remainingInterest
@@ -321,24 +320,12 @@
     return confirmed - directPayment - figures.taxReserved + figures.taxBenefitReceived;
   }
 
-  function taxTransferCard(config, figures, plan) {
-    const confirmed = config.confirmedTaxEffect;
-    const pending = confirmed == null ? plan?.taxTransfer ?? null : taxTransferBalance(confirmed, figures);
-    const direction = confirmed == null
-      ? 'Estimert rest ' + (pending < 0 ? 'til hyttekonto' : pending > 0 ? 'til hovedkonto' : 'å overføre')
-      : pending > 0 ? 'Til hovedkonto' : pending < 0 ? 'Til hyttekonto' : 'Gjenstår å overføre';
-    return card('Skatteoverføring for ' + currentYear, [
-      metric(figures.actualTaxEffect < 0 ? 'Beregnet mulig skattebesparelse' : 'Beregnet skatt på registrerte poster', amount(Math.abs(figures.actualTaxEffect))),
-      metric(confirmed < 0 ? 'Bekreftet brukt skattebesparelse' : 'Bekreftet skatt', confirmed == null ? '–' : amount(Math.abs(confirmed))),
-      metric('Overført til hovedkonto', amount(figures.taxReserved)),
-      metric('Overført til hyttekonto', amount(figures.taxBenefitReceived)),
-      metric('Betalt direkte fra hyttekonto', amount(figures.taxPaidFromCabin)),
-      metric(direction, pending == null ? '–' : amount(Math.abs(pending)))
-    ], overviewSetting('tax-settings', 'Rediger skatteopplysninger',
+  function taxSettings(config) {
+    return overviewSetting('tax-settings', 'Rediger skatteopplysninger',
       field('Skattesats (%)', 'name="taxRate" type="number" min="0" max="100" step="0.01" required', config.taxRate ?? 22) +
       field('Skattemessig justering (kr)', 'name="taxAdjustment" type="number" step="0.01"', numeric(config.taxAdjustment)) +
-      field('Bekreftet skatt (+) eller brukt skattebesparelse (−), kr', 'name="confirmedTaxEffect" type="number" step="0.01"', numeric(confirmed))
-    ));
+      field('Bekreftet skatt (+) eller brukt skattebesparelse (−), kr', 'name="confirmedTaxEffect" type="number" step="0.01"', numeric(config.confirmedTaxEffect))
+    );
   }
 
   function oversikt(data, config, figures, plan) {
@@ -348,6 +335,8 @@
     const rent = config.rent ?? null;
     const coverageRent = rent ?? plan?.rent ?? null;
     const remaining = value => coverageRent === null ? '–' : amount(Math.max(0, coverageRent - value));
+    const confirmedTax = config.confirmedTaxEffect;
+    const pastTaxBalance = !plan && confirmedTax != null ? taxTransferBalance(confirmedTax, figures) : 0;
     const proposal = rentProposal(data, figures);
     const proposalActions = '<div class="row mesk-entry-actions">' +
       toggleEditor('rent-basis', 'Rediger grunnlag') + '</div>';
@@ -380,12 +369,20 @@
         metric('Registrerte kostnader og renter', amount(-sum(figures.actual.filter(e => isCostRefund(e) || resultValue(e) < 0), resultValue))),
         metric('Registrert resultat før skatt', amount(figures.actualResult)),
         metric('Årsprognose før skatt', amount(figures.forecastResult)),
-        metric('Estimert skatt på registrerte poster', amount(figures.actualTax)),
+        metric(figures.actualTaxEffect < 0 ? 'Mulig skattebesparelse på registrerte poster' : 'Estimert skatt på registrerte poster',
+          amount(Math.abs(figures.actualTaxEffect))),
         metric('Estimert skatt for året', amount(figures.forecastTax)),
         metric('Årsprognose etter estimert skatt', amount(figures.forecastResult - figures.forecastTax)),
-        metric('Betalt skatt for året', amount(figures.taxPaid))
-      ], resultPostingsNote(figures.actual, currentYear) + '<p class="sub">Skatteestimatet gjelder hytteeierskapet. Under Planlagt ser du beregnet skatteoverføring ved årsslutt.</p>') +
-      taxTransferCard(config, figures, plan);
+        metric('Betalt skatt for året', amount(figures.taxPaid)),
+        ...(confirmedTax == null ? [] : [
+          metric(confirmedTax < 0 ? 'Bekreftet brukt skattebesparelse' : 'Bekreftet skatt', amount(Math.abs(confirmedTax)))
+        ]),
+        ...(pastTaxBalance === 0 ? [] : [
+          metric(pastTaxBalance < 0 ? 'Rest til hyttekonto' : 'Rest til hovedkonto', amount(Math.abs(pastTaxBalance)))
+        ])
+      ], resultPostingsNote(figures.actual, currentYear) +
+        (plan ? '<p class="sub">Se beregnet skatteoverføring ved årsslutt under Planlagt.</p>' : '') +
+        taxSettings(config));
   }
 
   function recurringCost(entry) {
