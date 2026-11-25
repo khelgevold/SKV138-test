@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Simulering av ekstra avdrag til Heden
+
+Under MESK Økonomi → Lån kan brukeren simulere ekstra avdrag i inntil ti år. Årsrammen rundes ned til trinn på 50 000 kr innenfor restgjelden og med plass til allerede registrerte eller planlagte avdrag. Simuleringen tar utgangspunkt i 1. januar og viser avdrag, restgjeld, renter, rentebesparelse mot registrert plan og beregnet åremål per år. Simuleringen lagrer ingen posteringer eller endringer i avtalt åremål. Rente ved registrert avdrag beregnes etter registrert betalingsdato. Beregningene er testet med fiktive data. Klargjort på `prep/skv138-mesk-annual-rent`, publisering og innlogget funksjonstest gjenstår.
+
 ## Status 25.11.2026 – Beregnet åremål for MESK
 
 På klargjøringsgrenen `prep/skv138-mesk-annual-rent` beregnes forslag til åremål fra egenkapital brukt ved kjøpet × årlig avkastningskrav (standard 4,8 %), pluss renter og driftskostnader for valgt år. Brukeren registrerer egenkapitalen i appen. Avdrag inngår i kontantstrøm og reduserer renteberegningen fra betalingsdatoen. Åremålet som er avtalt, oppdateres ved eget valg. Beregningen er testet lokalt. Publisering og innlogget funksjonstest gjenstår.
