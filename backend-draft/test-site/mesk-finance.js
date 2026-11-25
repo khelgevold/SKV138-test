@@ -25,6 +25,8 @@
   let notice = '';
   let loanScenario = null;
   const principalStep = 5000000;
+  const lastPlanningYear = 2033;
+  const lastVisibleYear = () => Math.max(lastPlanningYear, dateYear(today()));
   const amount = n => money(n === 0 ? 0 : n / 100);
   const numeric = n => n === null || n === undefined ? '' : n / 100;
   const datestamp = day => Date.parse(day + 'T00:00:00Z');
@@ -189,7 +191,7 @@
   }
 
   function annualPlan(data, targetYear, thisYear) {
-    if (targetYear < thisYear) return null;
+    if (targetYear < thisYear || targetYear > lastPlanningYear) return null;
     let scenario = data;
     let opening = openingBalances(data, thisYear).forecast;
     let plan;
@@ -470,7 +472,7 @@
         '<button data-mesk-action="remove" data-id="' + id + '">Slett</button></div>') + '</div>';
     }).join('') || '<p class="sub">Ingen ' + (planned ? 'planlagte poster' : 'posteringer') + ' for året.</p>';
     return '<div class="mesk-toolbar">' + toggleEditor('new', action) +
-      (planned && figures.planned.some(e => !e.autoPrincipal) && currentYear < 2100 ? toggleEditor('copy', 'Kopier til neste år') : '') + '</div>' + draw +
+      (planned && figures.planned.some(e => !e.autoPrincipal) && currentYear < lastPlanningYear ? toggleEditor('copy', 'Kopier til neste år') : '') + '</div>' + draw +
       (planned ? annualPlanSummary(plan) : '') +
       '<div class="card mesk-entries">' + rows + '</div>' +
       (planned && plan ? card('Skatteoverføring ved årsslutt', [
@@ -501,7 +503,7 @@
   function simulateHeden(data, startYear, years, budget, includeInRent) {
     const scenario = {...data, entries:[...data.entries]};
     const rows = [];
-    for (let year = startYear; year < startYear + years && year <= 2100; year++) {
+    for (let year = startYear; year < startYear + years && year <= lastPlanningYear; year++) {
       const withoutExtra = calculateLoan(scenario, 'heden', year, true);
       const laterPayments = sum(data.entries.filter(e =>
         e.kind === 'principal' && e.loan === 'heden' && e.date >= yearEnd(year) &&
@@ -529,8 +531,8 @@
 
   function loanSimulation(data) {
     const startYear = firstSimulationYear(data, currentYear, today());
-    if (startYear > 2100) return '';
-    const maximumYears = Math.min(10, 2101 - startYear);
+    if (startYear > lastPlanningYear) return '';
+    const maximumYears = Math.min(10, lastPlanningYear - startYear + 1);
     const years = Math.min(loanScenario?.years ?? 5, maximumYears);
     const form = '<form data-mesk-form="loan-simulation"><div class="field-grid">' +
       field('Disponibelt til ekstra avdrag per år (kr)', 'name="budget" type="number" min="0" step="1" required', numeric(loanScenario?.budget)) +
@@ -588,7 +590,7 @@
     const figures = plan?.figures ?? yearFigures(data, currentYear);
     yearLabel.textContent = currentYear;
     host.querySelector('[data-mesk-action="previous"]').disabled = currentYear <= 2000;
-    host.querySelector('[data-mesk-action="next"]').disabled = currentYear >= 2100;
+    host.querySelector('[data-mesk-action="next"]').disabled = currentYear >= lastVisibleYear();
     host.querySelector('[data-mesk-tabs]').innerHTML = tabs.map(([key,label]) =>
       '<button type="button" data-mesk-action="tab" data-id="' + key + '" aria-pressed="' + (key === activeTab) + '" class="' +
       (key === activeTab ? 'selected' : '') + '">' + label + '</button>').join('');
@@ -646,8 +648,13 @@
     const year = date ? dateYear(date) : currentYear;
     const loan = loanEntry.has(kind) ? String(values.get('loan')) : '';
     const taxYear = taxKinds.has(kind) ? Number(values.get('taxYear')) : null;
+    const lastYear = existing.status === 'planned' ? lastPlanningYear : lastVisibleYear();
+    if (year > lastYear) {
+      alert('Velg en dato senest 31.12.' + lastYear + '.');
+      return null;
+    }
     if (!Object.hasOwn(kinds, kind) || !Number.isSafeInteger(value) || value <= 0 ||
-        year < 2000 || year > 2100 || (taxYear !== null && (!Number.isInteger(taxYear) || taxYear < 2000 || taxYear > 2100)) || (loanEntry.has(kind) && !Object.hasOwn(loans, loan))) {
+        year < 2000 || (taxYear !== null && (!Number.isInteger(taxYear) || taxYear < 2000 || taxYear > 2100)) || (loanEntry.has(kind) && !Object.hasOwn(loans, loan))) {
       alert('Kontroller dato, beløp og lånevalg.');
       return null;
     }
@@ -733,6 +740,7 @@
   });
 
   function copyPlanned(data) {
+    if (currentYear >= lastPlanningYear) return;
     const candidates = data.entries.filter(e => e.status==='planned' && e.year===currentYear && !['rent','principal','tax','taxReserve','taxBenefit','borrowing','transfer','investment'].includes(asRentPosting(e).kind));
     const next = currentYear + 1;
     const rows = candidates.filter(e => !data.entries.some(other => other.year===next && (other.copiedFrom===e.id ||
@@ -756,7 +764,7 @@
     notice = '';
     switch(action) {
       case 'previous': currentYear--; editor=null; break;
-      case 'next': currentYear++; editor=null; break;
+      case 'next': currentYear = Math.min(lastVisibleYear(), currentYear + 1); editor=null; break;
       case 'tab': activeTab=id; editor=null; break;
       case 'close': editor=null; break;
       case 'year': editor={kind:'year'}; break;
