@@ -32,7 +32,10 @@ export function createSkv138Client({ authClient, fetchImpl, storage, endpoint = 
         throw new Error("TEST_DIAG_TOKEN_ENDPOINT_FETCH_FAILED");
       }
       if (!tokenResponse.ok) {
-        throw new Error("TEST_DIAG_TOKEN_ENDPOINT_HTTP_" + tokenResponse.status);
+        const error = new Error("TEST_DIAG_TOKEN_ENDPOINT_HTTP_" + tokenResponse.status);
+        error.status = tokenResponse.status;
+        error.stage = "authentication";
+        throw error;
       }
       let tokenData;
       try { tokenData = await tokenResponse.json(); }
@@ -59,7 +62,9 @@ export function createSkv138Client({ authClient, fetchImpl, storage, endpoint = 
       const code = Number.isInteger(response.status) ? response.status : "unknown";
       const type = response.headers?.get?.("content-type") || "missing";
       const kind = type.includes("text/html") ? "HTML" : type.includes("text/plain") ? "TEXT" : type.includes("application/json") ? "JSON" : "OTHER";
-      throw new Error("TEST_DIAG_RESPONSE_NOT_JSON_HTTP_" + code + "_TYPE_" + kind);
+      const error = new Error("TEST_DIAG_RESPONSE_NOT_JSON_HTTP_" + code + "_TYPE_" + kind);
+      error.status = response.status;
+      throw error;
     }
     if (!response.ok) {
       const error = new Error(response.status === 409 ? "Conflict: reload before saving" : (data.error || "Request failed"));
