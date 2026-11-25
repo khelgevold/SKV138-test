@@ -1,6 +1,6 @@
-## Status 25.11.2026 – Feil ved lagring av låneopptak som postering
+## Status 25.11.2026 – MESK-rettelser og eget PROD-domene
 
-Et lagringsforsøk på `skv138.helgevold.no` ble avvist med HTTP 403 `Origin denied`. Den publiserte appen er bygd med `https://skv138-prod.netlify.app` som origin. Brukeren registrerte posteringene på Netlify-adressen og bekreftet at de deretter vises på begge adressene. Bruk Netlify-adressen ved registrering inntil PROD-origin eventuelt legges om. Ingen SQL-endring var nødvendig. På `prep/skv138-mesk-save-status` venter MESK på svar fra lagringskøen før den viser at posten er lagret. Ved avvist forespørsel vises HTTP-status når den er tilgjengelig. Ulagrede data kan som før lastes ned. Testet med låneopptak som postering og simulerte svar for både bekreftet lagring og HTTP 503. Rettelsen av lagringsmeldingen er klargjort for publisering. Postskjemaet skiller «Skattegrunnlag for MESK» fra avhukingen «Ta med kostnaden i forslaget til åremål». Avhukingen står rett ved teksten.
+Commit `7677d78` er publisert. `skv138.helgevold.no` leverer nytt MESK-skjema og viser «lagret» etter bekreftelse fra serveren. Skjemaet skiller skattegrunnlag fra valget om å ta med kostnaden i åremålsforslaget. Brukeren satte `SKV138_APP_ORIGIN` til `https://skv138.helgevold.no` før deploy. Produksjonsbygget er verifisert med Auth på dette domenet. Det forrige `Origin denied`-avviket ble omgått ved å registrere posteringene via Netlify-adressen, og brukeren bekreftet at de vises på begge adresser. Innlogget lagring og kontroll etter ny innlasting på eget domene gjenstår etter denne deployen. Ingen SQL-migrering.
 
 ## Status 25.11.2026 – MESK-oppdatering publisert i PROD
 
