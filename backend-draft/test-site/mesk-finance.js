@@ -118,17 +118,18 @@
     return resultValue(entry);
   }
 
-  function yearFigures(data, y) {
+  function yearFigures(data, y, estimatedRent = null, annualPlan = false) {
     const config = yearSettings(data, y);
     const actual = data.entries.filter(e => e.year === y && e.status === 'actual');
     const planned = data.entries.filter(e => e.year === y && e.status === 'planned');
     const settledInterest = config.settledInterest ?? {};
     const forecastEntries = [...actual, ...planned.filter(e => e.kind !== 'interest' || !settledInterest[e.loan])];
     const rentPaid = sum(actual.filter(e => e.kind === 'rent'), e => e.amount);
-    const remainingRent = Math.max(0, (config.rent ?? 0) - rentPaid);
+    const remainingRent = Math.max(0, (config.rent ?? estimatedRent ?? 0) - rentPaid);
     const projectedLoans = Object.fromEntries(Object.keys(loans).map(key => [key, calculateLoan(data, key, y, true)]));
     const remainingInterest = sum(Object.keys(loans), key => {
       if (settledInterest[key]) return 0;
+      if (annualPlan && key === 'heden' && planned.some(e => e.kind === 'interest' && e.loan === key)) return 0;
       const loan = projectedLoans[key];
       const alreadyIncluded = sum(forecastEntries.filter(e => e.kind === 'interest' && e.loan === key), e => e.amount);
       return Math.max(0, (loan?.interest ?? 0) - alreadyIncluded);
@@ -152,6 +153,70 @@
       actualCash: sum(actual, balanceChange),
       forecastCash: sum(forecastEntries, balanceChange) + remainingRent - remainingInterest
     };
+  }
+
+  function projectYear(data, y, opening, future, extra = 0) {
+    const config = yearSettings(data, y);
+    const scenario = extra ? {...data, entries:[...data.entries, {
+      kind:'principal', loan:'heden', year:y, date:yearStart(y), amount:extra, status:'planned', autoPrincipal:true
+    }]} : data;
+    const base = yearFigures(scenario, y, null, future);
+    const proposal = rentProposal(scenario, base);
+    const rent = config.rent ?? (!future || proposal.missingRates.length ? null : proposal.total);
+    const figures = config.rent == null && rent !== null ? yearFigures(scenario, y, rent, true) : base;
+    const plannedTax = sum(figures.planned.filter(e => e.taxYear === y &&
+      (e.kind === 'taxReserve' || (e.kind === 'tax' && !taxFromMain(e)))), e => e.amount);
+    const taxTarget = config.confirmedTaxEffect ?? figures.forecastTax;
+    const plannedBenefit = sum(figures.planned.filter(e => e.taxYear === y && e.kind === 'taxBenefit'), e => e.amount);
+    const pendingTax = taxTransferBalance(taxTarget, figures) - plannedTax + plannedBenefit;
+    const taxTransfer = taxTarget < 0 ? Math.min(0, pendingTax) : Math.max(0, pendingTax);
+    const hedenInterest = figures.projectedLoans.heden;
+    const recordedInterest = figures.forecastEntries.filter(e => e.kind === 'interest' && e.loan === 'heden');
+    const manualInterest = figures.planned.some(e => e.kind === 'interest' && e.loan === 'heden') || figures.settledInterest.heden;
+    const interest = manualInterest || hedenInterest?.interest == null
+      ? recordedInterest.length || figures.settledInterest.heden ? sum(recordedInterest, e => e.amount) : null
+      : Math.max(hedenInterest.interest, sum(recordedInterest, e => e.amount));
+    const principal = sum(figures.forecastEntries.filter(e => e.kind === 'principal' && e.loan === 'heden'), e => e.amount);
+    return {scenario, figures, rent, proposal, opening, extra, principal, interest, manualInterest, taxTransfer,
+      closing:opening + figures.forecastCash - taxTransfer};
+  }
+
+  function annualPlan(data, targetYear, thisYear) {
+    if (targetYear < thisYear) return null;
+    let scenario = data;
+    let opening = openingBalances(data, thisYear).forecast;
+    let plan;
+    let completeBudget = true;
+    for (let year = thisYear; year <= targetYear; year++) {
+      const config = yearSettings(data, year);
+      if (config.opening != null) {
+        opening = config.opening;
+        completeBudget = true;
+      }
+      const future = year > thisYear;
+      plan = projectYear(scenario, year, opening, future);
+      if (future) {
+        const hasCosts = plan.figures.forecastEntries.some(e => e.kind === 'expense');
+        completeBudget = completeBudget && hasCosts && plan.rent !== null && !plan.proposal.missingRates.length;
+        const laterPrincipal = sum(data.entries.filter(e =>
+          e.kind === 'principal' && e.loan === 'heden' && e.date >= yearEnd(year)), e => e.amount);
+        if (completeBudget && plan.principal === 0 && plan.interest !== null &&
+            scenario.loans.heden?.start <= yearStart(year)) {
+          const available = Math.max(0, plan.figures.projectedLoans.heden.balance - laterPrincipal);
+          for (let candidate = Math.floor(available / principalStep) * principalStep;
+               candidate > 0; candidate -= principalStep) {
+            const trial = projectYear(scenario, year, opening, future, candidate);
+            if (trial.closing > 0) {
+              plan = trial;
+              break;
+            }
+          }
+        }
+      }
+      scenario = plan.scenario;
+      opening = plan.closing;
+    }
+    return {...plan, completeBudget};
   }
 
   function openingBalances(data, y) {
@@ -263,7 +328,7 @@
       : '');
   }
 
-  function oversikt(data, config, figures) {
+  function oversikt(data, config, figures, plan) {
     const opening = openingBalances(data, currentYear);
     const privateIncome = privateCoverage(currentYear);
     const upcoming = currentYear > dateYear(today());
@@ -280,8 +345,8 @@
       : '<p class="sub">Forslaget bruker kostnadene som er valgt for åremålet, samt beregnede renter som ennå ikke er registrert.</p>';
     return '<div class="mesk-toolbar">' + toggleEditor('year', 'Årsinnstillinger') + '</div>' + setup +
       card('Hyttekonto', [
-        metric(upcoming ? 'Beregnet inngående saldo' : 'Faktisk saldo', amount(upcoming ? opening.forecast : opening.actual + figures.actualCash)),
-        metric('Prognose ved årsslutt', amount(opening.forecast + figures.forecastCash))
+        metric(upcoming ? 'Beregnet inngående saldo' : 'Faktisk saldo', amount(upcoming ? plan.opening : opening.actual + figures.actualCash)),
+        metric('Prognose ved årsslutt', amount(plan?.closing ?? opening.forecast + figures.forecastCash))
       ]) +
       card('Beregnet åremål for ' + currentYear, [
         metric('Avkastningskrav på egenkapital (' + proposal.rate.toLocaleString('nb-NO') + ' %)', proposal.equityReturn === null ? '–' : amount(proposal.equityReturn)),
@@ -345,9 +410,24 @@
       '<button class="primary" type="submit">Lagre post</button>' + toggleEditor('close', 'Avbryt') + '</div></form>';
   }
 
-  function entryList(data, figures, planned) {
+  function annualPlanSummary(plan) {
+    if (!plan || currentYear <= dateYear(today())) return '';
+    const value = n => n === null ? '–' : amount(n);
+    const january = fmt(yearStart(currentYear));
+    return card('Årsplan for ' + currentYear, [
+      metric(january + ' · Forventet innbetaling av åremål', plan.rent === null ? '–' : amount(plan.figures.remainingRent)),
+      metric(january + ' · Avdrag til Heden Holding', value(plan.principal)),
+      metric(january + ' · ' + (plan.manualInterest ? 'Registrerte Heden-renter for året' : 'Beregnede Heden-renter for året'), value(plan.interest)),
+      metric('Saldo ved årsslutt etter skatt', value(plan.closing))
+    ], (!plan.completeBudget ? '<p class="sub">Legg inn åremål, lånerenter og driftskostnader for å beregne avdragsrommet.</p>' : '') +
+      '<details><summary>Vis beregning</summary><p>Inngående saldo ' + escape(amount(plan.opening)) +
+      '. Årets planlagte driftskostnader ' + escape(amount(sum(plan.figures.planned.filter(e => e.kind === 'expense'), e => e.amount))) +
+      '. ' + (plan.extra ? 'Avdraget er et beregnet forslag.' : 'Registrert avdrag eller 0 kr er lagt til grunn.') + '</p></details>');
+  }
+
+  function entryList(data, figures, planned, plan) {
     const entries = planned
-      ? [...figures.planned].sort((a, b) =>
+      ? figures.planned.filter(e => !e.autoPrincipal).sort((a, b) =>
         (a.date || yearEnd(a.year)).localeCompare(b.date || yearEnd(b.year)) || a.kind.localeCompare(b.kind))
       : [...figures.actual].reverse().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
     const draw = editor?.kind === 'entry' ? rowForm(editor.item) : '';
@@ -363,8 +443,11 @@
     }).join('') || '<p class="sub">Ingen ' + (planned ? 'planlagte poster' : 'posteringer') + ' for året.</p>';
     return '<div class="mesk-toolbar">' + toggleEditor('new', action) +
       (planned && entries.length && currentYear < 2100 ? toggleEditor('copy', 'Kopier til neste år') : '') + '</div>' + draw +
-      (planned ? '<p class="sub">Avtalt åremål og beregnede lånerenter ligger i prognosen. Her kan du registrere andre forventede poster.</p>' : '') +
-      '<div class="card mesk-entries">' + rows + '</div>';
+      (planned ? annualPlanSummary(plan) : '') +
+      '<div class="card mesk-entries">' + rows + '</div>' +
+      (planned && plan ? card('Skatteoverføring ved årsslutt', [
+        metric(fmt(currentYear + '-12-31') + (plan.taxTransfer < 0 ? ' · Til hyttekonto' : ' · Til hovedkonto'), amount(Math.abs(plan.taxTransfer)))
+      ], '<p class="sub">Beregnet rest etter registrerte og planlagte skattebetalinger og overføringer for skatteåret.</p>') : '');
   }
 
   function loanForm(data, key, config) {
@@ -472,7 +555,8 @@
   function renderMesk() {
     const data = model();
     const settings = yearSettings(data, currentYear);
-    const figures = yearFigures(data, currentYear);
+    const plan = annualPlan(data, currentYear, dateYear(today()));
+    const figures = plan?.figures ?? yearFigures(data, currentYear);
     yearLabel.textContent = currentYear;
     host.querySelector('[data-mesk-action="previous"]').disabled = currentYear <= 2000;
     host.querySelector('[data-mesk-action="next"]').disabled = currentYear >= 2100;
@@ -480,8 +564,8 @@
       '<button type="button" data-mesk-action="tab" data-id="' + key + '" aria-pressed="' + (key === activeTab) + '" class="' +
       (key === activeTab ? 'selected' : '') + '">' + label + '</button>').join('');
     host.querySelector('[data-mesk-notice]').textContent = notice;
-    panels.innerHTML = activeTab === 'overview' ? oversikt(data, settings, figures) :
-      activeTab === 'loans' ? loanPanel(data, settings, figures) : entryList(data, figures, activeTab === 'planned');
+    panels.innerHTML = activeTab === 'overview' ? oversikt(data, settings, figures, plan) :
+      activeTab === 'loans' ? loanPanel(plan?.scenario ?? data, settings, figures) : entryList(data, figures, activeTab === 'planned', plan);
     const form = panels.querySelector('[data-mesk-form="entry"]');
     if (form) {
       syncEntryFields(form);
@@ -654,7 +738,7 @@
         return;
       case 'accept-rent': {
         const config = yearSettings(data,currentYear);
-        const proposal = rentProposal(data, yearFigures(data, currentYear));
+        const proposal = annualPlan(data, currentYear, dateYear(today()))?.proposal ?? rentProposal(data, yearFigures(data, currentYear));
         if (proposal.total == null || proposal.missingRates.length) return;
         data.years[currentYear] = {...config, rent:proposal.total};
         persist(data,'Avtalt åremål er oppdatert.');
