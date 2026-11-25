@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Forenklet MESK-oversikt publisert i PROD
+
+Commit `d3fa16c` er publisert, og HTML og MESK-modul er verifisert byte for byte på `skv138.helgevold.no`. Mer-menyen er avrundet. MESK har samlet skatteopplysningene i resultatkortet og fjernet overflødige knapper, restbeløp og Vis beregning. Beregnet skatteoverføring kan fortsatt registreres fra Planlagt. Ingen SQL-migrering. Innlogget visuell kontroll gjenstår.
+
 ## Status 25.11.2026 – Forenkle årsplankortet
 
 «Vis beregning» er fjernet fra årsplankortet. Nøkkeltall og informasjon ved manglende årsgrunnlag vises fortsatt. Klargjort på `prep/skv138-mesk-coverage`.
