@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Handlingsmeny for MESK-poster
+
+På `prep/skv138-mesk-entry-menu` ligger Rediger, Registrer faktisk og Slett i en meny ved beløp og saldo. Beregnede linjer, inkludert skatteoverføring, kan registreres med faktisk dato og beløp. Rediger og Slett er deaktivert på beregnede linjer. Ved lagring opprettes en faktisk post og prognosen regner på nytt. Testet fra meny til opprettet og avregnet åremål. Klargjort for neste publisering.
+
 ## Status 25.11.2026 – MESK-planhorisont til og med 2033
 
 Årsvelger, årsprognose, kopiering av planlagte poster og lånesimulering stopper ved utgangen av 2033. Aktuelt kalenderår blir tilgjengelig for faktiske posteringer når det kommer. Grensen er testet for årsplan og lånesimulering. Klargjort på `prep/skv138-mesk-cost-refund`.
