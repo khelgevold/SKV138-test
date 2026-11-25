@@ -372,8 +372,7 @@
         metric('Privat utleie, utbetalt etter estimert skatt', amount(privateIncome.actual)),
         metric('Privat utleie, prognose etter estimert skatt', amount(privateIncome.forecast)),
         metric('Gjenstår å tjene inn', remaining(privateIncome.actual)),
-        metric('Prognose for udekket åremål', remaining(privateIncome.forecast)),
-        metric('Gjenstår å betale til MESK', remaining(figures.rentPaid))
+        metric('Prognose for udekket åremål', remaining(privateIncome.forecast))
       ], overviewSetting('rent-settings', 'Rediger avtalt åremål',
         field('Avtalt åremål (kr)', 'name="rent" type="number" min="0" step="0.01" placeholder="Bruk beregnet åremål i årsplanen"', numeric(rent)))) +
       card('Resultat og skatt for hytta · ' + currentYear, [
