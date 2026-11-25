@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Fjern snarvei for avtalt åremål
+
+«Bruk som avtalt åremål» er fjernet fra beregningskortet. Årsplanen bruker beregnet åremål som standard. Et beløp som faktisk er avtalt, kan fortsatt registreres under Dekning av åremålet. Begge beregningsveier er verifisert. Klargjort på `prep/skv138-mesk-entry-menu`.
+
 ## Status 25.11.2026 – Flytt MESKs årsvalg til relevante kort
 
 Samlet Årsinnstillinger er erstattet av avgrensede valg. Hyttekonto har Juster inngående saldo. Dekning av åremålet har Rediger avtalt åremål og bruker beregnet årsplan når eget beløp mangler. Skatteoverføring har Rediger skatteopplysninger for sats, justering og bekreftet skatt eller skattebesparelse. Hvert skjema oppdaterer bare sine egne felt og beholder tidligere verdier i øvrige grupper. Testet med separate lagringer og automatisk åremål. Klargjort på `prep/skv138-mesk-entry-menu`.
