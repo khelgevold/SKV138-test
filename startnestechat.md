@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Oppgjorte renter per lån og år
+
+På `prep/skv138-mesk-posting-results` kan årets renter markeres som ferdig oppgjort separat for privatlånet og Heden Holding. Saldo-, resultat- og skatteprognose samt åremålsforslag bruker da registrerte renter for lånet i det året. Eventuelle planlagte renteposter beholdes og merkes som holdt utenfor prognosen. Innstillingen påvirker bare valgt lån og år. Testet med avviket på 154 kr og scenarier for begge lån og påfølgende år. Klargjort for neste publisering.
+
 ## Status 25.11.2026 – MESK-resultat per år
 
 Brukeren meldte at registrerte inntekter og kostnader viser null selv om postene er registrert. År, datoer og posttyper i PROD er ikke bekreftet. På `prep/skv138-mesk-posting-results` viser resultatkortet valgt år og en forklaring når årets faktiske poster gir null registrert inntekt og kostnad. Postlisten viser posttypen også når en egen kategori er satt. Kontrollert med fiktive data for tre år og ulike posttyper. Beregningen og lagrede data er uendret. Endringen er klargjort for en senere publisering.
