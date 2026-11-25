@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Forenklet dekning av åremålet
+
+Den nederste boksen «Gjenstår å betale til MESK» er fjernet fra Dekning av åremålet. Åremål, faktisk betalt beløp og de to restfeltene for privat utleie vises fortsatt. Klargjort på `prep/skv138-mesk-coverage`.
+
 ## Status 25.11.2026 – Estimert rest i skatteoverføringskortet
 
 Uten bekreftet skatt viser kortet estimert restoverføring fra samme årsplan som Planlagt, etter faktiske og allerede planlagte overføringer. Med bekreftet skatt viser kortet rest etter faktisk bokførte overføringer og betalinger. Bekreftet skatt beholder eget felt. Testet med estimat, delbeløp og bekreftet skatt. Klargjort på `prep/skv138-mesk-entry-menu`.
