@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Kompakte MESK-kort og saldo etter postering
+
+Hyttekonto, Beregnet åremål og Dekning av åremålet har mindre luft. Avkastningsgrunnlaget redigeres med blyant i nøkkeltallet, og prosentsatsen vises i redigeringsfeltet. Knappen for å bruke beregnet åremål og den generelle forklaringsteksten er fjernet. Eksisterende avtalte åremålsbeløp beholdes. Skatteopplysninger åpnes med blyant ved Estimert skatt slik at bekreftet skatt og justering fortsatt kan registreres. Posteringer viser faktisk hyttekontosaldo etter hver post med nyeste dato først. Beregning og skjemaer er kontrollert med eksempeldata. Klargjort på `prep/skv138-mesk-compact-cards`.
+
 ## Status 25.11.2026 – Forenklet MESK-oversikt publisert i PROD
 
 Commit `d3fa16c` er publisert, og HTML og MESK-modul er verifisert byte for byte på `skv138.helgevold.no`. Mer-menyen er avrundet. MESK har samlet skatteopplysningene i resultatkortet og fjernet overflødige knapper, restbeløp og Vis beregning. Beregnet skatteoverføring kan fortsatt registreres fra Planlagt. Ingen SQL-migrering. Innlogget visuell kontroll gjenstår.
