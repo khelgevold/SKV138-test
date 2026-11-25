@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Flytt MESKs årsvalg til relevante kort
+
+Samlet Årsinnstillinger er erstattet av avgrensede valg. Hyttekonto har Juster inngående saldo. Dekning av åremålet har Rediger avtalt åremål og bruker beregnet årsplan når eget beløp mangler. Skatteoverføring har Rediger skatteopplysninger for sats, justering og bekreftet skatt eller skattebesparelse. Hvert skjema oppdaterer bare sine egne felt og beholder tidligere verdier i øvrige grupper. Testet med separate lagringer og automatisk åremål. Klargjort på `prep/skv138-mesk-entry-menu`.
+
 ## Status 25.11.2026 – Fjern avdragssnarveien fra lånekortet
 
 «Planlegg avdrag 1. januar» er fjernet fra Heden-kortet. Automatisk avdragsforslag vises i årsplanen. Lånekortet viser fortsatt forventet restgjeld ved årsslutt. Testet med automatiske avdrag i to sammenhengende år. Klargjort på `prep/skv138-mesk-entry-menu`.
