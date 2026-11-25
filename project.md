@@ -1,3 +1,7 @@
+## Status 25.11.2026 – Fjern avdragssnarveien fra lånekortet
+
+«Planlegg avdrag 1. januar» er fjernet fra Heden-kortet. Automatisk avdragsforslag vises i årsplanen. Lånekortet viser fortsatt forventet restgjeld ved årsslutt. Testet med automatiske avdrag i to sammenhengende år. Klargjort på `prep/skv138-mesk-entry-menu`.
+
 ## Status 25.11.2026 – Fjern manuell Heden-simulator
 
 Den manuelle simulatoren «Simuler ekstra avdrag til Heden» er fjernet fra Lån. Automatisk avdragsforslag beregnes fortsatt fra betalingsevnen i Planlagt. Testet med et årsbudsjett som gir rom for ekstra avdrag. Klargjort på `prep/skv138-mesk-entry-menu`.
