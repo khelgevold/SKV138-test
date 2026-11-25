@@ -373,8 +373,8 @@
         metric('Privat utleie, prognose etter estimert skatt', amount(privateIncome.forecast)),
         metric('Gjenstår å tjene inn', remaining(privateIncome.actual)),
         metric('Prognose for udekket åremål', remaining(privateIncome.forecast))
-      ], overviewSetting('rent-settings', 'Rediger avtalt åremål',
-        field('Avtalt åremål (kr)', 'name="rent" type="number" min="0" step="0.01" placeholder="Bruk beregnet åremål i årsplanen"', numeric(rent)))) +
+      ], rent === null ? '' : '<div class="row mesk-entry-actions">' +
+        toggleEditor('use-calculated-rent', 'Bruk beregnet åremål') + '</div>') +
       card('Resultat og skatt for hytta · ' + currentYear, [
         metric('Registrert inntekt', amount(sum(figures.actual.filter(e => !isCostRefund(e) && resultValue(e) > 0), resultValue))),
         metric('Registrerte kostnader og renter', amount(-sum(figures.actual.filter(e => isCostRefund(e) || resultValue(e) < 0), resultValue))),
@@ -675,10 +675,7 @@
     const data = model();
     const values = new FormData(form);
     const settings = yearSettings(data, currentYear);
-    if (kind === 'rent-settings') {
-      data.years[currentYear] = {...settings, rent:readMoney(values,'rent')};
-      persist(data,'Åremålet er lagret.');
-    } else if (kind === 'opening-settings') {
+    if (kind === 'opening-settings') {
       data.years[currentYear] = {...settings, opening:readMoney(values,'opening')};
       persist(data,'Inngående saldo er lagret.');
     } else if (kind === 'tax-settings') {
@@ -752,7 +749,10 @@
       case 'next': currentYear = Math.min(lastVisibleYear(), currentYear + 1); editor=null; break;
       case 'tab': activeTab=id; editor=null; break;
       case 'close': editor=null; break;
-      case 'rent-settings':
+      case 'use-calculated-rent':
+        data.years[currentYear] = {...yearSettings(data, currentYear), rent:null};
+        persist(data,'Årsplanen bruker beregnet åremål.');
+        return;
       case 'opening-settings':
       case 'tax-settings':
         editor={kind:action};
