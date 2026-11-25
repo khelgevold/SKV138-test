@@ -450,10 +450,7 @@
       metric(january + ' · Avdrag til Heden Holding', value(plan.principal)),
       metric(january + ' · ' + (plan.manualInterest ? 'Registrerte Heden-renter for året' : 'Beregnede Heden-renter for året'), value(plan.interest)),
       metric('Saldo ved årsslutt etter skatt', value(plan.closing))
-    ], (!plan.completeBudget ? '<p class="sub">Legg inn åremål, lånerenter og driftskostnader for å beregne avdragsrommet.</p>' : '') +
-      '<details><summary>Vis beregning</summary><p>Inngående saldo ' + escape(amount(plan.opening)) +
-      '. Årets planlagte driftskostnader ' + escape(amount(sum(plan.figures.planned.filter(e => e.kind === 'expense'), e => e.amount))) +
-      '. ' + (plan.extra ? 'Avdraget er et beregnet forslag.' : 'Registrert avdrag eller 0 kr er lagt til grunn.') + '</p></details>');
+    ], !plan.completeBudget ? '<p class="sub">Legg inn åremål, lånerenter og driftskostnader for å beregne avdragsrommet.</p>' : '');
   }
 
   function plannedBalances(figures, opening, year) {
